@@ -891,28 +891,34 @@ body {
 .boton-enviar-modal:hover {
     background-color: #3d2817;
 }
-/* --- AJUSTES PARA PANTALLAS DE CELULAR (RESPONSIVO) --- */
+/* --- AJUSTES PARA PANTALLAS DE CELULAR (MENU DESLIZABLE) --- */
 @media (max-width: 600px) {
-    /* Ajustamos el menú para que se divida en 2 columnas perfectas en vez de colapsar */
     .menu-principal ul {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        text-align: center;
+        display: flex; /* Ponemos los elementos uno al lado del otro */
+        justify-content: flex-start; /* Alinea al inicio para que empiece desde la izquierda */
+        overflow-x: auto; /* Activa el deslizamiento horizontal */
+        scroll-behavior: smooth;
+        white-space: nowrap; /* Evita por completo que los textos se rompan en dos líneas */
+        padding: 0 10px;
+        
+        /* Oculta la barra de scroll visual para que se vea más limpio en Android e iOS */
+        -webkit-overflow-scrolling: touch; /* Suaviza el scroll en iPhones */
+        scrollbar-width: none; /* Oculta barra en Firefox */
+    }
+
+    /* Oculta la barra de scroll en Chrome, Safari y Edge */
+    .menu-principal ul::-webkit-scrollbar {
+        display: none;
     }
 
     .menu-principal li {
         margin: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    /* Línea sutil divisoria en el medio */
-    .menu-principal li:nth-child(odd) {
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        flex-shrink: 0; /* Evita que los botones se achiquen o se aplasten */
     }
 
     .menu-principal a {
-        padding: 12px 8px;
-        font-size: 0.85rem; /* Achicamos un poco la letra para que no se corte */
+        padding: 15px 20px; /* Espaciado cómodo para tocar con el dedo */
+        font-size: 0.95rem; /* Mantiene un tamaño de letra legible */
     }
 
     /* Reducimos un poco el tamaño del logo para que luzca más equilibrado */
@@ -920,11 +926,46 @@ body {
         max-width: 260px;
     }
 
-    /* Evitamos márgenes gigantes en el título principal */
+    /* Evitamos títulos gigantes en el celular */
     .vitrina-productos h2, 
     .seccion-pasos h2, 
     .seccion-testimonios h2, 
     .seccion-contacto h2 {
         font-size: 1.8rem;
+    }
+}/* --- AJUSTES PARA PANTALLAS DE CELULAR (MENU DESLIZABLE EN UNA SOLA LÍNEA) --- */
+@media (max-width: 600px) {
+    .menu-principal ul {
+        display: flex !important;          /* Fuerza a que se pongan uno al lado del otro */
+        flex-wrap: nowrap !important;      /* Prohíbe estrictamente saltar a una segunda línea */
+        justify-content: flex-start;       /* Empieza alineado a la izquierda */
+        overflow-x: auto !important;       /* Activa el deslizamiento horizontal */
+        scroll-behavior: smooth;
+        padding: 0 15px;
+        
+        /* Oculta la barra gris visual de scroll para mantener la elegancia */
+        -webkit-overflow-scrolling: touch; /* Scroll suave tipo app en iOS */
+        scrollbar-width: none;             /* Oculta barra en Firefox */
+    }
+
+    /* Oculta la barra de scroll en Chrome, Safari y en tu Device Simulator */
+    .menu-principal ul::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .menu-principal li {
+        margin: 0;
+        flex-shrink: 0 !important;         /* Evita que los nombres se aplasten o achiquen */
+    }
+
+    .menu-principal a {
+        padding: 15px 18px;                /* Espacio cómodo para deslizar con el dedo */
+        font-size: 0.95rem;                /* Letra legible y nítida */
+        white-space: nowrap;               /* Evita que palabras como "¿Cómo Comprar?" se partan */
+    }
+
+    /* Ajuste extra para el tamaño del logo */
+    .logo {
+        max-width: 260px;
     }
 }

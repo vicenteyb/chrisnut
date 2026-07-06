@@ -120,13 +120,12 @@ body {
 
     .submenu-atajos {
         display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
+        position: fixed; /* fixed (no absolute) para que no lo recorte el overflow-x:auto del menú */
         flex-direction: column;
         background-color: #3d2817;
         min-width: 210px;
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+        border-radius: 0 0 8px 8px;
         z-index: 1001;
     }
 

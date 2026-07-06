@@ -46,9 +46,9 @@
             <p>Descubre las delicias que preparamos con amor cada día.</p>
             
             <div class="contenedor-productos">
-                <article class="tarjeta-producto" data-nombre="Media lunas" data-precio="1000">
-                    <img src="medialuna.jpeg" alt="Media lunas" class="imagen-producto">
-                    <h3>Media lunas</h3>
+                <article class="tarjeta-producto" data-nombre="Medialunas" data-precio="1000">
+                    <img src="medialuna.jpeg" alt="Medialunas" class="imagen-producto">
+                    <h3>Medialunas</h3>
                     <p class="descripcion">Medialunas bañadas en almibar perfectas para acompañarlas con café.dulces y saladas.</p>
                     <span class="precio">$1.000</span>
                     <button class="boton-agregar-carrito">Agregar al carrito</button>
@@ -208,6 +208,9 @@
 
             <button id="boton-finalizar-pedido" class="boton-enviar-modal" onclick="enviarPedidoWhatsapp()">
                 Finalizar pedido por WhatsApp
+            </button>
+            <button id="boton-vaciar-carrito" class="boton-secundario-modal" onclick="vaciarCarrito()">
+                🗑️ Vaciar carrito
             </button>
         </div>
     </div>
@@ -491,6 +494,15 @@
         renderizarCarrito();
     }
 
+    function vaciarCarrito() {
+        if (carrito.length === 0) return;
+        if (confirm("¿Seguro que quieres vaciar el carrito?")) {
+            carrito = [];
+            actualizarContadorCarrito();
+            renderizarCarrito();
+        }
+    }
+
     function actualizarContadorCarrito() {
         const totalItems = carrito.reduce((suma, item) => suma + item.cantidad, 0);
         document.getElementById("contador-carrito").textContent = totalItems;
@@ -541,24 +553,35 @@
         document.getElementById("modal-carrito").style.display = "none";
     }
 
+    // Emoji representativo para cada producto (si no está en la lista, usa uno genérico)
+    const emojiProducto = {
+        "Medialunas": "🥐",
+        "Rollitos de Canela": "🍥",
+        "Berlín": "🍩",
+        "Alfajores Simples": "🍪",
+        "Pan Amasado": "🍞"
+    };
+
     function enviarPedidoWhatsapp() {
         if (carrito.length === 0) {
             alert("Tu carrito está vacío. Agrega algún producto antes de enviar tu pedido.");
             return;
         }
 
-        let mensaje = "¡Hola Chrisnut! 👋 Quiero hacer el siguiente pedido:%0A%0A";
+        let lineas = "¡Hola Chrisnut! 👋 Quiero hacer el siguiente pedido:\n\n";
         let total = 0;
 
         carrito.forEach(item => {
             const subtotal = item.precio * item.cantidad;
             total += subtotal;
-            mensaje += `• ${item.cantidad}x ${item.nombre} - ${formatearPrecio(subtotal)}%0A`;
+            const emoji = emojiProducto[item.nombre] || "🛍️";
+            lineas += `${emoji} ${item.cantidad} ${item.nombre} = ${formatearPrecio(subtotal)}\n`;
         });
 
-        mensaje += `%0ATotal: ${formatearPrecio(total)}`;
+        lineas += `\n💰 *Total: ${formatearPrecio(total)}*\n\n¡Muchas gracias! 🥰`;
 
-        const urlWhatsapp = `https://api.whatsapp.com/message/I6NMZ3PAO76CE1?autoload=1&app_absent=0&text=${mensaje}`;
+        const mensajeCodificado = encodeURIComponent(lineas);
+        const urlWhatsapp = `https://api.whatsapp.com/message/I6NMZ3PAO76CE1?autoload=1&app_absent=0&text=${mensajeCodificado}`;
         window.open(urlWhatsapp, "_blank");
     }
 
@@ -574,26 +597,44 @@
         const botonAtajos = document.getElementById("boton-atajos");
         const submenuAtajos = document.getElementById("submenu-atajos");
 
+        // Calcula dónde debe caer el submenú (usa position:fixed para no quedar
+        // recortado por el overflow-x:auto de la barra de menú en celular)
+        function posicionarSubmenuAtajos() {
+            const rect = botonAtajos.getBoundingClientRect();
+            submenuAtajos.style.top = `${rect.bottom}px`;
+            submenuAtajos.style.left = `${rect.left}px`;
+        }
+
+        function cerrarSubmenuAtajos() {
+            submenuAtajos.classList.remove("mostrar-submenu");
+            botonAtajos.classList.remove("atajos-activo");
+        }
+
         botonAtajos.addEventListener("click", (e) => {
             e.stopPropagation();
+            const seVaAAbrir = !submenuAtajos.classList.contains("mostrar-submenu");
+            if (seVaAAbrir) {
+                posicionarSubmenuAtajos();
+            }
             submenuAtajos.classList.toggle("mostrar-submenu");
             botonAtajos.classList.toggle("atajos-activo");
         });
 
         // Se cierra al elegir una opción o al tocar fuera de él
         submenuAtajos.querySelectorAll("a").forEach(enlace => {
-            enlace.addEventListener("click", () => {
-                submenuAtajos.classList.remove("mostrar-submenu");
-                botonAtajos.classList.remove("atajos-activo");
-            });
+            enlace.addEventListener("click", cerrarSubmenuAtajos);
         });
 
         document.addEventListener("click", (e) => {
             if (!submenuAtajos.contains(e.target) && e.target !== botonAtajos) {
-                submenuAtajos.classList.remove("mostrar-submenu");
-                botonAtajos.classList.remove("atajos-activo");
+                cerrarSubmenuAtajos();
             }
         });
+
+        // Si el usuario sigue haciendo scroll o gira el celular, se cierra
+        // para que no quede "flotando" en un lugar incorrecto
+        window.addEventListener("scroll", cerrarSubmenuAtajos, { passive: true });
+        window.addEventListener("resize", cerrarSubmenuAtajos);
 
         // Enlace de Perfil abre el modal de cuenta
         document.getElementById("enlace-perfil").addEventListener("click", (e) => {

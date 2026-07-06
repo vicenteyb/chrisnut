@@ -9,26 +9,34 @@
 <body>
 
     <header id="inicio" class="header-principal">
-        <img src="logo.png" alt="Logo Chrisnut - Panadería y dulzura" class="logo">
+        <a href="https://www.instagram.com/chrisnutcl/" target="_blank" rel="noopener">
+            <img src="logo.png" alt="Logo Chrisnut - Panadería y dulzura" class="logo">
+        </a>
     </header>
 
     <nav class="menu-principal">
-        <button id="boton-hamburguesa" class="boton-hamburguesa" aria-label="Abrir menú">
-            <span></span><span></span><span></span>
-        </button>
-
         <ul id="lista-menu" class="lista-menu">
             <li><a href="#inicio">Inicio</a></li>
-            <li><a href="#vitrina">Nuestros Productos</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-            <li><a href="#como-comprar">¿Cómo Comprar?</a></li>
-            <li><a href="#testimonios">Ustedes</a></li>
-            <li><a href="#" id="enlace-perfil">👤 Perfil</a></li>
-        </ul>
 
-        <button id="boton-carrito" class="boton-carrito">
-            🛒 <span id="contador-carrito" class="contador-carrito">0</span>
-        </button>
+            <li class="item-desplegable">
+                <button id="boton-atajos" class="boton-atajos" aria-label="Abrir menú de opciones">
+                    Menú <span class="flecha-desplegable">⌄</span>
+                </button>
+                <ul id="submenu-atajos" class="submenu-atajos">
+                    <li><a href="#vitrina">Nuestros Productos</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="#como-comprar">¿Cómo Comprar?</a></li>
+                    <li><a href="#testimonios">Ustedes</a></li>
+                </ul>
+            </li>
+
+            <li><a href="#" id="enlace-perfil" class="enlace-perfil">👤 Perfil</a></li>
+            <li>
+                <button id="boton-carrito" class="boton-carrito">
+                    🛒 <span id="contador-carrito" class="contador-carrito">0</span>
+                </button>
+            </li>
+        </ul>
     </nav>
     <hr class="separador">
 
@@ -221,10 +229,18 @@
                     </div>
                     <div class="grupo-modal">
                         <label for="login-clave">Contraseña:</label>
-                        <input type="password" id="login-clave" placeholder="Tu contraseña" required>
+                        <div class="input-clave-contenedor">
+                            <input type="password" id="login-clave" placeholder="Tu contraseña" required>
+                            <button type="button" class="boton-ver-clave" onclick="alternarClave('login-clave', this)">👁️</button>
+                        </div>
                     </div>
+                    <a href="#" id="enlace-olvide-clave" class="enlace-olvide-clave">¿Olvidaste tu contraseña?</a>
                     <p id="error-login" class="error-formulario"></p>
-                    <button type="submit" class="boton-enviar-modal">Ingresar</button>
+                    <p id="exito-login" class="exito-formulario"></p>
+                    <button type="submit" id="boton-login" class="boton-enviar-modal">
+                        <span class="texto-boton">Ingresar</span>
+                        <span class="spinner-boton"></span>
+                    </button>
                 </form>
 
                 <form id="formulario-registro" class="formulario-modal" style="display: none;">
@@ -238,17 +254,28 @@
                     </div>
                     <div class="grupo-modal">
                         <label for="registro-clave">Contraseña:</label>
-                        <input type="password" id="registro-clave" placeholder="Mínimo 6 caracteres" required minlength="6">
+                        <div class="input-clave-contenedor">
+                            <input type="password" id="registro-clave" placeholder="Mínimo 6 caracteres" required minlength="6">
+                            <button type="button" class="boton-ver-clave" onclick="alternarClave('registro-clave', this)">👁️</button>
+                        </div>
+                        <div id="medidor-clave" class="medidor-clave">
+                            <div id="barra-medidor-clave" class="barra-medidor-clave"></div>
+                        </div>
+                        <span id="texto-medidor-clave" class="texto-medidor-clave"></span>
                     </div>
                     <p id="error-registro" class="error-formulario"></p>
-                    <button type="submit" class="boton-enviar-modal">Crear Cuenta</button>
+                    <button type="submit" id="boton-registro" class="boton-enviar-modal">
+                        <span class="texto-boton">Crear Cuenta</span>
+                        <span class="spinner-boton"></span>
+                    </button>
                 </form>
             </div>
 
             <div id="vista-cuenta" style="display: none;">
+                <div id="avatar-usuario" class="avatar-usuario">A</div>
                 <h3>¡Hola, <span id="nombre-usuario-perfil">amigo/a</span>! 👋</h3>
                 <p id="correo-usuario-perfil" class="correo-usuario-perfil"></p>
-                <button id="boton-cerrar-sesion" class="boton-enviar-modal" onclick="cerrarSesion()">Cerrar Sesión</button>
+                <button id="boton-cerrar-sesion" class="boton-secundario-modal" onclick="cerrarSesion()">Cerrar Sesión</button>
             </div>
         </div>
     </div>
@@ -295,14 +322,6 @@
     }
 
     // ==========================================
-    // MENÚ HAMBURGUESA (celular)
-    // ==========================================
-    function alternarMenu() {
-        document.getElementById("lista-menu").classList.toggle("menu-abierto");
-        document.getElementById("boton-hamburguesa").classList.toggle("hamburguesa-activa");
-    }
-
-    // ==========================================
     // PERFIL / CUENTAS (Firebase Authentication)
     // ==========================================
     function abrirModalPerfil() {
@@ -312,6 +331,7 @@
         document.getElementById("modal-perfil").style.display = "none";
         document.getElementById("error-login").textContent = "";
         document.getElementById("error-registro").textContent = "";
+        document.getElementById("exito-login").textContent = "";
     }
 
     function mostrarPestana(pestana) {
@@ -333,6 +353,56 @@
         }
     }
 
+    // Muestra u oculta el texto de una contraseña al tocar el ojito 👁️
+    function alternarClave(idInput, boton) {
+        const input = document.getElementById(idInput);
+        if (input.type === "password") {
+            input.type = "text";
+            boton.textContent = "🙈";
+        } else {
+            input.type = "password";
+            boton.textContent = "👁️";
+        }
+    }
+
+    // Pone un botón en estado "cargando" (con spinner) o lo devuelve a la normalidad
+    function alternarCargaBoton(boton, cargando) {
+        boton.disabled = cargando;
+        boton.classList.toggle("boton-cargando", cargando);
+    }
+
+    // Medidor visual de qué tan fuerte es la contraseña al crear la cuenta
+    function evaluarFuerzaClave(clave) {
+        const barra = document.getElementById("barra-medidor-clave");
+        const texto = document.getElementById("texto-medidor-clave");
+
+        if (!clave) {
+            barra.style.width = "0%";
+            barra.style.backgroundColor = "transparent";
+            texto.textContent = "";
+            return;
+        }
+
+        let puntos = 0;
+        if (clave.length >= 6) puntos++;
+        if (clave.length >= 10) puntos++;
+        if (/[0-9]/.test(clave)) puntos++;
+        if (/[A-Z]/.test(clave)) puntos++;
+
+        const niveles = [
+            { ancho: "25%", color: "#dc2626", texto: "Débil" },
+            { ancho: "50%", color: "#f59e0b", texto: "Aceptable" },
+            { ancho: "75%", color: "#84cc16", texto: "Buena" },
+            { ancho: "100%", color: "#16a34a", texto: "¡Muy segura!" }
+        ];
+
+        const nivel = niveles[Math.min(puntos, 3)];
+        barra.style.width = nivel.ancho;
+        barra.style.backgroundColor = nivel.color;
+        texto.textContent = nivel.texto;
+        texto.style.color = nivel.color;
+    }
+
     function traducirErrorFirebase(codigo) {
         const errores = {
             "auth/email-already-in-use": "Ese correo ya tiene una cuenta creada.",
@@ -341,9 +411,15 @@
             "auth/user-not-found": "No existe una cuenta con ese correo.",
             "auth/wrong-password": "La contraseña es incorrecta.",
             "auth/invalid-credential": "Correo o contraseña incorrectos.",
-            "auth/too-many-requests": "Demasiados intentos. Intenta más tarde."
+            "auth/too-many-requests": "Demasiados intentos. Intenta más tarde.",
+            "auth/missing-email": "Escribe tu correo para recuperar la contraseña."
         };
         return errores[codigo] || "Ocurrió un error. Inténtalo de nuevo.";
+    }
+
+    function iniciales(nombre) {
+        if (!nombre) return "😊";
+        return nombre.trim().charAt(0).toUpperCase();
     }
 
     function cerrarSesion() {
@@ -358,13 +434,15 @@
         const vistaCuenta = document.getElementById("vista-cuenta");
 
         if (usuario) {
-            enlacePerfil.textContent = "👤 " + (usuario.displayName || "Mi Cuenta").split(" ")[0];
+            const primerNombre = (usuario.displayName || "Mi Cuenta").split(" ")[0];
+            enlacePerfil.innerHTML = `<span class="avatar-mini">${iniciales(usuario.displayName)}</span> ${primerNombre}`;
             vistaInvitado.style.display = "none";
             vistaCuenta.style.display = "block";
+            document.getElementById("avatar-usuario").textContent = iniciales(usuario.displayName);
             document.getElementById("nombre-usuario-perfil").textContent = usuario.displayName || "amigo/a";
             document.getElementById("correo-usuario-perfil").textContent = usuario.email;
         } else {
-            enlacePerfil.textContent = "👤 Perfil";
+            enlacePerfil.innerHTML = "👤 Perfil";
             vistaInvitado.style.display = "block";
             vistaCuenta.style.display = "none";
         }
@@ -492,15 +570,29 @@
         // Botón flotante del carrito (en el menú)
         document.getElementById("boton-carrito").addEventListener("click", abrirModalCarrito);
 
-        // Menú hamburguesa (celular)
-        document.getElementById("boton-hamburguesa").addEventListener("click", alternarMenu);
+        // Menú desplegable de atajos (solo aparece como tal en celular)
+        const botonAtajos = document.getElementById("boton-atajos");
+        const submenuAtajos = document.getElementById("submenu-atajos");
 
-        // Al hacer clic en un link del menú desplegable, se cierra solo
-        document.querySelectorAll("#lista-menu a").forEach(enlace => {
+        botonAtajos.addEventListener("click", (e) => {
+            e.stopPropagation();
+            submenuAtajos.classList.toggle("mostrar-submenu");
+            botonAtajos.classList.toggle("atajos-activo");
+        });
+
+        // Se cierra al elegir una opción o al tocar fuera de él
+        submenuAtajos.querySelectorAll("a").forEach(enlace => {
             enlace.addEventListener("click", () => {
-                document.getElementById("lista-menu").classList.remove("menu-abierto");
-                document.getElementById("boton-hamburguesa").classList.remove("hamburguesa-activa");
+                submenuAtajos.classList.remove("mostrar-submenu");
+                botonAtajos.classList.remove("atajos-activo");
             });
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!submenuAtajos.contains(e.target) && e.target !== botonAtajos) {
+                submenuAtajos.classList.remove("mostrar-submenu");
+                botonAtajos.classList.remove("atajos-activo");
+            }
         });
 
         // Enlace de Perfil abre el modal de cuenta
@@ -509,13 +601,44 @@
             abrirModalPerfil();
         });
 
+        // Medidor de fuerza de contraseña en tiempo real
+        document.getElementById("registro-clave").addEventListener("input", (e) => {
+            evaluarFuerzaClave(e.target.value);
+        });
+
+        // Recuperar contraseña
+        document.getElementById("enlace-olvide-clave").addEventListener("click", async (e) => {
+            e.preventDefault();
+            const correo = document.getElementById("login-correo").value;
+            const errorLogin = document.getElementById("error-login");
+            const exitoLogin = document.getElementById("exito-login");
+            errorLogin.textContent = "";
+            exitoLogin.textContent = "";
+
+            if (!correo) {
+                errorLogin.textContent = "Escribe tu correo arriba y luego toca este enlace.";
+                return;
+            }
+
+            try {
+                await auth.sendPasswordResetEmail(correo);
+                exitoLogin.textContent = "¡Listo! Revisa tu correo para recuperar tu contraseña.";
+            } catch (error) {
+                errorLogin.textContent = traducirErrorFirebase(error.code);
+            }
+        });
+
         // Formulario de inicio de sesión
         document.getElementById("formulario-login").addEventListener("submit", async (e) => {
             e.preventDefault();
             const correo = document.getElementById("login-correo").value;
             const clave = document.getElementById("login-clave").value;
             const errorLogin = document.getElementById("error-login");
+            const exitoLogin = document.getElementById("exito-login");
+            const botonLogin = document.getElementById("boton-login");
             errorLogin.textContent = "";
+            exitoLogin.textContent = "";
+            alternarCargaBoton(botonLogin, true);
 
             try {
                 await auth.signInWithEmailAndPassword(correo, clave);
@@ -523,6 +646,8 @@
                 cerrarModalPerfil();
             } catch (error) {
                 errorLogin.textContent = traducirErrorFirebase(error.code);
+            } finally {
+                alternarCargaBoton(botonLogin, false);
             }
         });
 
@@ -533,7 +658,9 @@
             const correo = document.getElementById("registro-correo").value;
             const clave = document.getElementById("registro-clave").value;
             const errorRegistro = document.getElementById("error-registro");
+            const botonRegistro = document.getElementById("boton-registro");
             errorRegistro.textContent = "";
+            alternarCargaBoton(botonRegistro, true);
 
             try {
                 const credencial = await auth.createUserWithEmailAndPassword(correo, clave);
@@ -547,9 +674,12 @@
                 });
 
                 document.getElementById("formulario-registro").reset();
+                evaluarFuerzaClave("");
                 cerrarModalPerfil();
             } catch (error) {
                 errorRegistro.textContent = traducirErrorFirebase(error.code);
+            } finally {
+                alternarCargaBoton(botonRegistro, false);
             }
         });
 

@@ -8,16 +8,22 @@
 </head>
 <body>
 
-    <header class="header-principal">
+    <header id="inicio" class="header-principal">
         <img src="logo.png" alt="Logo Chrisnut - Panadería y dulzura" class="logo">
     </header>
 
     <nav class="menu-principal">
-        <ul>
+        <button id="boton-hamburguesa" class="boton-hamburguesa" aria-label="Abrir menú">
+            <span></span><span></span><span></span>
+        </button>
+
+        <ul id="lista-menu" class="lista-menu">
+            <li><a href="#inicio">Inicio</a></li>
             <li><a href="#vitrina">Nuestros Productos</a></li>
             <li><a href="#contacto">Contacto</a></li>
             <li><a href="#como-comprar">¿Cómo Comprar?</a></li>
             <li><a href="#testimonios">Ustedes</a></li>
+            <li><a href="#" id="enlace-perfil">👤 Perfil</a></li>
         </ul>
 
         <button id="boton-carrito" class="boton-carrito">
@@ -198,6 +204,55 @@
         </div>
     </div>
 
+    <div id="modal-perfil" class="modal-fondo">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalPerfil()">&times;</span>
+
+            <div id="vista-invitado">
+                <div class="pestanas-perfil">
+                    <button id="tab-login" class="pestana-perfil pestana-activa" onclick="mostrarPestana('login')">Iniciar Sesión</button>
+                    <button id="tab-registro" class="pestana-perfil" onclick="mostrarPestana('registro')">Crear Cuenta</button>
+                </div>
+
+                <form id="formulario-login" class="formulario-modal">
+                    <div class="grupo-modal">
+                        <label for="login-correo">Correo Electrónico:</label>
+                        <input type="email" id="login-correo" placeholder="tu@correo.com" required>
+                    </div>
+                    <div class="grupo-modal">
+                        <label for="login-clave">Contraseña:</label>
+                        <input type="password" id="login-clave" placeholder="Tu contraseña" required>
+                    </div>
+                    <p id="error-login" class="error-formulario"></p>
+                    <button type="submit" class="boton-enviar-modal">Ingresar</button>
+                </form>
+
+                <form id="formulario-registro" class="formulario-modal" style="display: none;">
+                    <div class="grupo-modal">
+                        <label for="registro-nombre">Tu Nombre:</label>
+                        <input type="text" id="registro-nombre" placeholder="Ej: María José" required>
+                    </div>
+                    <div class="grupo-modal">
+                        <label for="registro-correo">Correo Electrónico:</label>
+                        <input type="email" id="registro-correo" placeholder="tu@correo.com" required>
+                    </div>
+                    <div class="grupo-modal">
+                        <label for="registro-clave">Contraseña:</label>
+                        <input type="password" id="registro-clave" placeholder="Mínimo 6 caracteres" required minlength="6">
+                    </div>
+                    <p id="error-registro" class="error-formulario"></p>
+                    <button type="submit" class="boton-enviar-modal">Crear Cuenta</button>
+                </form>
+            </div>
+
+            <div id="vista-cuenta" style="display: none;">
+                <h3>¡Hola, <span id="nombre-usuario-perfil">amigo/a</span>! 👋</h3>
+                <p id="correo-usuario-perfil" class="correo-usuario-perfil"></p>
+                <button id="boton-cerrar-sesion" class="boton-enviar-modal" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="pie-pagina">
         <div class="redes-sociales">
             <a href="https://www.instagram.com/chrisnutcl/" target="_blank">Instagram</a>
@@ -215,6 +270,7 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <script>
     const firebaseConfig = {
@@ -229,6 +285,7 @@
     
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const auth = firebase.auth();
 
     function abrirModal() {
         document.getElementById('modal-testimonio').style.display = 'flex';
@@ -236,6 +293,82 @@
     function cerrarModal() {
         document.getElementById('modal-testimonio').style.display = 'none';
     }
+
+    // ==========================================
+    // MENÚ HAMBURGUESA (celular)
+    // ==========================================
+    function alternarMenu() {
+        document.getElementById("lista-menu").classList.toggle("menu-abierto");
+        document.getElementById("boton-hamburguesa").classList.toggle("hamburguesa-activa");
+    }
+
+    // ==========================================
+    // PERFIL / CUENTAS (Firebase Authentication)
+    // ==========================================
+    function abrirModalPerfil() {
+        document.getElementById("modal-perfil").style.display = "flex";
+    }
+    function cerrarModalPerfil() {
+        document.getElementById("modal-perfil").style.display = "none";
+        document.getElementById("error-login").textContent = "";
+        document.getElementById("error-registro").textContent = "";
+    }
+
+    function mostrarPestana(pestana) {
+        const tabLogin = document.getElementById("tab-login");
+        const tabRegistro = document.getElementById("tab-registro");
+        const formLogin = document.getElementById("formulario-login");
+        const formRegistro = document.getElementById("formulario-registro");
+
+        if (pestana === "login") {
+            tabLogin.classList.add("pestana-activa");
+            tabRegistro.classList.remove("pestana-activa");
+            formLogin.style.display = "block";
+            formRegistro.style.display = "none";
+        } else {
+            tabRegistro.classList.add("pestana-activa");
+            tabLogin.classList.remove("pestana-activa");
+            formRegistro.style.display = "block";
+            formLogin.style.display = "none";
+        }
+    }
+
+    function traducirErrorFirebase(codigo) {
+        const errores = {
+            "auth/email-already-in-use": "Ese correo ya tiene una cuenta creada.",
+            "auth/invalid-email": "El correo no es válido.",
+            "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+            "auth/user-not-found": "No existe una cuenta con ese correo.",
+            "auth/wrong-password": "La contraseña es incorrecta.",
+            "auth/invalid-credential": "Correo o contraseña incorrectos.",
+            "auth/too-many-requests": "Demasiados intentos. Intenta más tarde."
+        };
+        return errores[codigo] || "Ocurrió un error. Inténtalo de nuevo.";
+    }
+
+    function cerrarSesion() {
+        auth.signOut();
+        cerrarModalPerfil();
+    }
+
+    // Cuando cambia el estado de sesión, actualizamos toda la interfaz
+    auth.onAuthStateChanged((usuario) => {
+        const enlacePerfil = document.getElementById("enlace-perfil");
+        const vistaInvitado = document.getElementById("vista-invitado");
+        const vistaCuenta = document.getElementById("vista-cuenta");
+
+        if (usuario) {
+            enlacePerfil.textContent = "👤 " + (usuario.displayName || "Mi Cuenta").split(" ")[0];
+            vistaInvitado.style.display = "none";
+            vistaCuenta.style.display = "block";
+            document.getElementById("nombre-usuario-perfil").textContent = usuario.displayName || "amigo/a";
+            document.getElementById("correo-usuario-perfil").textContent = usuario.email;
+        } else {
+            enlacePerfil.textContent = "👤 Perfil";
+            vistaInvitado.style.display = "block";
+            vistaCuenta.style.display = "none";
+        }
+    });
 
     // ==========================================
     // CARRITO DE COMPRAS
@@ -359,6 +492,67 @@
         // Botón flotante del carrito (en el menú)
         document.getElementById("boton-carrito").addEventListener("click", abrirModalCarrito);
 
+        // Menú hamburguesa (celular)
+        document.getElementById("boton-hamburguesa").addEventListener("click", alternarMenu);
+
+        // Al hacer clic en un link del menú desplegable, se cierra solo
+        document.querySelectorAll("#lista-menu a").forEach(enlace => {
+            enlace.addEventListener("click", () => {
+                document.getElementById("lista-menu").classList.remove("menu-abierto");
+                document.getElementById("boton-hamburguesa").classList.remove("hamburguesa-activa");
+            });
+        });
+
+        // Enlace de Perfil abre el modal de cuenta
+        document.getElementById("enlace-perfil").addEventListener("click", (e) => {
+            e.preventDefault();
+            abrirModalPerfil();
+        });
+
+        // Formulario de inicio de sesión
+        document.getElementById("formulario-login").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const correo = document.getElementById("login-correo").value;
+            const clave = document.getElementById("login-clave").value;
+            const errorLogin = document.getElementById("error-login");
+            errorLogin.textContent = "";
+
+            try {
+                await auth.signInWithEmailAndPassword(correo, clave);
+                document.getElementById("formulario-login").reset();
+                cerrarModalPerfil();
+            } catch (error) {
+                errorLogin.textContent = traducirErrorFirebase(error.code);
+            }
+        });
+
+        // Formulario de creación de cuenta
+        document.getElementById("formulario-registro").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById("registro-nombre").value;
+            const correo = document.getElementById("registro-correo").value;
+            const clave = document.getElementById("registro-clave").value;
+            const errorRegistro = document.getElementById("error-registro");
+            errorRegistro.textContent = "";
+
+            try {
+                const credencial = await auth.createUserWithEmailAndPassword(correo, clave);
+                await credencial.user.updateProfile({ displayName: nombre });
+
+                // Guardamos también una copia en Firestore por si se necesita más adelante
+                await db.collection("usuarios").doc(credencial.user.uid).set({
+                    nombre: nombre,
+                    correo: correo,
+                    fecha: new Date()
+                });
+
+                document.getElementById("formulario-registro").reset();
+                cerrarModalPerfil();
+            } catch (error) {
+                errorRegistro.textContent = traducirErrorFirebase(error.code);
+            }
+        });
+
         // Cada botón "Agregar al carrito" toma el nombre y precio de su tarjeta
         document.querySelectorAll(".boton-agregar-carrito").forEach(boton => {
             boton.addEventListener("click", () => {
@@ -460,11 +654,15 @@
     window.onclick = function(event) {
         const modalTestimonio = document.getElementById('modal-testimonio');
         const modalCarrito = document.getElementById('modal-carrito');
+        const modalPerfil = document.getElementById('modal-perfil');
         if (event.target == modalTestimonio) {
             modalTestimonio.style.display = 'none';
         }
         if (event.target == modalCarrito) {
             modalCarrito.style.display = 'none';
+        }
+        if (event.target == modalPerfil) {
+            modalPerfil.style.display = 'none';
         }
     }
     </script>

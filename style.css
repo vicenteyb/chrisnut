@@ -532,7 +532,7 @@ body {
     position: relative;
 }
 
-/* --- MENÚ MÓVIL: AUTO-SCROLL INFINITO + LETRA PEQUEÑA --- */
+/* --- AJUSTE FINAL: PREVENIR CORTE DE PALABRAS --- */
 @media (max-width: 600px) {
     .menu-principal ul {
         display: flex !important;
@@ -541,43 +541,34 @@ body {
         overflow-x: auto !important;
         padding: 0 15px !important;
         
-        /* Animación: se mueve 20 segundos y se repite infinito */
-        animation: scrollMenu 25s linear infinite;
-        
-        /* Para que funcione en móviles */
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
+        /* Animación fluida */
+        animation: scrollMenu 30s linear infinite !important;
     }
 
-    /* Pausa el movimiento cuando pones el dedo encima */
     .menu-principal ul:hover {
-        animation-play-state: paused;
+        animation-play-state: paused !important;
     }
 
-    /* Definición de la animación */
     @keyframes scrollMenu {
         0% { transform: translateX(0); }
-        50% { transform: translateX(-30%); } /* Ajusta este valor si quieres que recorra más o menos */
+        50% { transform: translateX(-30%); }
         100% { transform: translateX(0); }
     }
 
-    .menu-principal ul::-webkit-scrollbar {
-        display: none !important;
-    }
-
     .menu-principal li {
-        flex: 0 0 auto !important;
+        flex: 0 0 auto !important; /* Fuerza a que cada botón mantenga su tamaño real */
         margin: 0 !important;
     }
 
     .menu-principal a {
-        padding: 15px 12px !important; /* Padding más compacto */
-        font-size: 0.82rem !important; /* Letra más pequeña para que todo quepa */
-        white-space: nowrap !important;
+        padding: 15px 15px !important;
+        font-size: 0.85rem !important;
+        white-space: nowrap !important; /* ESTA ES LA CLAVE: prohíbe que el texto se corte */
+        display: block !important;
+        overflow: visible !important; /* Asegura que no se oculte nada */
     }
 
-    /* Ajuste de logo */
     .logo {
-        max-width: 220px !important;
+        max-width: 200px !important;
     }
 }

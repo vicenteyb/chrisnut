@@ -1,0 +1,495 @@
+/* --- Estilos Generales --- */
+html {
+    scroll-behavior: smooth; /* Hace que el menú navegue de forma suave */
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fdf6ec;
+}
+
+.header-principal {
+    text-align: center;
+    padding: 10px 20px;
+    background-color: #6a4833;
+    color: white;
+}
+
+.header-principal h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.eslogan {
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.logo {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+}
+
+/* --- Menú de Navegación --- */
+.menu-principal {
+    background-color: #3d2817;
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Asegura que el menú siempre quede por encima al bajar */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.menu-principal ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.menu-principal li {
+    margin: 0 20px;
+}
+
+.menu-principal a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 15px 10px;
+    font-weight: bold;
+}
+
+.menu-principal a:hover {
+    color: rgb(223, 186, 102);
+}
+
+/* --- Vitrina de Productos --- */
+.vitrina-productos {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.contenedor-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.tarjeta-producto {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición para el efecto suave */
+}
+
+/* Efecto sutil al pasar el mouse sobre un producto */
+.tarjeta-producto:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.tarjeta-producto h3 {
+    color: #6a4833;
+    margin-top: 0;
+}
+
+/* --- Detalles de los Productos --- */
+.imagen-producto {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Adapta la foto sin deformarse */
+    border-radius: 8px;
+    background-color: #f0f0f0; 
+    margin-bottom: 15px;
+}
+
+.tarjeta-producto .descripcion {
+    font-size: 0.9rem;
+    color: #555;
+    min-height: 40px; /* Mantiene alineadas las tarjetas */
+}
+
+.tarjeta-producto .precio {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #7d4f38;
+    margin-top: 10px;
+}
+
+/* --- Separador --- */
+.separador {
+    border: 0;
+    height: 1px;
+    background: #cbd5e1;
+    margin: 40px auto;
+    width: 80%;
+}
+
+/* --- Sección Contacto --- */
+.seccion-contacto {
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #fcfbfa; 
+}
+
+.formulario-contacto {
+    max-width: 500px;
+    margin: 30px auto 0 auto;
+    text-align: left;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.grupo-formulario {
+    margin-bottom: 20px;
+}
+
+.grupo-formulario label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #3d2817;
+}
+
+.grupo-formulario input,
+.grupo-formulario textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box; 
+}
+
+.grupo-formulario input:focus,
+.grupo-formulario textarea:focus {
+    outline: none;
+    border-color: #7d4f38; 
+}
+
+.boton-enviar {
+    background-color: #7d4f38;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.boton-enviar:hover {
+    background-color: #3d2817; 
+}
+
+/* --- Pie de Página --- */
+.pie-pagina {
+    background-color: #3d2817;
+    color: #e6dfd1;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 0.9rem;
+}
+
+/* --- Redes Sociales --- */
+.redes-sociales {
+    margin-bottom: 15px;
+}
+
+.redes-sociales a {
+    color: rgb(223, 186, 102); 
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+}
+
+.redes-sociales a:hover {
+    color: white;
+    transform: translateY(-3px); 
+}/* --- Estilos para el Prefijo Fijo de Teléfono (Corregido) --- */
+.input-telefono-contenedor {
+    display: flex; /* Fuerza a que el prefijo y el input estén en la misma línea */
+    align-items: center; /* Alinea perfectamente el texto al centro vertical */
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: white;
+    overflow: hidden;
+    width: 100%; /* Ocupa el ancho completo del formulario */
+    box-sizing: border-box;
+}
+
+.prefijo-fijo {
+    background-color: #f1f5f9;
+    color: #3d2817;
+    padding: 10px 14px;
+    font-weight: bold;
+    border-right: 1px solid #cbd5e1;
+    white-space: nowrap; /* Evita que el +56 9 se rompa en dos líneas */
+    display: flex;
+    align-items: center;
+    height: 100%;
+    user-select: none;
+}
+
+/* Quitamos los bordes internos de la casilla para que parezca una sola pieza */
+.input-telefono-contenedor input {
+    border: none !important;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+
+.input-telefono-contenedor input:focus {
+    outline: none;
+}
+
+/* Efecto visual al hacer clic en el campo */
+.input-telefono-contenedor:focus-within {
+    border-color: #7d4f38;
+    box-shadow: 0 0 0 1px #7d4f38;
+}
+
+/* --- Ajuste extra para que el menú sticky no tape el título de Contacto --- */
+.seccion-contacto {
+    scroll-margin-top: 70px; /* Le da un espacio arriba al clickear 'Contacto' en el menú */
+
+}/* --- Botón Flotante de WhatsApp --- */
+.whatsapp-flotante {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 2000; /* Hace que flote por encima de las imágenes y textos */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.whatsapp-flotante img {
+    width: 35px;
+    height: 35px;
+}
+
+/* Efecto para que se mueva un poquito al pasar el mouse */
+.whatsapp-flotante:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}/* --- Estilos para Sección Cómo Comprar --- */
+.seccion-pasos {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.subtitulo-seccion {
+    color: #555;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.contenedor-pasos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tarjeta-paso {
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+    width: 280px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+}
+
+.icono-paso {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.tarjeta-paso h3 {
+    color: #6a4833;
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.tarjeta-paso p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* --- Estilos para Sección Testimonios --- */
+.seccion-testimonios {
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #fcfbfa; /* Un fondo sutilmente diferente para destacar */
+}
+
+.contenedor-testimonios {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.tarjeta-testimonio {
+    background-color: white;
+    border-left: 4px solid #7d4f38; /* Detalle elegante de color café al costado */
+    border-radius: 8px;
+    padding: 20px;
+    width: 400px;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    box-sizing: border-box;
+}
+
+.estrellas {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.comentario {
+    font-style: italic;
+    color: #444;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+}
+
+.cliente {
+    color: #7d4f38;
+    margin: 0;
+    font-size: 0.9rem;
+}/* --- Botón de Testimonios --- */
+.boton-dejar-testimonio {
+    background-color: #7d4f38;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-dejar-testimonio:hover {
+    background-color: #3d2817;
+    transform: scale(1.05);
+}
+
+/* --- Estilos del Modal (Ventana Emergente) --- */
+.modal-fondo {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 3000; /* Por encima de todo */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro transparente */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-contenido {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.cerrar-modal {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.cerrar-modal:hover {
+    color: #3d2817;
+}
+
+.modal-contenido h3 {
+    margin-top: 0;
+    color: #6a4833;
+}
+
+/* Formulario interno */
+.formulario-modal {
+    margin-top: 20px;
+}
+
+.grupo-modal {
+    margin-bottom: 15px;
+}
+
+.grupo-modal label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #3d2817;
+    font-size: 0.9rem;
+}
+
+.grupo-modal input,
+.grupo-modal select,
+.grupo-modal textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.boton-enviar-modal {
+    background-color: #7d4f38;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.boton-enviar-modal:hover {
+    background-color: #3d2817;
+}

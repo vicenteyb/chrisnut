@@ -572,3 +572,55 @@ body {
         max-width: 200px !important;
     }
 }
+/* --- AJUSTES PARA PANTALLAS DE CELULAR (MENU DESLIZABLE) --- */
+@media (max-width: 600px) {
+    .menu-principal ul {
+        display: flex !important;
+        justify-content: flex-start !important;
+        overflow-x: auto !important; /* Habilita el desplazamiento lateral */
+        flex-wrap: nowrap !important; /* Evita que los elementos bajen de línea */
+        padding: 0 10px !important;
+        -webkit-overflow-scrolling: touch; /* Suaviza el scroll en iOS */
+        scrollbar-width: none; /* Oculta la barra de desplazamiento */
+    }
+
+    /* Ocultar barra de scroll en Chrome/Safari */
+    .menu-principal ul::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .menu-principal li {
+        flex: 0 0 auto !important; /* Evita que los elementos se encojan */
+        margin: 0 !important;
+    }
+
+    .menu-principal a {
+        padding: 15px 15px !important; /* Espacio cómodo para hacer clic */
+        font-size: 0.85rem !important; /* Tamaño ajustado para que quepan */
+        white-space: nowrap !important; /* Evita que el texto como "Ustedes" se corte */
+    }
+/* --- ESTILO DE MENÚ MÓVIL: FORZADO AL MÁXIMO --- */
+@media (max-width: 600px) {
+    .menu-principal ul {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        padding: 0 5px !important;
+        width: auto !important; /* Cambiado de 100% a auto */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .menu-principal li {
+        flex: 0 0 auto !important;
+        display: block !important;
+        min-width: max-content !important; /* FUERZA A QUE EL BOTÓN MIDA LO QUE MIDE EL TEXTO */
+    }
+
+    .menu-principal a {
+        display: block !important;
+        padding: 15px 10px !important;
+        font-size: 0.8rem !important;
+        white-space: nowrap !important; /* IMPIDE EL CORTE DE TEXTO */
+        min-width: max-content !important; /* IMPIDE QUE EL ENLACE SE ENCOJA */
+    }
+}

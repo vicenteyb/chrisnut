@@ -933,38 +933,36 @@ body {
     .seccion-contacto h2 {
         font-size: 1.8rem;
     }
-}/* --- AJUSTES PARA PANTALLAS DE CELULAR (MENU DESLIZABLE EN UNA SOLA LÍNEA) --- */
+/* --- AJUSTES PARA PANTALLAS DE CELULAR (MENU DESLIZABLE EN UNA SOLA LÍNEA) --- */
 @media (max-width: 600px) {
     .menu-principal ul {
-        display: flex !important;          /* Fuerza a que se pongan uno al lado del otro */
-        flex-wrap: nowrap !important;      /* Prohíbe estrictamente saltar a una segunda línea */
-        justify-content: flex-start;       /* Empieza alineado a la izquierda */
-        overflow-x: auto !important;       /* Activa el deslizamiento horizontal */
+        display: flex !important;          /* Coloca los elementos uno al lado de otro */
+        flex-wrap: nowrap !important;      /* Prohíbe que caigan a una segunda fila */
+        justify-content: flex-start;       /* Alineación desde el borde izquierdo */
+        overflow-x: auto !important;       /* Activa el desplazamiento lateral */
         scroll-behavior: smooth;
         padding: 0 15px;
-        
-        /* Oculta la barra gris visual de scroll para mantener la elegancia */
-        -webkit-overflow-scrolling: touch; /* Scroll suave tipo app en iOS */
+        -webkit-overflow-scrolling: touch; /* Deslizamiento suave en iPhone */
         scrollbar-width: none;             /* Oculta barra en Firefox */
     }
 
-    /* Oculta la barra de scroll en Chrome, Safari y en tu Device Simulator */
+    /* Oculta la barra de scroll en Chrome, Safari y simuladores */
     .menu-principal ul::-webkit-scrollbar {
         display: none !important;
     }
 
     .menu-principal li {
         margin: 0;
-        flex-shrink: 0 !important;         /* Evita que los nombres se aplasten o achiquen */
+        flex-shrink: 0 !important;         /* Evita que los textos largos se aplasten */
     }
 
     .menu-principal a {
-        padding: 15px 18px;                /* Espacio cómodo para deslizar con el dedo */
-        font-size: 0.95rem;                /* Letra legible y nítida */
-        white-space: nowrap;               /* Evita que palabras como "¿Cómo Comprar?" se partan */
+        padding: 15px 18px;                /* Área táctil cómoda para el dedo */
+        font-size: 0.95rem;                /* Texto perfectamente nítido */
+        white-space: nowrap;               /* Evita que los enlaces salten de renglón */
     }
 
-    /* Ajuste extra para el tamaño del logo */
+    /* Evita logos e imágenes gigantes en móviles */
     .logo {
         max-width: 260px;
     }

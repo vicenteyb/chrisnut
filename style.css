@@ -7,27 +7,18 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #fdf6ec;
+    color: #333;
 }
 
 .header-principal {
     text-align: center;
-    padding: 10px 20px;
+    padding: 20px;
     background-color: #6a4833;
     color: white;
 }
 
-.header-principal h1 {
-    margin: 0;
-    font-size: 2.5rem;
-}
-
-.eslogan {
-    font-style: italic;
-    margin-top: 5px;
-}
-
 .logo {
-    max-width: 400px;
+    max-width: 320px;
     width: 100%;
     height: auto;
 }
@@ -47,18 +38,21 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /* Permite que se acomode en celulares */
 }
 
 .menu-principal li {
-    margin: 0 20px;
+    margin: 0 10px;
 }
 
 .menu-principal a {
     color: white;
     text-decoration: none;
     display: block;
-    padding: 15px 10px;
+    padding: 15px 12px;
     font-weight: bold;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
 }
 
 .menu-principal a:hover {
@@ -67,37 +61,42 @@ body {
 
 /* --- Vitrina de Productos --- */
 .vitrina-productos {
-    padding: 40px 20px;
+    padding: 60px 20px;
     text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .contenedor-productos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
 }
 
 .tarjeta-producto {
     background-color: white;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición para el efecto suave */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /* Efecto sutil al pasar el mouse sobre un producto */
 .tarjeta-producto:hover {
-    transform: translateY(-5px); 
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px); 
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 .tarjeta-producto h3 {
     color: #6a4833;
-    margin-top: 0;
+    margin: 10px 0 5px 0;
+    font-size: 1.3rem;
 }
 
-/* --- Detalles de los Productos --- */
 .imagen-producto {
     width: 100%;
     height: 200px;
@@ -109,16 +108,22 @@ body {
 
 .tarjeta-producto .descripcion {
     font-size: 0.9rem;
-    color: #555;
-    min-height: 40px; /* Mantiene alineadas las tarjetas */
+    color: #666;
+    line-height: 1.4;
+    margin-bottom: 15px;
+    flex-grow: 1; /* Empuja el precio hacia abajo para que queden alineados */
 }
 
+/* Resalte tipo etiqueta para el precio */
 .tarjeta-producto .precio {
-    display: block;
-    font-size: 1.2rem;
+    display: inline-block;
+    font-size: 1.25rem;
     font-weight: bold;
     color: #7d4f38;
-    margin-top: 10px;
+    background-color: #fdf6ec;
+    padding: 6px 15px;
+    border-radius: 20px;
+    margin-top: auto;
 }
 
 /* --- Separador --- */
@@ -126,29 +131,149 @@ body {
     border: 0;
     height: 1px;
     background: #cbd5e1;
-    margin: 40px auto;
+    margin: 20px auto;
     width: 80%;
+}
+
+/* --- Sección Cómo Comprar --- */
+.seccion-pasos {
+    padding: 60px 20px;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.subtitulo-seccion {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 40px;
+    font-size: 1.05rem;
+}
+
+.contenedor-pasos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.tarjeta-paso {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px 25px;
+    width: 100%;
+    max-width: 300px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+}
+
+.icono-paso {
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+}
+
+.tarjeta-paso h3 {
+    color: #6a4833;
+    margin-top: 0;
+    font-size: 1.25rem;
+}
+
+.tarjeta-paso p {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- Sección Testimonios --- */
+.seccion-testimonios {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #fcfbfa; /* Un fondo sutilmente diferente para destacar */
+}
+
+.contenedor-testimonios {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tarjeta-testimonio {
+    background-color: white;
+    border-left: 5px solid #7d4f38; /* Detalle elegante de color café al costado */
+    border-radius: 8px;
+    padding: 22px;
+    width: 100%;
+    max-width: 450px;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    box-sizing: border-box;
+}
+
+.estrellas {
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.comentario {
+    font-style: italic;
+    color: #444;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+}
+
+.cliente {
+    color: #7d4f38;
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* --- Botón de Testimonios --- */
+.boton-dejar-testimonio {
+    background-color: #7d4f38;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 40px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(125, 79, 56, 0.2);
+}
+
+.boton-dejar-testimonio:hover {
+    background-color: #3d2817;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(61, 40, 23, 0.3);
 }
 
 /* --- Sección Contacto --- */
 .seccion-contacto {
-    padding: 40px 20px;
+    padding: 60px 20px;
     text-align: center;
-    background-color: #fcfbfa; 
+    background-color: #fdf6ec; 
+    scroll-margin-top: 70px; /* Evita que el menú sticky tape el título al clickear */
 }
 
 .formulario-contacto {
-    max-width: 500px;
+    max-width: 550px;
     margin: 30px auto 0 auto;
     text-align: left;
     background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
 }
 
 .grupo-formulario {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .grupo-formulario label {
@@ -156,35 +281,76 @@ body {
     margin-bottom: 8px;
     font-weight: bold;
     color: #3d2817;
+    font-size: 0.95rem;
 }
 
 .grupo-formulario input,
 .grupo-formulario textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #cbd5e1;
-    border-radius: 6px;
+    border-radius: 8px;
     font-family: Arial, sans-serif;
     box-sizing: border-box; 
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .grupo-formulario input:focus,
 .grupo-formulario textarea:focus {
     outline: none;
     border-color: #7d4f38; 
+    box-shadow: 0 0 0 3px rgba(125, 79, 56, 0.1);
+}
+
+/* Contenedor del teléfono unificado */
+.input-telefono-contenedor {
+    display: flex; 
+    align-items: center; 
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: white;
+    overflow: hidden;
+    width: 100%; 
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.prefijo-fijo {
+    background-color: #f1f5f9;
+    color: #3d2817;
+    padding: 12px 14px;
+    font-weight: bold;
+    border-right: 1px solid #cbd5e1;
+    white-space: nowrap; 
+    display: flex;
+    align-items: center;
+    user-select: none;
+    font-size: 0.95rem;
+}
+
+.input-telefono-contenedor input {
+    border: none !important;
+    padding: 12px;
+    outline: none !important;
+}
+
+.input-telefono-contenedor:focus-within {
+    border-color: #7d4f38;
+    box-shadow: 0 0 0 3px rgba(125, 79, 56, 0.1);
 }
 
 .boton-enviar {
     background-color: #7d4f38;
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 14px 20px;
     font-size: 1rem;
     font-weight: bold;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     width: 100%;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .boton-enviar:hover {
@@ -196,12 +362,393 @@ body {
     background-color: #3d2817;
     color: #e6dfd1;
     text-align: center;
-    padding: 20px;
-    margin-top: 40px;
+    padding: 30px 20px;
     font-size: 0.9rem;
 }
 
-/* --- Redes Sociales --- */
+.redes-sociales {
+    margin-bottom: 15px;
+}
+
+.redes-sociales a {
+    color: rgb(223, 186, 102); 
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+}
+
+.red
+/* --- Estilos Generales --- */
+html {
+    scroll-behavior: smooth; /* Hace que el menú navegue de forma suave */
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fdf6ec;
+    color: #333;
+}
+
+.header-principal {
+    text-align: center;
+    padding: 20px;
+    background-color: #6a4833;
+    color: white;
+}
+
+.logo {
+    max-width: 320px;
+    width: 100%;
+    height: auto;
+}
+
+/* --- Menú de Navegación --- */
+.menu-principal {
+    background-color: #3d2817;
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Asegura que el menú siempre quede por encima al bajar */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.menu-principal ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Permite que se acomode en celulares */
+}
+
+.menu-principal li {
+    margin: 0 10px;
+}
+
+.menu-principal a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 15px 12px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.menu-principal a:hover {
+    color: rgb(223, 186, 102);
+}
+
+/* --- Vitrina de Productos --- */
+.vitrina-productos {
+    padding: 60px 20px;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contenedor-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.tarjeta-producto {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición para el efecto suave */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Efecto sutil al pasar el mouse sobre un producto */
+.tarjeta-producto:hover {
+    transform: translateY(-8px); 
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.tarjeta-producto h3 {
+    color: #6a4833;
+    margin: 10px 0 5px 0;
+    font-size: 1.3rem;
+}
+
+.imagen-producto {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Adapta la foto sin deformarse */
+    border-radius: 8px;
+    background-color: #f0f0f0; 
+    margin-bottom: 15px;
+}
+
+.tarjeta-producto .descripcion {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+    margin-bottom: 15px;
+    flex-grow: 1; /* Empuja el precio hacia abajo para que queden alineados */
+}
+
+/* Resalte tipo etiqueta para el precio */
+.tarjeta-producto .precio {
+    display: inline-block;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #7d4f38;
+    background-color: #fdf6ec;
+    padding: 6px 15px;
+    border-radius: 20px;
+    margin-top: auto;
+}
+
+/* --- Separador --- */
+.separador {
+    border: 0;
+    height: 1px;
+    background: #cbd5e1;
+    margin: 20px auto;
+    width: 80%;
+}
+
+/* --- Sección Cómo Comprar --- */
+.seccion-pasos {
+    padding: 60px 20px;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.subtitulo-seccion {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 40px;
+    font-size: 1.05rem;
+}
+
+.contenedor-pasos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.tarjeta-paso {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px 25px;
+    width: 100%;
+    max-width: 300px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+}
+
+.icono-paso {
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+}
+
+.tarjeta-paso h3 {
+    color: #6a4833;
+    margin-top: 0;
+    font-size: 1.25rem;
+}
+
+.tarjeta-paso p {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- Sección Testimonios --- */
+.seccion-testimonios {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #fcfbfa; /* Un fondo sutilmente diferente para destacar */
+}
+
+.contenedor-testimonios {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tarjeta-testimonio {
+    background-color: white;
+    border-left: 5px solid #7d4f38; /* Detalle elegante de color café al costado */
+    border-radius: 8px;
+    padding: 22px;
+    width: 100%;
+    max-width: 450px;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    box-sizing: border-box;
+}
+
+.estrellas {
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.comentario {
+    font-style: italic;
+    color: #444;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 12px 0;
+}
+
+.cliente {
+    color: #7d4f38;
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* --- Botón de Testimonios --- */
+.boton-dejar-testimonio {
+    background-color: #7d4f38;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 40px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(125, 79, 56, 0.2);
+}
+
+.boton-dejar-testimonio:hover {
+    background-color: #3d2817;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(61, 40, 23, 0.3);
+}
+
+/* --- Sección Contacto --- */
+.seccion-contacto {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #fdf6ec; 
+    scroll-margin-top: 70px; /* Evita que el menú sticky tape el título al clickear */
+}
+
+.formulario-contacto {
+    max-width: 550px;
+    margin: 30px auto 0 auto;
+    text-align: left;
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.grupo-formulario {
+    margin-bottom: 22px;
+}
+
+.grupo-formulario label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #3d2817;
+    font-size: 0.95rem;
+}
+
+.grupo-formulario input,
+.grupo-formulario textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box; 
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.grupo-formulario input:focus,
+.grupo-formulario textarea:focus {
+    outline: none;
+    border-color: #7d4f38; 
+    box-shadow: 0 0 0 3px rgba(125, 79, 56, 0.1);
+}
+
+/* Contenedor del teléfono unificado */
+.input-telefono-contenedor {
+    display: flex; 
+    align-items: center; 
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: white;
+    overflow: hidden;
+    width: 100%; 
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.prefijo-fijo {
+    background-color: #f1f5f9;
+    color: #3d2817;
+    padding: 12px 14px;
+    font-weight: bold;
+    border-right: 1px solid #cbd5e1;
+    white-space: nowrap; 
+    display: flex;
+    align-items: center;
+    user-select: none;
+    font-size: 0.95rem;
+}
+
+.input-telefono-contenedor input {
+    border: none !important;
+    padding: 12px;
+    outline: none !important;
+}
+
+.input-telefono-contenedor:focus-within {
+    border-color: #7d4f38;
+    box-shadow: 0 0 0 3px rgba(125, 79, 56, 0.1);
+}
+
+.boton-enviar {
+    background-color: #7d4f38;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-enviar:hover {
+    background-color: #3d2817; 
+}
+
+/* --- Pie de Página --- */
+.pie-pagina {
+    background-color: #3d2817;
+    color: #e6dfd1;
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 0.9rem;
+}
+
 .redes-sociales {
     margin-bottom: 15px;
 }
@@ -219,212 +766,60 @@ body {
 .redes-sociales a:hover {
     color: white;
     transform: translateY(-3px); 
-}/* --- Estilos para el Prefijo Fijo de Teléfono (Corregido) --- */
-.input-telefono-contenedor {
-    display: flex; /* Fuerza a que el prefijo y el input estén en la misma línea */
-    align-items: center; /* Alinea perfectamente el texto al centro vertical */
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    background-color: white;
-    overflow: hidden;
-    width: 100%; /* Ocupa el ancho completo del formulario */
-    box-sizing: border-box;
 }
 
-.prefijo-fijo {
-    background-color: #f1f5f9;
-    color: #3d2817;
-    padding: 10px 14px;
-    font-weight: bold;
-    border-right: 1px solid #cbd5e1;
-    white-space: nowrap; /* Evita que el +56 9 se rompa en dos líneas */
-    display: flex;
-    align-items: center;
-    height: 100%;
-    user-select: none;
-}
-
-/* Quitamos los bordes internos de la casilla para que parezca una sola pieza */
-.input-telefono-contenedor input {
-    border: none !important;
-    padding: 10px;
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-}
-
-.input-telefono-contenedor input:focus {
-    outline: none;
-}
-
-/* Efecto visual al hacer clic en el campo */
-.input-telefono-contenedor:focus-within {
-    border-color: #7d4f38;
-    box-shadow: 0 0 0 1px #7d4f38;
-}
-
-/* --- Ajuste extra para que el menú sticky no tape el título de Contacto --- */
-.seccion-contacto {
-    scroll-margin-top: 70px; /* Le da un espacio arriba al clickear 'Contacto' en el menú */
-
-}/* --- Botón Flotante de WhatsApp --- */
-.whatsapp-flotante {
+/* --- Botón Flotante de WhatsApp (CORREGIDO) --- */
+.botones-flotantes-contenedor {
     position: fixed;
-    width: 60px;
-    height: 60px;
     bottom: 30px;
     right: 30px;
+    z-index: 2000; /* Asegura que flote por encima de todo */
+}
+
+.whatsapp-flotante {
+    width: 60px;
+    height: 60px;
     background-color: #25d366;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    z-index: 2000; /* Hace que flote por encima de las imágenes y textos */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
 }
 
 .whatsapp-flotante img {
-    width: 35px;
-    height: 35px;
+    width: 34px;
+    height: 34px;
 }
 
-/* Efecto para que se mueva un poquito al pasar el mouse */
 .whatsapp-flotante:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-}/* --- Estilos para Sección Cómo Comprar --- */
-.seccion-pasos {
-    padding: 40px 20px;
-    text-align: center;
-}
-
-.subtitulo-seccion {
-    color: #555;
-    font-style: italic;
-    margin-bottom: 30px;
-}
-
-.contenedor-pasos {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.tarjeta-paso {
-    background-color: white;
-    border-radius: 12px;
-    padding: 25px;
-    width: 280px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-    box-sizing: border-box;
-}
-
-.icono-paso {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-}
-
-.tarjeta-paso h3 {
-    color: #6a4833;
-    margin-top: 0;
-    font-size: 1.2rem;
-}
-
-.tarjeta-paso p {
-    font-size: 0.9rem;
-    color: #666;
-    line-height: 1.5;
-}
-
-/* --- Estilos para Sección Testimonios --- */
-.seccion-testimonios {
-    padding: 40px 20px;
-    text-align: center;
-    background-color: #fcfbfa; /* Un fondo sutilmente diferente para destacar */
-}
-
-.contenedor-testimonios {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.tarjeta-testimonio {
-    background-color: white;
-    border-left: 4px solid #7d4f38; /* Detalle elegante de color café al costado */
-    border-radius: 8px;
-    padding: 20px;
-    width: 400px;
-    text-align: left;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-    box-sizing: border-box;
-}
-
-.estrellas {
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-}
-
-.comentario {
-    font-style: italic;
-    color: #444;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    margin: 0 0 10px 0;
-}
-
-.cliente {
-    color: #7d4f38;
-    margin: 0;
-    font-size: 0.9rem;
-}/* --- Botón de Testimonios --- */
-.boton-dejar-testimonio {
-    background-color: #7d4f38;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 30px;
-    cursor: pointer;
-    margin-top: 30px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.boton-dejar-testimonio:hover {
-    background-color: #3d2817;
-    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 /* --- Estilos del Modal (Ventana Emergente) --- */
 .modal-fondo {
-    display: none; /* Oculto por defecto */
+    display: none; 
     position: fixed;
-    z-index: 3000; /* Por encima de todo */
+    z-index: 3000; 
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro transparente */
+    background-color: rgba(0, 0, 0, 0.5); 
     justify-content: center;
     align-items: center;
 }
 
 .modal-contenido {
     background-color: white;
-    padding: 30px;
-    border-radius: 12px;
+    padding: 35px 30px;
+    border-radius: 14px;
     width: 90%;
-    max-width: 450px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-width: 460px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
     position: relative;
     text-align: left;
     box-sizing: border-box;
@@ -438,6 +833,7 @@ body {
     font-weight: bold;
     color: #aaa;
     cursor: pointer;
+    transition: color 0.2s;
 }
 
 .cerrar-modal:hover {
@@ -447,21 +843,21 @@ body {
 .modal-contenido h3 {
     margin-top: 0;
     color: #6a4833;
+    font-size: 1.4rem;
 }
 
-/* Formulario interno */
 .formulario-modal {
     margin-top: 20px;
 }
 
 .grupo-modal {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
 .grupo-modal label {
     display: block;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     color: #3d2817;
     font-size: 0.9rem;
 }
@@ -470,24 +866,26 @@ body {
 .grupo-modal select,
 .grupo-modal textarea {
     width: 100%;
-    padding: 10px;
+    padding: 11px;
     border: 1px solid #cbd5e1;
-    border-radius: 6px;
+    border-radius: 8px;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
+    font-size: 0.95rem;
 }
 
 .boton-enviar-modal {
     background-color: #7d4f38;
     color: white;
     border: none;
-    padding: 12px;
+    padding: 14px;
     width: 100%;
     font-size: 1rem;
     font-weight: bold;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     margin-top: 10px;
+    transition: background-color 0.3s ease;
 }
 
 .boton-enviar-modal:hover {

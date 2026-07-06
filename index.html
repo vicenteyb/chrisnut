@@ -16,6 +16,8 @@
         <ul>
             <li><a href="#vitrina">Nuestros Productos</a></li>
             <li><a href="#contacto">Contacto</a></li>
+            <li><a href="#como-comprar">¿Cómo Comprar?</a></li>
+            <li><a href="#testimonios">Ustedes</a></li>
         </ul>
     </nav>
 <hr class="separador">
@@ -101,20 +103,9 @@
         </section>
     </main>
 
-    <footer class="pie-pagina">
-        <div class="redes-sociales">
-            <a href="https://www.instagram.com/chrisnutcl/" target="_blank">Instagram</a>
-            <a href="https://api.whatsapp.com/message/I6NMZ3PAO76CE1?autoload=1&app_absent=0&utm_source=ig" target="_blank">Whatsapp</a>
-        </div>
-        <p>&copy; 2026 Chrisnut - Panadería & Dulzura. Todos los derechos reservados.</p>
-    </footer>
-
-<div class="botones-flotantes-contenedor">
-        <a href="https://api.whatsapp.com/message/I6NMZ3PAO76CE1?autoload=1&app_absent=0&utm_source=ig" class="boton-flotante whatsapp-flotante" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Chrisnut">
-        </a>
-    </div>
-        <section id="como-comprar" class="seccion-pasos">
+            <hr class="separador">
+ 
+    <section id="como-comprar" class="seccion-pasos">
             <h2>¿Cómo comprar en Chrisnut?</h2>
             <p class="subtitulo-seccion">Disfrutar de nuestras delicias es súper simple, solo sigue estos pasos:</p>
             
@@ -139,61 +130,142 @@
             </div>
         </section>
 
-<!-- --- SECCIÓN TESTIMONIOS --- -->
-        <section id="testimonios" class="seccion-testimonios">
-            <h2>Lo que dicen nuestros clientes</h2>
-            <p class="subtitulo-seccion">La opinión de quienes disfrutan de nuestra panadería día a día:</p>
-            
-            <div class="contenedor-testimonios">
-                <div class="tarjeta-testimonio">
-                  
-            </div>
+    <section id="testimonios" class="seccion-testimonios">
+        <h2>Lo que dicen nuestros clientes</h2>
+        <p class="subtitulo-seccion">La opinión de quienes disfrutan de nuestra panadería día a día:</p>
 
-            <!-- Botón para abrir el formulario -->
-            <button class="boton-dejar-testimonio" onclick="abrirModal()">✨ Dejar mi opinión</button>
-        </section>
+        <div class="contenedor-testimonios"></div>
 
-        <!-- --- VENTANA EMERGENTE (MODAL) --- -->
-        <div id="modal-testimonio" class="modal-fondo">
-            <div class="modal-contenido">
-                <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
-                <h3>Cuéntanos tu experiencia 🥐</h3>
-                <p>Tu opinión nos ayuda muchísimo a seguir mejorando.</p>
-                
-                <form action="https://formspree.io/f/mojobepa" method="POST" class="formulario-modal">
-                    <div class="grupo-modal">
-                        <label for="nombre-testimonio">Tu Nombre:</label>
-                        <input type="text" id="nombre-testimonio" name="Nombre Cliente" placeholder="Ej: Juan Pérez" required>
-                    </div>
+        <button class="boton-dejar-testimonio" onclick="abrirModal()">✨ Dejar mi opinión</button>
+    </section>
 
-                    <div class="grupo-modal">
-                        <label for="puntuacion">Evaluación:</label>
-                        <select id="puntuacion" name="Estrellas" required>
-                            <option value="5 Estrellas">⭐⭐⭐⭐⭐ (Excelente)</option>
-                            <option value="4 Estrellas">⭐⭐⭐⭐ (Muy Bueno)</option>
-                            <option value="3 Estrellas">⭐⭐⭐ (Bueno)</option>
-                        </select>
-                    </div>
+    <div id="modal-testimonio" class="modal-fondo">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+            <h3>Cuéntanos tu experiencia 🥐</h3>
+            <p>Tu opinión nos ayuda muchísimo a seguir mejorando.</p>
 
-                    <div class="grupo-modal">
-                        <label for="mensaje-testimonio">Tu Comentario:</label>
-                        <textarea id="mensaje-testimonio" name="Comentario" rows="4" placeholder="¿Qué fue lo que más te gustó?" required></textarea>
-                    </div>
+            <form id="formulario-nuevo-testimonio" class="formulario-modal">
+                <div class="grupo-modal">
+                    <label for="nombre-testimonio">Tu Nombre:</label>
+                    <input type="text" id="nombre-testimonio" name="Nombre Cliente" placeholder="Ej: Juan Pérez" required>
+                </div>
 
-                    <button type="submit" class="boton-enviar-modal">Enviar Evaluación</button>
-                </form>
-            </div>
+                <div class="grupo-modal">
+                    <label for="puntuacion">Evaluación:</label>
+                    <select id="puntuacion" name="Estrellas" required>
+                        <option value="5 Estrellas">⭐⭐⭐⭐⭐ (Excelente)</option>
+                        <option value="4 Estrellas">⭐⭐⭐⭐ (Muy Bueno)</option>
+                        <option value="3 Estrellas">⭐⭐⭐ (Bueno)</option>
+                    </select>
+                </div>
+
+                <div class="grupo-modal">
+                    <label for="mensaje-testimonio">Tu Comentario:</label>
+                    <textarea id="mensaje-testimonio" name="Comentario" rows="4" placeholder="¿Qué fue lo que más te gustó?" required></textarea>
+                </div>
+
+                <button type="submit" class="boton-enviar-modal">Enviar Evaluación</button>
+            </form>
         </div>
-        <script>
+    </div>
+
+    <footer class="pie-pagina">
+        <div class="redes-sociales">
+            <a href="https://www.instagram.com/chrisnutcl/" target="_blank">Instagram</a>
+            <a href="https://api.whatsapp.com/message/I6NMZ3PAO76CE1?autoload=1&app_absent=0&utm_source=ig" target="_blank">Whatsapp</a>
+        </div>
+        <p>&copy; 2026 Chrisnut - Panadería & Dulzura. Todos los derechos reservados.</p>
+    </footer>
+
+<div class="botones-flotantes-contenedor">
+        <a href="https://api.whatsapp.com/message/I6NMZ3PAO76CE1?autoload=1&app_absent=0&utm_source=ig" class="boton-flotante whatsapp-flotante" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Chrisnut">
+        </a>
+    </div>
+       
+<!-- Cargamos Firebase desde internet de forma gratuita -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script>
+// 1. Pegar AQUÍ tus credenciales obtenidas en el Paso 2:
+const firebaseConfig = {
+  apiKey: "AIzaSyCZu8tSkKU86NITWs6vY52wkwd7Cn6DS78",
+  authDomain: "chisnut.firebaseapp.com",
+  projectId: "chisnut",
+  storageBucket: "chisnut.firebasestorage.app",
+  messagingSenderId: "930413004495",
+  appId: "1:930413004495:web:07ca2ed303945a378259ba",
+  measurementId: "G-F7785KGSX4"
+};
+// Inicializar Firebase y Firestore
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Funciones básicas para abrir y cerrar la ventana flotante
 function abrirModal() {
     document.getElementById('modal-testimonio').style.display = 'flex';
 }
-
 function cerrarModal() {
     document.getElementById('modal-testimonio').style.display = 'none';
 }
 
-// Cierra el modal automáticamente si el usuario hace clic fuera de la cajita blanca
+document.addEventListener("DOMContentLoaded", () => {
+    const contenedor = document.querySelector(".contenedor-testimonios");
+    const formulario = document.getElementById("formulario-nuevo-testimonio");
+
+    // 2. LEER los testimonios guardados en la nube y mostrarlos a TODOS los usuarios
+    db.collection("testimonios").orderBy("fecha", "desc").onSnapshot((snapshot) => {
+        // Limpiamos el contenedor para no duplicar (dejando vacía la zona dinámica)
+        // Nota: Si pusiste testimonios fijos en el HTML se mantendrán arriba.
+        const tarjetasDinamicas = document.querySelectorAll(".tarjeta-dinamica");
+        tarjetasDinamicas.forEach(tarjeta => tarjeta.remove());
+
+        snapshot.forEach((doc) => {
+            const datos = doc.data();
+            
+            let estrellasIcono = "⭐⭐⭐⭐⭐";
+            if (datos.estrellas === "4 Estrellas") estrellasIcono = "⭐⭐⭐⭐";
+            if (datos.estrellas === "3 Estrellas") estrellasIcono = "⭐⭐⭐";
+
+            const nuevaTarjeta = document.createElement("div");
+            nuevaTarjeta.className = "tarjeta-testimonio tarjeta-dinamica";
+            nuevaTarjeta.innerHTML = `
+                <div class="estrellas">${estrellasIcono}</div>
+                <p class="comentario">"${datos.comentario}"</p>
+                <h4 class="cliente">- ${datos.nombre}</h4>
+            `;
+            contenedor.appendChild(nuevaTarjeta);
+        });
+    });
+
+    // 3. GUARDAR un nuevo testimonio en la nube cuando alguien presione Enviar
+    formulario.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const nombreInput = document.getElementById("nombre-testimonio").value;
+        const puntuacionInput = document.getElementById("puntuacion").value;
+        const comentarioInput = document.getElementById("mensaje-testimonio").value;
+
+        db.collection("testimonios").add({
+            nombre: nombreInput,
+            estrellas: puntuacionInput,
+            comentario: comentarioInput,
+            fecha: new Date() // Sirve para ordenarlos automáticamente del más nuevo al más viejo
+        })
+        .then(() => {
+            formulario.reset();
+            cerrarModal();
+        })
+        .catch((error) => {
+            console.error("Error al guardar testimonio: ", error);
+            alert("Hubo un problema al enviar tu comentario. Inténtalo de nuevo.");
+        });
+    });
+});
+
+// Cierra la ventana si hacen clic fuera de la caja blanca
 window.onclick = function(event) {
     const modal = document.getElementById('modal-testimonio');
     if (event.target == modal) {

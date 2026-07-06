@@ -527,3 +527,57 @@ body {
     .logo {
         max-width: 260px;
     }
+/* Añade esto dentro de tu bloque @media (max-width: 600px) */
+.menu-principal {
+    position: relative;
+}
+
+/* --- MENÚ MÓVIL: AUTO-SCROLL INFINITO + LETRA PEQUEÑA --- */
+@media (max-width: 600px) {
+    .menu-principal ul {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        padding: 0 15px !important;
+        
+        /* Animación: se mueve 20 segundos y se repite infinito */
+        animation: scrollMenu 25s linear infinite;
+        
+        /* Para que funcione en móviles */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    /* Pausa el movimiento cuando pones el dedo encima */
+    .menu-principal ul:hover {
+        animation-play-state: paused;
+    }
+
+    /* Definición de la animación */
+    @keyframes scrollMenu {
+        0% { transform: translateX(0); }
+        50% { transform: translateX(-30%); } /* Ajusta este valor si quieres que recorra más o menos */
+        100% { transform: translateX(0); }
+    }
+
+    .menu-principal ul::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .menu-principal li {
+        flex: 0 0 auto !important;
+        margin: 0 !important;
+    }
+
+    .menu-principal a {
+        padding: 15px 12px !important; /* Padding más compacto */
+        font-size: 0.82rem !important; /* Letra más pequeña para que todo quepa */
+        white-space: nowrap !important;
+    }
+
+    /* Ajuste de logo */
+    .logo {
+        max-width: 220px !important;
+    }
+}

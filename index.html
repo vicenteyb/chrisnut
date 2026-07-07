@@ -380,6 +380,14 @@
                     </div>
                 </div>
 
+                <div id="panel-admin-pedidos" class="panel-admin" style="display:none;">
+                    <h3>📦 Panel de administrador</h3>
+                    <p class="panel-admin-subtitulo">Pedidos activos (pendientes / confirmados)</p>
+                    <div id="lista-admin-pedidos" class="lista-admin-testimonios">
+                        <p class="carrito-vacio">Cargando...</p>
+                    </div>
+                </div>
+
                 <div id="panel-admin-testimonios" class="panel-admin" style="display:none;">
                     <h3>🛠️ Panel de administrador</h3>
                     <p class="panel-admin-subtitulo">Opiniones pendientes por aprobar</p>
@@ -600,24 +608,31 @@
 
             // Panel simple de administrador (solo visible para correos autorizados)
             const panelAdmin = document.getElementById("panel-admin-testimonios");
+            const panelAdminPedidos = document.getElementById("panel-admin-pedidos");
             const contenidoModalPerfil = document.querySelector("#modal-perfil .modal-contenido");
             window._esAdminActual = esAdmin(usuario);
             if (esAdmin(usuario)) {
                 panelAdmin.style.display = "block";
+                panelAdminPedidos.style.display = "block";
                 if (contenidoModalPerfil) contenidoModalPerfil.classList.add("modal-ancho-admin");
                 suscribirTestimoniosPendientesAdmin();
+                suscribirPedidosAdmin();
             } else {
                 panelAdmin.style.display = "none";
+                panelAdminPedidos.style.display = "none";
                 if (contenidoModalPerfil) contenidoModalPerfil.classList.remove("modal-ancho-admin");
                 desuscribirTestimoniosPendientesAdmin();
+                desuscribirPedidosAdmin();
             }
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
         } else {
             window._esAdminActual = false;
             document.getElementById("panel-admin-testimonios").style.display = "none";
+            document.getElementById("panel-admin-pedidos").style.display = "none";
             const contenidoModalPerfilSalida = document.querySelector("#modal-perfil .modal-contenido");
             if (contenidoModalPerfilSalida) contenidoModalPerfilSalida.classList.remove("modal-ancho-admin");
             desuscribirTestimoniosPendientesAdmin();
+            desuscribirPedidosAdmin();
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
             textoPerfil.textContent = "Hola, Inicia sesión";
             opcionesInvitado.forEach(li => li.style.display = "block");
@@ -1068,6 +1083,97 @@
         }
     }
 
+    // ==========================================
+    // PANEL DE ADMINISTRADOR (cambiar estado de pedidos)
+    // ==========================================
+    let cancelarSuscripcionPedidosAdmin = null;
+
+    const OPCIONES_ESTADO_PEDIDO = [
+        { valor: "pendiente", texto: "Pendiente" },
+        { valor: "confirmado", texto: "Confirmado" },
+        { valor: "entregado", texto: "Entregado" },
+        { valor: "cancelado", texto: "Cancelado" }
+    ];
+
+    function suscribirPedidosAdmin() {
+        if (cancelarSuscripcionPedidosAdmin) return; // ya está escuchando
+
+        const contenedor = document.getElementById("lista-admin-pedidos");
+
+        // Traemos los pedidos más recientes y mostramos solo los activos
+        // (pendiente/confirmado); los ya entregados o cancelados quedan
+        // fuera de esta lista para no saturarla.
+        cancelarSuscripcionPedidosAdmin = db.collection("pedidos")
+            .orderBy("fecha", "desc")
+            .limit(50)
+            .onSnapshot((snapshot) => {
+                const pedidosActivos = [];
+                snapshot.forEach((doc) => {
+                    const datos = doc.data();
+                    const estado = datos.estado || "pendiente";
+                    if (estado === "pendiente" || estado === "confirmado") {
+                        pedidosActivos.push({ id: doc.id, datos });
+                    }
+                });
+
+                if (pedidosActivos.length === 0) {
+                    contenedor.innerHTML = '<p class="carrito-vacio">No hay pedidos activos por ahora. ✅</p>';
+                    return;
+                }
+
+                let html = "";
+                pedidosActivos.forEach(({ id, datos }) => {
+                    const estadoActual = datos.estado || "pendiente";
+
+                    let itemsHtml = "";
+                    (datos.items || []).forEach(item => {
+                        itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
+                    });
+
+                    let opcionesHtml = "";
+                    OPCIONES_ESTADO_PEDIDO.forEach(op => {
+                        opcionesHtml += `<option value="${op.valor}" ${op.valor === estadoActual ? "selected" : ""}>${op.texto}</option>`;
+                    });
+
+                    html += `
+                        <div class="tarjeta-admin-testimonio">
+                            <div class="pedido-encabezado">
+                                <span class="pedido-fecha">${formatearFechaPedido(datos.fecha)}</span>
+                                <span class="pedido-estado pedido-estado-${estadoActual}">${textoEstadoPedido[estadoActual] || estadoActual}</span>
+                            </div>
+                            <p class="comentario">${datos.nombreCliente || "Cliente"}${datos.correoCliente ? " · " + datos.correoCliente : ""}</p>
+                            <ul class="pedido-items">${itemsHtml}</ul>
+                            <div class="pedido-total">Total: ${formatearPrecio(datos.total || 0)}</div>
+                            <div class="acciones-admin-testimonio">
+                                <select class="selector-estado-pedido" onchange="cambiarEstadoPedidoAdmin('${id}', this.value)">
+                                    ${opcionesHtml}
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                });
+                contenedor.innerHTML = html;
+            }, (error) => {
+                console.error("Error al cargar pedidos: ", error);
+                contenedor.innerHTML = '<p class="carrito-vacio">No se pudieron cargar los pedidos.</p>';
+            });
+    }
+
+    function desuscribirPedidosAdmin() {
+        if (cancelarSuscripcionPedidosAdmin) {
+            cancelarSuscripcionPedidosAdmin();
+            cancelarSuscripcionPedidosAdmin = null;
+        }
+    }
+
+    function cambiarEstadoPedidoAdmin(idPedido, nuevoEstado) {
+        db.collection("pedidos").doc(idPedido).update({ estado: nuevoEstado })
+            .catch((error) => {
+                console.error("Error al cambiar el estado del pedido: ", error);
+                alert("No se pudo cambiar el estado del pedido. Intenta de nuevo.");
+            });
+    }
+
     function aprobarTestimonioAdmin(idTestimonio) {
         db.collection("testimonios").doc(idTestimonio).update({ aprobado: true })
             .catch((error) => {
@@ -1450,6 +1556,11 @@
             const snapshot = window._ultimoSnapshotTestimonios;
             if (!snapshot) return;
 
+            // Se calcula directamente desde auth.currentUser (en vez de depender
+            // de una bandera guardada aparte) para evitar que quede desincronizada
+            // si esta función se llama antes de que la sesión termine de resolverse.
+            const esAdminAhora = esAdmin(auth.currentUser);
+
             const tarjetasDinamicas = document.querySelectorAll(".tarjeta-dinamica");
             tarjetasDinamicas.forEach(tarjeta => tarjeta.remove());
 
@@ -1463,7 +1574,7 @@
                 const nuevaTarjeta = document.createElement("div");
                 nuevaTarjeta.className = "tarjeta-testimonio tarjeta-dinamica";
                 nuevaTarjeta.innerHTML = `
-                    ${window._esAdminActual ? `<button class="boton-borrar-testimonio-publico" title="Eliminar esta opinión" onclick="eliminarTestimonioPublicoAdmin('${doc.id}')">✕</button>` : ""}
+                    ${esAdminAhora ? `<button class="boton-borrar-testimonio-publico" title="Eliminar esta opinión" onclick="eliminarTestimonioPublicoAdmin('${doc.id}')">✕</button>` : ""}
                     <div class="estrellas">${estrellasIcono}</div>
                     <p class="comentario">"${datos.comentario}"</p>
                     <h4 class="cliente">- ${datos.nombre}</h4>

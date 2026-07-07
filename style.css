@@ -1,3 +1,69 @@
+/* ==========================================
+   VARIABLES DE COLOR (tema claro y oscuro)
+   ========================================== */
+:root {
+    --color-fondo: #fdf6ec;
+    --color-fondo-alterno: #fcfbfa;
+    --color-tarjeta: #ffffff;
+
+    --color-texto-principal: #3d2817;
+    --color-titulo: #6a4833;
+    --color-texto-secundario: #555555;
+    --color-texto-terciario: #777777;
+    --color-texto-suave: #888888;
+    --color-texto-suave-claro: #e6dfd1;
+
+    --color-borde: #cbd5e1;
+    --color-borde-suave: #eeeeee;
+    --color-gris-claro: #f1f5f9;
+    --color-gris-claro-hover: #e2e8f0;
+
+    --color-marron: #6a4833;
+    --color-marron-oscuro: #3d2817;
+    --color-acento: #7d4f38;
+    --color-acento-hover: #9c6a4a;
+    --color-acento-suave: #8a5a3f;
+    --color-dorado: #f5c66b;
+
+    --sombra-suave: rgba(0, 0, 0, 0.1);
+    --sombra-media: rgba(0, 0, 0, 0.2);
+
+    color-scheme: light;
+}
+
+html[data-tema="oscuro"] {
+    --color-fondo: #1c1712;
+    --color-fondo-alterno: #221b15;
+    --color-tarjeta: #2a221a;
+
+    --color-texto-principal: #f1e6d8;
+    --color-titulo: #e3b57f;
+    --color-texto-secundario: #cbbfae;
+    --color-texto-terciario: #b3a494;
+    --color-texto-suave: #a89986;
+    --color-texto-suave-claro: #cbbfae;
+
+    --color-borde: #4a3c2f;
+    --color-borde-suave: #3a2f26;
+    --color-gris-claro: #33291f;
+    --color-gris-claro-hover: #3d3226;
+
+    --color-acento: #b07a52;
+    --color-acento-hover: #c4906a;
+
+    --sombra-suave: rgba(0, 0, 0, 0.35);
+    --sombra-media: rgba(0, 0, 0, 0.5);
+
+    color-scheme: dark;
+}
+
+/* Transición suave al cambiar de tema */
+body, .tarjeta-producto, .tarjeta-paso, .tarjeta-testimonio,
+.modal-contenido, .formulario-contacto, .input-clave-contenedor,
+.input-telefono-contenedor, .pedido-tarjeta {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 /* --- Estilos Generales --- */
 html {
     scroll-behavior: smooth; /* Hace que el menú navegue de forma suave */
@@ -5,14 +71,69 @@ html {
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #fdf6ec;
+    font-family: 'Poppins', Arial, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+}
+
+h1, h2, h3 {
+    font-family: 'Fraunces', Georgia, serif;
+}
+
+/* Títulos de sección: mismo estilo en toda la página */
+main h2 {
+    color: var(--color-titulo);
+    font-size: 2rem;
+    margin-bottom: 8px;
+    position: relative;
+    display: inline-block;
+}
+
+main h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-acento), var(--color-dorado));
+    border-radius: 3px;
+    margin: 10px auto 0 auto;
+}
+
+main > section {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+@media (max-width: 600px) {
+    main h2 {
+        font-size: 1.6rem;
+    }
+}
+
+/* Aparición suave de las secciones al hacer scroll */
+.seccion-animada {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.seccion-animada.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .seccion-animada {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
 
 .header-principal {
     text-align: center;
     padding: 10px 20px;
-    background-color: #6a4833;
+    background-color: var(--color-marron);
     color: white;
 }
 
@@ -54,7 +175,7 @@ body {
 
 /* --- Menú de Navegación (categorías + perfil + carrito) --- */
 .menu-principal {
-    background-color: #3d2817;
+    background-color: var(--color-marron-oscuro);
     position: sticky;
     top: 0;
     z-index: 1000; /* Asegura que el menú siempre quede por encima al bajar */
@@ -127,7 +248,7 @@ body {
     list-style: none;
     margin: 0;
     padding: 0;
-    background-color: #3d2817;
+    background-color: var(--color-marron-oscuro);
     min-width: 220px;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
     border-radius: 0 0 8px 8px;
@@ -242,7 +363,7 @@ body {
         display: none;
         position: fixed; /* fixed (no absolute) para que no lo recorte el overflow-x:auto del menú */
         flex-direction: column;
-        background-color: #3d2817;
+        background-color: var(--color-marron-oscuro);
         min-width: 210px;
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
         border-radius: 0 0 8px 8px;
@@ -279,7 +400,7 @@ body {
 }
 
 .tarjeta-producto {
-    background-color: white;
+    background-color: var(--color-tarjeta);
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -293,7 +414,7 @@ body {
 }
 
 .tarjeta-producto h3 {
-    color: #6a4833;
+    color: var(--color-titulo);
     margin-top: 0;
 }
 
@@ -303,13 +424,13 @@ body {
     height: 200px;
     object-fit: cover; /* Adapta la foto sin deformarse */
     border-radius: 8px;
-    background-color: #f0f0f0; 
+    background-color: var(--color-gris-claro); 
     margin-bottom: 15px;
 }
 
 .tarjeta-producto .descripcion {
     font-size: 0.9rem;
-    color: #555;
+    color: var(--color-texto-secundario);
     min-height: 40px; /* Mantiene alineadas las tarjetas */
 }
 
@@ -317,7 +438,7 @@ body {
     display: block;
     font-size: 1.2rem;
     font-weight: bold;
-    color: #7d4f38;
+    color: var(--color-acento);
     margin-top: 10px;
 }
 
@@ -331,7 +452,7 @@ body {
     padding: 12px 16px;
     border: none;
     border-radius: 30px;
-    background: linear-gradient(135deg, #8a5a3f, #6a4833);
+    background: linear-gradient(135deg, var(--color-acento-suave), var(--color-marron));
     color: white;
     font-size: 0.95rem;
     font-weight: bold;
@@ -347,7 +468,7 @@ body {
 }
 
 .boton-agregar-carrito:hover {
-    background: linear-gradient(135deg, #9c6a4a, #7d4f38);
+    background: linear-gradient(135deg, var(--color-acento-hover), var(--color-acento));
     transform: translateY(-2px);
     box-shadow: 0 6px 14px rgba(106, 72, 51, 0.45);
 }
@@ -371,7 +492,7 @@ body {
 .separador {
     border: 0;
     height: 1px;
-    background: #cbd5e1;
+    background: var(--color-borde);
     margin: 40px auto;
     width: 80%;
 }
@@ -380,14 +501,14 @@ body {
 .seccion-contacto {
     padding: 40px 20px;
     text-align: center;
-    background-color: #fcfbfa; 
+    background-color: var(--color-fondo-alterno); 
 }
 
 .formulario-contacto {
     max-width: 500px;
     margin: 30px auto 0 auto;
     text-align: left;
-    background: white;
+    background: var(--color-tarjeta);
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -401,14 +522,14 @@ body {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
-    color: #3d2817;
+    color: var(--color-texto-principal);
 }
 
 .grupo-formulario input,
 .grupo-formulario textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--color-borde);
     border-radius: 6px;
     font-family: Arial, sans-serif;
     box-sizing: border-box; 
@@ -417,11 +538,11 @@ body {
 .grupo-formulario input:focus,
 .grupo-formulario textarea:focus {
     outline: none;
-    border-color: #7d4f38; 
+    border-color: var(--color-acento); 
 }
 
 .boton-enviar {
-    background-color: #7d4f38;
+    background-color: var(--color-acento);
     color: white;
     border: none;
     padding: 12px 20px;
@@ -434,13 +555,13 @@ body {
 }
 
 .boton-enviar:hover {
-    background-color: #3d2817; 
+    background-color: var(--color-marron-oscuro); 
 }
 
 /* --- Pie de Página --- */
 .pie-pagina {
-    background-color: #3d2817;
-    color: #e6dfd1;
+    background-color: var(--color-marron-oscuro);
+    color: var(--color-texto-suave-claro);
     text-align: center;
     padding: 20px;
     margin-top: 40px;
@@ -471,20 +592,20 @@ body {
 .input-telefono-contenedor {
     display: flex; 
     align-items: center; 
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--color-borde);
     border-radius: 6px;
-    background-color: white;
+    background-color: var(--color-tarjeta);
     overflow: hidden;
     width: 100%; 
     box-sizing: border-box;
 }
 
 .prefijo-fijo {
-    background-color: #f1f5f9;
-    color: #3d2817;
+    background-color: var(--color-gris-claro);
+    color: var(--color-texto-principal);
     padding: 10px 14px;
     font-weight: bold;
-    border-right: 1px solid #cbd5e1;
+    border-right: 1px solid var(--color-borde);
     white-space: nowrap; 
     display: flex;
     align-items: center;
@@ -506,8 +627,8 @@ body {
 }
 
 .input-telefono-contenedor:focus-within {
-    border-color: #7d4f38;
-    box-shadow: 0 0 0 1px #7d4f38;
+    border-color: var(--color-acento);
+    box-shadow: 0 0 0 1px var(--color-acento);
 }
 
 .seccion-contacto {
@@ -548,7 +669,7 @@ body {
 }
 
 .subtitulo-seccion {
-    color: #555;
+    color: var(--color-texto-secundario);
     font-style: italic;
     margin-bottom: 30px;
 }
@@ -563,7 +684,7 @@ body {
 }
 
 .tarjeta-paso {
-    background-color: white;
+    background-color: var(--color-tarjeta);
     border-radius: 12px;
     padding: 25px;
     width: 280px;
@@ -577,14 +698,14 @@ body {
 }
 
 .tarjeta-paso h3 {
-    color: #6a4833;
+    color: var(--color-titulo);
     margin-top: 0;
     font-size: 1.2rem;
 }
 
 .tarjeta-paso p {
     font-size: 0.9rem;
-    color: #666;
+    color: var(--color-texto-secundario);
     line-height: 1.5;
 }
 
@@ -592,7 +713,7 @@ body {
 .seccion-testimonios {
     padding: 40px 20px;
     text-align: center;
-    background-color: #fcfbfa; 
+    background-color: var(--color-fondo-alterno); 
 }
 
 .contenedor-testimonios {
@@ -605,8 +726,8 @@ body {
 }
 
 .tarjeta-testimonio {
-    background-color: white;
-    border-left: 4px solid #7d4f38; 
+    background-color: var(--color-tarjeta);
+    border-left: 4px solid var(--color-acento); 
     border-radius: 8px;
     padding: 20px;
     width: 400px;
@@ -622,21 +743,21 @@ body {
 
 .comentario {
     font-style: italic;
-    color: #444;
+    color: var(--color-texto-secundario);
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 0 0 10px 0;
 }
 
 .cliente {
-    color: #7d4f38;
+    color: var(--color-acento);
     margin: 0;
     font-size: 0.9rem;
 }
 
 /* --- Botón de Testimonios --- */
 .boton-dejar-testimonio {
-    background-color: #7d4f38;
+    background-color: var(--color-acento);
     color: white;
     border: none;
     padding: 12px 25px;
@@ -649,7 +770,7 @@ body {
 }
 
 .boton-dejar-testimonio:hover {
-    background-color: #3d2817;
+    background-color: var(--color-marron-oscuro);
     transform: scale(1.05);
 }
 
@@ -668,7 +789,7 @@ body {
 }
 
 .modal-contenido {
-    background-color: white;
+    background-color: var(--color-tarjeta);
     padding: 30px;
     border-radius: 12px;
     width: 90%;
@@ -697,17 +818,17 @@ body {
     top: 15px;
     font-size: 28px;
     font-weight: bold;
-    color: #aaa;
+    color: var(--color-texto-suave);
     cursor: pointer;
 }
 
 .cerrar-modal:hover {
-    color: #3d2817;
+    color: var(--color-texto-principal);
 }
 
 .modal-contenido h3 {
     margin-top: 0;
-    color: #6a4833;
+    color: var(--color-titulo);
 }
 
 /* --- Modal de Perfil: permite scroll si el contenido crece (datos + favoritos) --- */
@@ -718,7 +839,7 @@ body {
 
 .separador-perfil {
     border: none;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--color-borde-suave);
     margin: 25px 0 20px;
 }
 
@@ -745,10 +866,10 @@ body {
 }
 
 .pedido-tarjeta {
-    border: 1px solid #eee;
+    border: 1px solid var(--color-borde-suave);
     border-radius: 8px;
     padding: 12px 14px;
-    background-color: #fdf6ec;
+    background-color: var(--color-fondo);
 }
 
 .pedido-encabezado {
@@ -762,7 +883,7 @@ body {
 
 .pedido-fecha {
     font-size: 0.8rem;
-    color: #888;
+    color: var(--color-texto-suave);
 }
 
 .pedido-estado {
@@ -797,12 +918,12 @@ body {
     margin: 0 0 8px;
     padding-left: 18px;
     font-size: 0.85rem;
-    color: #3d2817;
+    color: var(--color-texto-principal);
 }
 
 .pedido-total {
     font-weight: bold;
-    color: #7d4f38;
+    color: var(--color-acento);
     font-size: 0.9rem;
 }
 
@@ -818,7 +939,7 @@ body {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
-    color: #3d2817;
+    color: var(--color-texto-principal);
     font-size: 0.9rem;
 }
 
@@ -827,14 +948,14 @@ body {
 .grupo-modal textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--color-borde);
     border-radius: 6px;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
 }
 
 .boton-enviar-modal {
-    background-color: #7d4f38;
+    background-color: var(--color-acento);
     color: white;
     border: none;
     padding: 12px;
@@ -847,7 +968,7 @@ body {
 }
 
 .boton-enviar-modal:hover {
-    background-color: #3d2817;
+    background-color: var(--color-marron-oscuro);
 }
 
 /* --- AJUSTES PARA PANTALLAS DE CELULAR (MENU DESLIZABLE MANUAL) --- */
@@ -897,8 +1018,8 @@ body {
 }
 
 .contador-carrito {
-    background-color: #f5c66b;
-    color: #3d2817;
+    background-color: var(--color-dorado);
+    color: var(--color-marron-oscuro);
     font-size: 0.8rem;
     font-weight: bold;
     border-radius: 50%;
@@ -950,7 +1071,7 @@ body {
 /* --- Botón "agregar al carrito" dentro del modal de favoritos --- */
 .boton-agregar-desde-favoritos {
     border: none;
-    background-color: #6a4833;
+    background-color: var(--color-marron);
     color: white;
     width: 34px;
     height: 34px;
@@ -961,7 +1082,7 @@ body {
 }
 
 .boton-agregar-desde-favoritos:hover {
-    background-color: #3d2817;
+    background-color: var(--color-marron-oscuro);
 }
 
 /* --- Modal de Perfil --- */
@@ -969,7 +1090,7 @@ body {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-borde-suave);
 }
 
 .pestana-perfil {
@@ -978,15 +1099,15 @@ body {
     border: none;
     padding: 10px;
     font-weight: bold;
-    color: #999;
+    color: var(--color-texto-suave);
     cursor: pointer;
     border-bottom: 3px solid transparent;
     font-size: 0.95rem;
 }
 
 .pestana-perfil.pestana-activa {
-    color: #7d4f38;
-    border-bottom-color: #7d4f38;
+    color: var(--color-acento);
+    border-bottom-color: var(--color-acento);
 }
 
 .error-formulario {
@@ -1006,7 +1127,7 @@ body {
 }
 
 .correo-usuario-perfil {
-    color: #777;
+    color: var(--color-texto-terciario);
     margin-bottom: 25px;
 }
 
@@ -1015,7 +1136,7 @@ body {
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #7d4f38, #3d2817);
+    background: linear-gradient(135deg, var(--color-acento), var(--color-marron-oscuro));
     color: white;
     font-size: 1.8rem;
     font-weight: bold;
@@ -1029,8 +1150,8 @@ body {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background-color: #f5c66b;
-    color: #3d2817;
+    background-color: var(--color-dorado);
+    color: var(--color-marron-oscuro);
     font-size: 0.75rem;
     font-weight: bold;
     display: inline-flex;
@@ -1041,7 +1162,7 @@ body {
 }
 
 .boton-secundario-modal {
-    background-color: white;
+    background-color: var(--color-tarjeta);
     color: #b91c1c;
     border: 1px solid #b91c1c;
     padding: 10px 20px;
@@ -1059,9 +1180,9 @@ body {
 .input-clave-contenedor {
     display: flex;
     align-items: center;
-    border: 1px solid #cbd5e1;
+    border: 1px solid var(--color-borde);
     border-radius: 6px;
-    background-color: white;
+    background-color: var(--color-tarjeta);
     overflow: hidden;
 }
 
@@ -1077,8 +1198,8 @@ body {
 }
 
 .input-clave-contenedor:focus-within {
-    border-color: #7d4f38;
-    box-shadow: 0 0 0 1px #7d4f38;
+    border-color: var(--color-acento);
+    box-shadow: 0 0 0 1px var(--color-acento);
 }
 
 .boton-ver-clave {
@@ -1094,7 +1215,7 @@ body {
     display: block;
     text-align: right;
     font-size: 0.85rem;
-    color: #7d4f38;
+    color: var(--color-acento);
     text-decoration: none;
     margin: -10px 0 15px 0;
 }
@@ -1208,7 +1329,7 @@ body {
 
 .carrito-vacio {
     text-align: center;
-    color: #777;
+    color: var(--color-texto-terciario);
     padding: 20px 0;
 }
 
@@ -1218,7 +1339,7 @@ body {
     align-items: center;
     gap: 10px;
     padding: 12px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-borde-suave);
 }
 
 .item-carrito-info {
@@ -1228,13 +1349,13 @@ body {
 
 .item-carrito-nombre {
     font-weight: bold;
-    color: #3d2817;
+    color: var(--color-texto-principal);
     font-size: 0.95rem;
 }
 
 .item-carrito-precio {
     font-size: 0.8rem;
-    color: #888;
+    color: var(--color-texto-suave);
 }
 
 .item-carrito-controles {
@@ -1244,9 +1365,9 @@ body {
 }
 
 .boton-cantidad {
-    background-color: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    color: #3d2817;
+    background-color: var(--color-gris-claro);
+    border: 1px solid var(--color-borde);
+    color: var(--color-texto-principal);
     width: 26px;
     height: 26px;
     border-radius: 6px;
@@ -1257,7 +1378,7 @@ body {
 }
 
 .boton-cantidad:hover {
-    background-color: #e2e8f0;
+    background-color: var(--color-gris-claro-hover);
 }
 
 .item-carrito-cantidad {
@@ -1268,7 +1389,7 @@ body {
 
 .item-carrito-subtotal {
     font-weight: bold;
-    color: #7d4f38;
+    color: var(--color-acento);
     white-space: nowrap;
     font-size: 0.9rem;
 }
@@ -1292,8 +1413,175 @@ body {
     justify-content: space-between;
     font-size: 1.2rem;
     font-weight: bold;
-    color: #3d2817;
+    color: var(--color-texto-principal);
     padding: 15px 0;
-    border-top: 2px solid #eee;
+    border-top: 2px solid var(--color-borde-suave);
     flex-shrink: 0;
+}
+/* ==========================================
+   AJUSTES DE INSIGNIAS Y MENSAJES EN MODO OSCURO
+   ========================================== */
+html[data-tema="oscuro"] .pedido-estado-pendiente { background-color: #4a3a12; color: #f5cf72; }
+html[data-tema="oscuro"] .pedido-estado-confirmado { background-color: #123a4a; color: #7cc2f5; }
+html[data-tema="oscuro"] .pedido-estado-entregado { background-color: #163d1f; color: #86e29b; }
+html[data-tema="oscuro"] .pedido-estado-cancelado { background-color: #4a1616; color: #f58686; }
+html[data-tema="oscuro"] .error-formulario { color: #f58686; }
+html[data-tema="oscuro"] .exito-formulario { color: #86e29b; }
+html[data-tema="oscuro"] .boton-secundario-modal { background-color: transparent; color: #f58686; border-color: #f58686; }
+html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(245, 134, 134, 0.1); }
+
+/* ==========================================
+   INTERRUPTOR DE MODO OSCURO
+   ========================================== */
+.boton-modo-oscuro {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    line-height: 1;
+}
+
+.boton-modo-oscuro:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    transform: rotate(15deg);
+}
+
+/* ==========================================
+   PANTALLA DE CARGA (loader)
+   ========================================== */
+#pantalla-carga {
+    position: fixed;
+    inset: 0;
+    background-color: var(--color-fondo);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    z-index: 9999;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+#pantalla-carga.oculto {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-logo {
+    max-width: 140px;
+    width: 45%;
+    animation: latidoLoader 1.4s ease-in-out infinite;
+}
+
+.loader-spinner {
+    width: 42px;
+    height: 42px;
+    border: 4px solid var(--color-borde);
+    border-top-color: var(--color-acento);
+    border-radius: 50%;
+    animation: girarSpinner 0.8s linear infinite;
+}
+
+.loader-texto {
+    font-family: 'Fraunces', Georgia, serif;
+    color: var(--color-texto-principal);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+@keyframes latidoLoader {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loader-logo, .loader-spinner { animation: none; }
+}
+
+/* ==========================================
+   PANEL SIMPLE DE ADMINISTRADOR (testimonios pendientes)
+   ========================================== */
+.panel-admin {
+    text-align: left;
+    background-color: var(--color-gris-claro);
+    border: 1px dashed var(--color-acento);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 25px;
+}
+
+.panel-admin h3 {
+    margin-top: 0;
+    color: var(--color-titulo);
+    font-size: 1.05rem;
+}
+
+.panel-admin-subtitulo {
+    font-size: 0.8rem;
+    color: var(--color-texto-terciario);
+    margin: -8px 0 14px 0;
+}
+
+.lista-admin-testimonios {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.tarjeta-admin-testimonio {
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+
+.tarjeta-admin-testimonio .estrellas {
+    margin-bottom: 6px;
+}
+
+.tarjeta-admin-testimonio .comentario {
+    margin-bottom: 8px;
+}
+
+.acciones-admin-testimonio {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.boton-aprobar-testimonio,
+.boton-rechazar-testimonio {
+    flex: 1;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+}
+
+.boton-aprobar-testimonio {
+    background-color: #16a34a;
+    color: white;
+}
+
+.boton-rechazar-testimonio {
+    background-color: #b91c1c;
+    color: white;
+}
+
+.boton-aprobar-testimonio:hover,
+.boton-rechazar-testimonio:hover {
+    filter: brightness(1.1);
 }

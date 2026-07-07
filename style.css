@@ -596,9 +596,9 @@ body {
 
     .menu-principal ul {
         flex-wrap: nowrap;
-        justify-content: flex-start;
+        justify-content: space-between;
         overflow-x: auto;
-        padding: 0 15px;
+        padding: 0 10px;
         -webkit-overflow-scrolling: touch; /* scroll suave al deslizar con el dedo */
         scrollbar-width: none;
     }

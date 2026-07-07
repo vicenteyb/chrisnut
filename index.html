@@ -562,6 +562,11 @@
         "Pan Amasado": "🍞"
     };
 
+    // ⚠️ IMPORTANTE: reemplaza este número por el de WhatsApp de Chrisnut,
+    // en formato internacional y SIN espacios, +, guiones ni paréntesis.
+    // Ejemplo Chile: 56912345678
+    const NUMERO_WHATSAPP_CHRISNUT = "56955395216";
+
     function enviarPedidoWhatsapp() {
         if (carrito.length === 0) {
             alert("Tu carrito está vacío. Agrega algún producto antes de enviar tu pedido.");
@@ -578,10 +583,10 @@
             lineas += `${emoji} ${item.cantidad} ${item.nombre} = ${formatearPrecio(subtotal)}\n`;
         });
 
-        lineas += `\n💰 *Total: ${formatearPrecio(total)}*\n\n¡Muchas gracias! 🥰`;
+        lineas += `\n💰 *Total: ${formatearPrecio(total)}*\n\n¡Muchas gracias!`;
 
         const mensajeCodificado = encodeURIComponent(lineas);
-        const urlWhatsapp = `https://api.whatsapp.com/message/I6NMZ3PAO76CE1?autoload=1&app_absent=0&text=${mensajeCodificado}`;
+        const urlWhatsapp = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP_CHRISNUT}&text=${mensajeCodificado}`;
         window.open(urlWhatsapp, "_blank");
     }
 

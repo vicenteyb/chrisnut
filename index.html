@@ -413,6 +413,9 @@
     </footer>
 
     <div class="botones-flotantes-contenedor">
+        <button id="boton-carrito-flotante" class="boton-flotante carrito-flotante" aria-label="Ver carrito" title="Ver carrito" style="display:none;">
+            🛒 <span id="contador-carrito-flotante" class="contador-carrito-flotante">0</span>
+        </button>
         <a href="https://wa.me/qr/JPOAXZ6QHLFOJ1" class="boton-flotante whatsapp-flotante" target="_blank">
             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Chrisnut">
         </a>
@@ -450,6 +453,10 @@
     function esAdmin(usuario) {
         return !!usuario && CORREOS_ADMIN.includes((usuario.email || "").toLowerCase());
     }
+
+    // Bandera global: si el usuario logueado es admin, se muestra la "X" para
+    // borrar opiniones ya publicadas directamente desde la sección "Ustedes".
+    window._esAdminActual = false;
 
     function abrirModal() {
         document.getElementById('modal-testimonio').style.display = 'flex';
@@ -593,16 +600,25 @@
 
             // Panel simple de administrador (solo visible para correos autorizados)
             const panelAdmin = document.getElementById("panel-admin-testimonios");
+            const contenidoModalPerfil = document.querySelector("#modal-perfil .modal-contenido");
+            window._esAdminActual = esAdmin(usuario);
             if (esAdmin(usuario)) {
                 panelAdmin.style.display = "block";
+                if (contenidoModalPerfil) contenidoModalPerfil.classList.add("modal-ancho-admin");
                 suscribirTestimoniosPendientesAdmin();
             } else {
                 panelAdmin.style.display = "none";
+                if (contenidoModalPerfil) contenidoModalPerfil.classList.remove("modal-ancho-admin");
                 desuscribirTestimoniosPendientesAdmin();
             }
+            if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
         } else {
+            window._esAdminActual = false;
             document.getElementById("panel-admin-testimonios").style.display = "none";
+            const contenidoModalPerfilSalida = document.querySelector("#modal-perfil .modal-contenido");
+            if (contenidoModalPerfilSalida) contenidoModalPerfilSalida.classList.remove("modal-ancho-admin");
             desuscribirTestimoniosPendientesAdmin();
+            if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
             textoPerfil.textContent = "Hola, Inicia sesión";
             opcionesInvitado.forEach(li => li.style.display = "block");
             opcionesCuenta.forEach(li => li.style.display = "none");
@@ -807,6 +823,11 @@
     function actualizarContadorCarrito() {
         const totalItems = carrito.reduce((suma, item) => suma + item.cantidad, 0);
         document.getElementById("contador-carrito").textContent = totalItems;
+
+        // Botón flotante: solo se muestra si hay algo en el carrito
+        const botonFlotante = document.getElementById("boton-carrito-flotante");
+        document.getElementById("contador-carrito-flotante").textContent = totalItems;
+        botonFlotante.style.display = totalItems > 0 ? "flex" : "none";
     }
 
     function renderizarCarrito() {
@@ -1064,6 +1085,17 @@
             });
     }
 
+    // Permite al admin borrar, desde la sección pública "Ustedes", una opinión
+    // que ya estaba publicada (no solo las pendientes por aprobar).
+    function eliminarTestimonioPublicoAdmin(idTestimonio) {
+        if (!confirm("¿Eliminar esta opinión ya publicada? Esta acción no se puede deshacer.")) return;
+        db.collection("testimonios").doc(idTestimonio).delete()
+            .catch((error) => {
+                console.error("Error al eliminar el testimonio publicado: ", error);
+                alert("No se pudo eliminar la opinión. Intenta de nuevo.");
+            });
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         const contenedor = document.querySelector(".contenedor-testimonios");
         const formulario = document.getElementById("formulario-nuevo-testimonio");
@@ -1079,6 +1111,10 @@
             botonModoOscuro.setAttribute("aria-label", esOscuro ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
         }
         actualizarIconoTema();
+
+        // Sincroniza el contador/botón flotante del carrito con lo que ya
+        // estaba guardado en este dispositivo, apenas carga la página.
+        actualizarContadorCarrito();
 
         botonModoOscuro.addEventListener("click", () => {
             const esOscuroActual = document.documentElement.getAttribute("data-tema") === "oscuro";
@@ -1110,6 +1146,9 @@
 
         // Botón flotante del carrito (en el menú)
         document.getElementById("boton-carrito").addEventListener("click", abrirModalCarrito);
+
+        // Botón flotante del carrito (arriba de WhatsApp, solo visible con items)
+        document.getElementById("boton-carrito-flotante").addEventListener("click", abrirModalCarrito);
 
         // Enlace "Mis Favoritos" dentro del desplegable de atajos
         document.getElementById("enlace-favoritos-menu").addEventListener("click", (e) => {
@@ -1144,6 +1183,9 @@
             submenuAtajos.classList.remove("mostrar-submenu");
             botonAtajos.classList.remove("atajos-activo");
         }
+
+        cerrarSubmenuAtajos();
+        window.addEventListener("pageshow", cerrarSubmenuAtajos);
 
         botonAtajos.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -1199,6 +1241,13 @@
             botonPerfil.setAttribute("aria-expanded", "false");
             menuPerfilAbierto = false;
         }
+
+        // Nos aseguramos de que arranque cerrado. Esto también corrige el caso
+        // en que el celular restaura la página desde su caché (bfcache) al
+        // volver atrás, y por defecto la dejaba con el menú abierto tal como
+        // había quedado antes de salir.
+        cerrarSubmenuPerfil();
+        window.addEventListener("pageshow", cerrarSubmenuPerfil);
 
         botonPerfil.addEventListener("click", (e) => {
             e.preventDefault();
@@ -1392,17 +1441,21 @@
             }
         });
 
-        // Solo mostramos los testimonios que ya fueron aprobados por el administrador
-        db.collection("testimonios")
-            .where("aprobado", "==", true)
-            .orderBy("fecha", "desc")
-            .onSnapshot((snapshot) => {
+        // Solo mostramos los testimonios que ya fueron aprobados por el administrador.
+        // Guardamos el último snapshot para poder re-dibujar la lista cuando cambia
+        // el estado de sesión (ej: al iniciar sesión como admin aparece la "X").
+        window._ultimoSnapshotTestimonios = null;
+
+        window.renderizarTestimoniosPublicos = function () {
+            const snapshot = window._ultimoSnapshotTestimonios;
+            if (!snapshot) return;
+
             const tarjetasDinamicas = document.querySelectorAll(".tarjeta-dinamica");
             tarjetasDinamicas.forEach(tarjeta => tarjeta.remove());
 
             snapshot.forEach((doc) => {
                 const datos = doc.data();
-                
+
                 let estrellasIcono = "⭐⭐⭐⭐⭐";
                 if (datos.estrellas === "4 Estrellas") estrellasIcono = "⭐⭐⭐⭐";
                 if (datos.estrellas === "3 Estrellas") estrellasIcono = "⭐⭐⭐";
@@ -1410,13 +1463,22 @@
                 const nuevaTarjeta = document.createElement("div");
                 nuevaTarjeta.className = "tarjeta-testimonio tarjeta-dinamica";
                 nuevaTarjeta.innerHTML = `
+                    ${window._esAdminActual ? `<button class="boton-borrar-testimonio-publico" title="Eliminar esta opinión" onclick="eliminarTestimonioPublicoAdmin('${doc.id}')">✕</button>` : ""}
                     <div class="estrellas">${estrellasIcono}</div>
                     <p class="comentario">"${datos.comentario}"</p>
                     <h4 class="cliente">- ${datos.nombre}</h4>
                 `;
                 contenedor.appendChild(nuevaTarjeta);
             });
-        });
+        }
+
+        db.collection("testimonios")
+            .where("aprobado", "==", true)
+            .orderBy("fecha", "desc")
+            .onSnapshot((snapshot) => {
+                window._ultimoSnapshotTestimonios = snapshot;
+                renderizarTestimoniosPublicos();
+            });
 
         formulario.addEventListener("submit", (e) => {
             e.preventDefault();

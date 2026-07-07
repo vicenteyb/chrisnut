@@ -734,6 +734,66 @@ main > section {
     }
 }
 
+/* --- Botón Flotante de Estado del Pedido ---
+   Aparece justo cuando se envía un pedido (reemplazando visualmente al
+   carrito flotante, que se oculta al vaciarse). Muestra un ícono y un color
+   distinto según el estado actual (pendiente/confirmado/entregado/cancelado)
+   y se mantiene sincronizado en tiempo real con Firestore. */
+.estado-pedido-flotante {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    animation: aparecerCarritoFlotante 0.25s ease;
+    background-color: #f59e0b; /* color por defecto: pendiente */
+}
+
+.estado-pedido-flotante:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.estado-pedido-flotante-pendiente {
+    background-color: #f59e0b;
+}
+
+.estado-pedido-flotante-confirmado {
+    background-color: #3b82f6;
+}
+
+.estado-pedido-flotante-entregado {
+    background-color: #22c55e;
+}
+
+.estado-pedido-flotante-cancelado {
+    background-color: #ef4444;
+}
+
+@keyframes latidoEstadoPedido {
+    0% { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(245, 158, 11, 0.55); }
+    70% { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 0 10px rgba(245, 158, 11, 0); }
+    100% { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+.estado-pedido-flotante-pendiente {
+    animation: aparecerCarritoFlotante 0.25s ease, latidoEstadoPedido 1.8s ease-in-out infinite;
+}
+
+.mensaje-seguimiento-pedido {
+    margin: 8px 0 0;
+    font-size: 0.85rem;
+    color: var(--color-texto-suave);
+}
+
 /* --- Estilos para Sección Cómo Comprar --- */
 .seccion-pasos {
     padding: 40px 20px;
@@ -963,6 +1023,35 @@ main > section {
     margin-bottom: 10px;
 }
 
+.encabezado-historial-pedidos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.encabezado-historial-pedidos h3 {
+    margin-bottom: 0;
+}
+
+.filtro-mes-pedidos {
+    border: 1px solid var(--color-borde-suave);
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.filtro-mes-pedidos:focus {
+    outline: none;
+    border-color: var(--color-acento);
+}
+
 .lista-pedidos-perfil {
     max-height: 260px;
     overflow-y: auto;
@@ -1027,19 +1116,28 @@ main > section {
     position: relative;
     display: inline-flex;
     align-items: center;
-    border-radius: 12px;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    transition: background-color 0.25s ease, box-shadow 0.2s ease, transform 0.18s ease;
 }
 
 .selector-estado-envoltura::after {
-    content: "▾";
+    content: "";
     position: absolute;
-    right: 10px;
+    right: 11px;
     top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.7rem;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-65%) rotate(45deg);
     pointer-events: none;
-    opacity: 0.75;
+    opacity: 0.85;
+    transition: transform 0.2s ease;
+}
+
+.selector-estado-envoltura:has(.selector-estado-pedido:focus)::after {
+    transform: translateY(-40%) rotate(225deg);
 }
 
 .selector-estado-pedido {
@@ -1049,18 +1147,21 @@ main > section {
     border: none;
     background: transparent;
     font-family: inherit;
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: bold;
-    padding: 5px 26px 5px 12px;
-    border-radius: 12px;
+    letter-spacing: 0.01em;
+    padding: 7px 28px 7px 14px;
+    border-radius: 14px;
     cursor: pointer;
     white-space: nowrap;
     color: inherit;
-    transition: filter 0.15s ease, transform 0.15s ease;
+    transition: filter 0.15s ease;
 }
 
-.selector-estado-pedido:hover {
-    filter: brightness(1.08);
+.selector-estado-envoltura:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+    filter: brightness(1.06);
 }
 
 .selector-estado-pedido:focus {
@@ -1068,11 +1169,22 @@ main > section {
 }
 
 .selector-estado-envoltura:has(.selector-estado-pedido:focus) {
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15);
 }
 
 .selector-estado-envoltura:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
+}
+
+@keyframes rebote-cambio-estado {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.12); }
+    60% { transform: scale(0.96); }
+    100% { transform: scale(1); }
+}
+
+.selector-estado-envoltura.animar-cambio {
+    animation: rebote-cambio-estado 0.4s ease;
 }
 
 .selector-estado-pendiente {
@@ -2012,32 +2124,6 @@ html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(
 }
 
 /* ==========================================
-   INFORME IMPRIMIBLE (estadísticas del mes)
-   ========================================== */
-.reporte-imprimible {
-    display: none;
-}
-
-@media print {
-    body.modo-impresion > *:not(#reporte-imprimible) {
-        display: none !important;
-    }
-    body.modo-impresion .reporte-imprimible {
-        display: block !important;
-        color: #000;
-    }
-    .reporte-imprimible table {
-        border-collapse: collapse;
-        width: 100%;
-        margin-top: 16px;
-    }
-    .reporte-imprimible td {
-        border: 1px solid #999;
-        padding: 8px 12px;
-    }
-}
-
-/* ==========================================
    OPTIMIZACIÓN MÓVIL (iPhone / Android)
    ========================================== */
 .header-principal {
@@ -2068,9 +2154,10 @@ button {
     .pedido-estado-clickeable:hover,
     .boton-aprobar-testimonio:hover,
     .boton-rechazar-testimonio:hover,
-    .selector-estado-pedido:hover {
+    .selector-estado-envoltura:hover {
         filter: none;
         transform: none;
+        box-shadow: none;
     }
 }
 

@@ -255,7 +255,7 @@
         </section>
     </main>
 
-    <div id="reporte-imprimible" class="reporte-imprimible"></div>
+    <!-- (el antiguo div "reporte-imprimible" para window.print() ya no se usa: ahora el informe se genera directo en PDF con jsPDF) -->
 
     <div id="modal-testimonio" class="modal-fondo">
         <div class="modal-contenido">
@@ -390,7 +390,10 @@
                 <hr class="separador-perfil">
 
                 <div class="seccion-pedidos-perfil">
-                    <h3>Tu historial de pedidos</h3>
+                    <div class="encabezado-historial-pedidos">
+                        <h3>Tu historial de pedidos</h3>
+                        <select id="filtro-mes-historial-pedidos" class="filtro-mes-pedidos" style="display:none;"></select>
+                    </div>
                     <div id="lista-pedidos-perfil" class="lista-pedidos-perfil">
                         <p class="carrito-vacio">Cargando tus pedidos...</p>
                     </div>
@@ -407,26 +410,10 @@
                     <div class="panel-estadisticas-mes">
                         <div class="panel-estadisticas-encabezado">
                             <h4>📊 Estadísticas del mes</h4>
-                            <button type="button" class="boton-imprimir-estadisticas" onclick="imprimirEstadisticasMes()">🖨️ Imprimir</button>
+                            <button type="button" class="boton-imprimir-estadisticas" onclick="guardarEstadisticasPDF()">📄 Guardar PDF</button>
                         </div>
                         <div id="contenido-estadisticas-mes" class="grid-estadisticas">
                             <p class="carrito-vacio">Cargando estadísticas...</p>
-                        </div>
-                    </div>
-
-                    <div class="panel-cupones">
-                        <h4>🏷️ Códigos de descuento</h4>
-                        <div class="grupo-nuevo-cupon">
-                            <input type="text" id="nuevo-cupon-codigo" placeholder="Código, ej: VERANO10">
-                            <select id="nuevo-cupon-tipo">
-                                <option value="porcentaje">% Porcentaje</option>
-                                <option value="monto">$ Monto fijo</option>
-                            </select>
-                            <input type="number" id="nuevo-cupon-valor" placeholder="Valor" min="1">
-                            <button type="button" onclick="agregarCupon()">Agregar</button>
-                        </div>
-                        <div id="lista-cupones-admin" class="lista-cupones-admin">
-                            <p class="carrito-vacio">Cargando cupones...</p>
                         </div>
                     </div>
 
@@ -434,7 +421,20 @@
                     <div id="lista-admin-pedidos" class="lista-admin-testimonios">
                         <p class="carrito-vacio">Cargando...</p>
                     </div>
+
+                    <div class="panel-cupones">
+                        <h4>🏷️ Códigos de descuento</h4>
+                        <div class="grupo-nuevo-cupon">
+                            <input type="text" id="nuevo-cupon-codigo" placeholder="Código, ej: VERANO10">
+                            <input type="number" id="nuevo-cupon-valor" placeholder="Descuento %" min="1" max="100">
+                            <button type="button" onclick="agregarCupon()">Agregar</button>
+                        </div>
+                        <div id="lista-cupones-admin" class="lista-cupones-admin">
+                            <p class="carrito-vacio">Cargando cupones...</p>
+                        </div>
+                    </div>
                 </div>
+
 
                 <div id="panel-admin-testimonios" class="panel-admin" style="display:none;">
                     <h3>🛠️ Panel de administrador</h3>
@@ -460,6 +460,42 @@
         </div>
     </div>
 
+    <div id="modal-estado-pedido" class="modal-fondo">
+        <div class="modal-contenido modal-carrito-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalEstadoPedido()">&times;</span>
+            <h3>Estado de tu pedido 📦</h3>
+
+            <div id="contenido-modal-estado-pedido">
+                <p class="carrito-vacio">Todavía no tenemos información de tu pedido.</p>
+            </div>
+
+            <button type="button" class="boton-secundario-modal" onclick="cerrarSeguimientoPedido()">
+                ✕ Dejar de ver este pedido
+            </button>
+        </div>
+    </div>
+
+    <!-- Reemplaza los alert() nativos del navegador por un cartel lindo y acorde a la marca -->
+    <div id="modal-aviso" class="modal-fondo modal-aviso-fondo">
+        <div class="modal-contenido modal-aviso-contenido">
+            <div id="icono-aviso" class="icono-aviso icono-aviso-info">💬</div>
+            <p id="mensaje-aviso" class="mensaje-aviso"></p>
+            <button type="button" id="boton-aviso-aceptar" class="boton-enviar-modal" onclick="cerrarModalAviso()">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Reemplaza los confirm() nativos del navegador -->
+    <div id="modal-confirmacion" class="modal-fondo modal-aviso-fondo">
+        <div class="modal-contenido modal-aviso-contenido">
+            <div class="icono-aviso icono-aviso-advertencia">❓</div>
+            <p id="mensaje-confirmacion" class="mensaje-aviso"></p>
+            <div class="botones-confirmacion">
+                <button type="button" class="boton-secundario-modal" onclick="responderConfirmacion(false)">Cancelar</button>
+                <button type="button" id="boton-confirmacion-aceptar" class="boton-enviar-modal" onclick="responderConfirmacion(true)">Sí, continuar</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="pie-pagina">
         <div class="redes-sociales">
             <a href="https://www.instagram.com/chrisnutcl/" target="_blank">Instagram</a>
@@ -472,6 +508,9 @@
         <button id="boton-carrito-flotante" class="boton-flotante carrito-flotante" aria-label="Ver carrito" title="Ver carrito" style="display:none;">
             🛒 <span id="contador-carrito-flotante" class="contador-carrito-flotante">0</span>
         </button>
+        <button id="boton-estado-pedido-flotante" class="boton-flotante estado-pedido-flotante" aria-label="Ver estado de tu pedido" title="Ver estado de tu pedido" style="display:none;">
+            <span id="icono-estado-pedido-flotante">⏳</span>
+        </button>
         <a href="https://wa.me/qr/JPOAXZ6QHLFOJ1" class="boton-flotante whatsapp-flotante" target="_blank">
             <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Chrisnut">
         </a>
@@ -481,6 +520,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
     <script>
     const firebaseConfig = {
@@ -722,8 +763,84 @@
         cancelado: "Cancelado"
     };
 
+    // Guarda en memoria todos los pedidos ya cargados del usuario, para poder
+    // filtrarlos por mes sin tener que volver a consultar Firestore.
+    let historialPedidosUsuarioActual = [];
+
+    // Devuelve una clave tipo "2026-07" a partir de la fecha del pedido,
+    // para poder agrupar/filtrar por mes.
+    function claveMesPedido(fecha) {
+        try {
+            const fechaJS = fecha.toDate ? fecha.toDate() : new Date(fecha);
+            const año = fechaJS.getFullYear();
+            const mes = String(fechaJS.getMonth() + 1).padStart(2, "0");
+            return `${año}-${mes}`;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    // Convierte una clave "2026-07" en un texto legible: "Julio 2026"
+    function nombreMesPedidoDesdeClave(claveMes) {
+        const [año, mes] = claveMes.split("-").map(Number);
+        const fechaReferencia = new Date(año, mes - 1, 1);
+        const texto = fechaReferencia.toLocaleDateString("es-CL", { month: "long", year: "numeric" });
+        return texto.charAt(0).toUpperCase() + texto.slice(1);
+    }
+
+    function construirTarjetaPedido(pedido, mostrarBotonRepetir) {
+        const estadoClave = pedido.estado || "pendiente";
+        const estadoTexto = textoEstadoPedido[estadoClave] || estadoClave;
+
+        let itemsHtml = "";
+        (pedido.items || []).forEach(item => {
+            itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
+        });
+
+        return `
+            <div class="pedido-tarjeta">
+                <div class="pedido-encabezado">
+                    <span class="pedido-fecha">${formatearFechaPedido(pedido.fecha)}</span>
+                    <span class="pedido-estado pedido-estado-${estadoClave}">${estadoTexto}</span>
+                </div>
+                <ul class="pedido-items">${itemsHtml}</ul>
+                <div class="pedido-total">Total: ${formatearPrecio(pedido.total || 0)}</div>
+                ${mostrarBotonRepetir ? `<button type="button" class="boton-repetir-pedido" onclick='repetirPedido(${JSON.stringify(pedido.items || [])})'>🔁 Repetir este pedido</button>` : ""}
+            </div>
+        `;
+    }
+
+    // Vuelve a pintar la lista según el mes elegido en el <select> (o todos).
+    // No consulta Firestore de nuevo: filtra lo que ya está en memoria.
+    function renderizarHistorialPedidosFiltrado() {
+        const contenedor = document.getElementById("lista-pedidos-perfil");
+        const selectorMes = document.getElementById("filtro-mes-historial-pedidos");
+        if (!contenedor) return;
+
+        const mesElegido = selectorMes ? selectorMes.value : "todos";
+        const pedidosFiltrados = mesElegido === "todos"
+            ? historialPedidosUsuarioActual
+            : historialPedidosUsuarioActual.filter(pedido => claveMesPedido(pedido.fecha) === mesElegido);
+
+        if (pedidosFiltrados.length === 0) {
+            contenedor.innerHTML = '<p class="carrito-vacio">No tienes pedidos en ese mes.</p>';
+            return;
+        }
+
+        // El botón "Repetir este pedido" solo debe verse en el pedido más
+        // reciente de todo el historial (no en el primero de cada filtro).
+        const pedidoMasReciente = historialPedidosUsuarioActual[0];
+
+        let html = "";
+        pedidosFiltrados.forEach(pedido => {
+            html += construirTarjetaPedido(pedido, pedido === pedidoMasReciente);
+        });
+        contenedor.innerHTML = html;
+    }
+
     async function cargarHistorialPedidos(uid) {
         const contenedor = document.getElementById("lista-pedidos-perfil");
+        const selectorMes = document.getElementById("filtro-mes-historial-pedidos");
         if (!contenedor) return;
 
         try {
@@ -733,37 +850,34 @@
                 .get();
 
             if (snapshot.empty) {
+                historialPedidosUsuarioActual = [];
+                if (selectorMes) selectorMes.style.display = "none";
                 contenedor.innerHTML = '<p class="carrito-vacio">Todavía no has hecho ningún pedido.</p>';
                 return;
             }
 
-            let html = "";
-            let esElPrimero = true;
-            snapshot.forEach((doc) => {
-                const pedido = doc.data();
-                const estadoClave = pedido.estado || "pendiente";
-                const estadoTexto = textoEstadoPedido[estadoClave] || estadoClave;
+            historialPedidosUsuarioActual = snapshot.docs.map(doc => doc.data());
 
-                let itemsHtml = "";
-                (pedido.items || []).forEach(item => {
-                    itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
+            // Arma las opciones del filtro solo con los meses que realmente
+            // tienen pedidos (en orden del más reciente al más antiguo).
+            if (selectorMes) {
+                const mesesConPedidos = [];
+                historialPedidosUsuarioActual.forEach(pedido => {
+                    const clave = claveMesPedido(pedido.fecha);
+                    if (clave && !mesesConPedidos.includes(clave)) mesesConPedidos.push(clave);
                 });
 
-                html += `
-                    <div class="pedido-tarjeta">
-                        <div class="pedido-encabezado">
-                            <span class="pedido-fecha">${formatearFechaPedido(pedido.fecha)}</span>
-                            <span class="pedido-estado pedido-estado-${estadoClave}">${estadoTexto}</span>
-                        </div>
-                        <ul class="pedido-items">${itemsHtml}</ul>
-                        <div class="pedido-total">Total: ${formatearPrecio(pedido.total || 0)}</div>
-                        ${esElPrimero ? `<button type="button" class="boton-repetir-pedido" onclick='repetirPedido(${JSON.stringify(pedido.items || [])})'>🔁 Repetir este pedido</button>` : ""}
-                    </div>
-                `;
-                esElPrimero = false;
-            });
+                let opcionesHtml = `<option value="todos">Todos los meses</option>`;
+                mesesConPedidos.forEach(clave => {
+                    opcionesHtml += `<option value="${clave}">${nombreMesPedidoDesdeClave(clave)}</option>`;
+                });
+                selectorMes.innerHTML = opcionesHtml;
+                selectorMes.value = "todos";
+                // Si solo hay pedidos de un mes, no vale la pena mostrar el filtro.
+                selectorMes.style.display = mesesConPedidos.length > 1 ? "inline-block" : "none";
+            }
 
-            contenedor.innerHTML = html;
+            renderizarHistorialPedidosFiltrado();
         } catch (error) {
             console.error("Error al cargar el historial de pedidos: ", error);
             contenedor.innerHTML = '<p class="carrito-vacio">No pudimos cargar tus pedidos. Intenta de nuevo más tarde.</p>';
@@ -897,9 +1011,10 @@
         guardarCarritoEnFirestore();
     }
 
-    function vaciarCarrito() {
+    async function vaciarCarrito() {
         if (carrito.length === 0) return;
-        if (confirm("¿Seguro que quieres vaciar el carrito?")) {
+        const confirmado = await mostrarConfirmacion("¿Seguro que quieres vaciar el carrito?", "Sí, vaciar");
+        if (confirmado) {
             carrito = [];
             actualizarContadorCarrito();
             renderizarCarrito();
@@ -1036,7 +1151,7 @@
     async function registrarPedidoFirestore(itemsPedido, total, telefonoCliente, descuentoInfo) {
         const usuario = auth.currentUser;
         try {
-            await db.collection("pedidos").add({
+            const referenciaPedido = await db.collection("pedidos").add({
                 uid: usuario ? usuario.uid : null,
                 nombreCliente: usuario ? (usuario.displayName || "Sin nombre") : "Invitado",
                 correoCliente: usuario ? usuario.email : null,
@@ -1048,21 +1163,23 @@
                 estado: "pendiente",
                 fecha: new Date()
             });
+            return referenciaPedido.id;
         } catch (error) {
             console.error("Error al registrar el pedido: ", error);
+            return null;
         }
     }
 
     async function enviarPedidoWhatsapp() {
         if (carrito.length === 0) {
-            alert("Tu carrito está vacío. Agrega algún producto antes de enviar tu pedido.");
+            mostrarAviso("Tu carrito está vacío. Agrega algún producto antes de enviar tu pedido.", "advertencia");
             return;
         }
 
         const inputTelefono = document.getElementById("telefono-carrito");
         const telefonoDigitado = (inputTelefono.value || "").trim();
         if (!/^[0-9]{8}$/.test(telefonoDigitado)) {
-            alert("Ingresa tu número de WhatsApp (8 dígitos, sin el +56 9) para poder avisarte del estado de tu pedido.");
+            mostrarAviso("Ingresa tu número de WhatsApp (8 dígitos, sin el +56 9) para poder avisarte del estado de tu pedido.", "advertencia");
             inputTelefono.focus();
             return;
         }
@@ -1089,8 +1206,10 @@
             ? { codigo: cuponAplicado.codigo, montoDescuento }
             : null;
 
-        // Guardamos el pedido antes de abrir WhatsApp (copiamos el arreglo tal cual está)
-        await registrarPedidoFirestore(carrito.map(item => ({ ...item })), totalFinal, telefonoCliente, descuentoInfo);
+        // Guardamos el pedido antes de abrir WhatsApp (copiamos el arreglo tal cual está,
+        // ANTES de vaciar el carrito, para poder mostrar el logo de estado al instante)
+        const itemsPedidoEnviado = carrito.map(item => ({ ...item }));
+        const idPedidoRegistrado = await registrarPedidoFirestore(itemsPedidoEnviado, totalFinal, telefonoCliente, descuentoInfo);
 
         const mensajeCodificado = encodeURIComponent(lineas);
         const urlWhatsapp = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP_CHRISNUT}&text=${mensajeCodificado}`;
@@ -1107,6 +1226,264 @@
         guardarCarritoLocal();
         guardarCarritoEnFirestore();
         cerrarModalCarrito();
+
+        // Justo cuando el carrito flotante desaparece (carrito vacío), activamos
+        // el logo flotante de "estado del pedido" para poder seguirlo en vivo.
+        // Le pasamos los datos que ya tenemos a mano para que el logo aparezca
+        // de inmediato, sin depender de poder releer el pedido desde Firestore.
+        if (idPedidoRegistrado) {
+            iniciarSeguimientoPedido(idPedidoRegistrado, {
+                items: itemsPedidoEnviado,
+                total: totalFinal,
+                estado: "pendiente",
+                fecha: new Date()
+            });
+        }
+    }
+
+    // ==========================================
+    // LOGO FLOTANTE DE ESTADO DEL PEDIDO
+    // ==========================================
+    // Apenas el cliente envía su pedido (y el carrito flotante se vacía y
+    // desaparece), este logo flotante toma su lugar arriba del botón de
+    // WhatsApp. Muestra en vivo el estado del pedido (pendiente, confirmado,
+    // entregado o cancelado) escuchando el documento en Firestore, y al
+    // hacer clic abre un detalle con los productos, el total y el estado.
+    // Además se guarda en localStorage para seguir mostrándose aunque el
+    // cliente recargue o cierre y vuelva a abrir la página.
+    const CLAVE_SEGUIMIENTO_PEDIDO = "chrisnut_pedido_seguimiento";
+    let cancelarSeguimientoPedido = null;
+
+    const iconoEstadoPedido = {
+        pendiente: "⏳",
+        confirmado: "👍",
+        entregado: "✅",
+        cancelado: "❌"
+    };
+
+    const mensajeAmigableEstadoPedido = {
+        pendiente: "Recibimos tu pedido y muy pronto lo confirmaremos. 🥐",
+        confirmado: "¡Tu pedido fue confirmado y ya lo estamos preparando! 🍞",
+        entregado: "¡Tu pedido ya fue entregado, que lo disfrutes! 💛",
+        cancelado: "Este pedido fue cancelado. Cualquier duda, escríbenos por WhatsApp."
+    };
+
+    // Guarda el pedido en seguimiento junto con los últimos datos conocidos
+    // (items, total, estado, fecha), para poder pintar el logo al instante
+    // -incluso recién cargada la página- sin depender de una lectura a
+    // Firestore que quizás las reglas de seguridad no permitan para un
+    // invitado (sin sesión iniciada).
+    function guardarSeguimientoPedidoLocal(idPedido, datos) {
+        try {
+            const registro = { id: idPedido };
+            if (datos) {
+                let fechaISO;
+                try {
+                    fechaISO = (datos.fecha && datos.fecha.toDate ? datos.fecha.toDate() : new Date(datos.fecha)).toISOString();
+                } catch (error) {
+                    fechaISO = new Date().toISOString();
+                }
+                registro.datos = {
+                    items: datos.items || [],
+                    total: datos.total || 0,
+                    estado: datos.estado || "pendiente",
+                    fecha: fechaISO
+                };
+            }
+            localStorage.setItem(CLAVE_SEGUIMIENTO_PEDIDO, JSON.stringify(registro));
+        } catch (error) {}
+    }
+
+    function borrarSeguimientoPedidoLocal() {
+        try {
+            localStorage.removeItem(CLAVE_SEGUIMIENTO_PEDIDO);
+        } catch (error) {}
+    }
+
+    // Deja de escuchar cambios y oculta el logo, pero sin borrar el registro
+    // local (se usa, por ejemplo, antes de empezar a seguir un pedido nuevo).
+    function detenerSeguimientoPedido() {
+        if (cancelarSeguimientoPedido) {
+            cancelarSeguimientoPedido();
+            cancelarSeguimientoPedido = null;
+        }
+        const botonFlotante = document.getElementById("boton-estado-pedido-flotante");
+        if (botonFlotante) botonFlotante.style.display = "none";
+    }
+
+    // La usa el botón "Dejar de ver este pedido" dentro del modal: el cliente
+    // decide ocultar el seguimiento definitivamente.
+    function cerrarSeguimientoPedido() {
+        detenerSeguimientoPedido();
+        borrarSeguimientoPedidoLocal();
+        cerrarModalEstadoPedido();
+    }
+
+    // Pinta el logo flotante y el contenido del modal con los datos que sea
+    // (locales o recién llegados de Firestore) y actualiza la caché local.
+    function aplicarEstadoPedidoAlFlotante(idPedido, datos) {
+        const botonFlotante = document.getElementById("boton-estado-pedido-flotante");
+        const iconoFlotante = document.getElementById("icono-estado-pedido-flotante");
+        if (!botonFlotante || !iconoFlotante) return;
+
+        const estado = datos.estado || "pendiente";
+
+        botonFlotante.className = "boton-flotante estado-pedido-flotante estado-pedido-flotante-" + estado;
+        botonFlotante.style.display = "flex";
+        iconoFlotante.textContent = iconoEstadoPedido[estado] || "📦";
+
+        renderizarContenidoEstadoPedido(datos);
+        guardarSeguimientoPedidoLocal(idPedido, datos);
+    }
+
+    // datosIniciales (opcional): lo que ya sabemos apenas se hace el pedido
+    // (items, total, estado "pendiente", fecha), para mostrar el logo de
+    // inmediato sin esperar ninguna respuesta del servidor. Si después se
+    // puede escuchar el documento en vivo, se va actualizando solo; si no se
+    // puede (por permisos), el logo igual queda visible con esos datos.
+    function iniciarSeguimientoPedido(idPedido, datosIniciales) {
+        detenerSeguimientoPedido(); // por si ya había un pedido anterior en seguimiento
+
+        if (datosIniciales) {
+            aplicarEstadoPedidoAlFlotante(idPedido, datosIniciales);
+        } else {
+            guardarSeguimientoPedidoLocal(idPedido);
+        }
+
+        cancelarSeguimientoPedido = db.collection("pedidos").doc(idPedido)
+            .onSnapshot((doc) => {
+                if (!doc.exists) {
+                    detenerSeguimientoPedido();
+                    borrarSeguimientoPedidoLocal();
+                    return;
+                }
+                aplicarEstadoPedidoAlFlotante(idPedido, doc.data());
+            }, (error) => {
+                // No se pudo escuchar en vivo (por ejemplo, por permisos de
+                // Firestore para invitados). El logo ya quedó visible con los
+                // datos iniciales, así que no lo ocultamos por este error.
+                console.error("Error al seguir el estado del pedido en vivo: ", error);
+            });
+    }
+
+    function renderizarContenidoEstadoPedido(datos) {
+        const contenedor = document.getElementById("contenido-modal-estado-pedido");
+        if (!contenedor) return;
+
+        const estado = datos.estado || "pendiente";
+        const estadoTexto = textoEstadoPedido[estado] || estado;
+
+        let itemsHtml = "";
+        (datos.items || []).forEach(item => {
+            itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
+        });
+
+        contenedor.innerHTML = `
+            <div class="pedido-tarjeta">
+                <div class="pedido-encabezado">
+                    <span class="pedido-fecha">${formatearFechaPedido(datos.fecha)}</span>
+                    <span class="pedido-estado pedido-estado-${estado}">${estadoTexto}</span>
+                </div>
+                <ul class="pedido-items">${itemsHtml}</ul>
+                <div class="pedido-total">Total: ${formatearPrecio(datos.total || 0)}</div>
+                <p class="mensaje-seguimiento-pedido">${mensajeAmigableEstadoPedido[estado] || ""}</p>
+            </div>
+        `;
+    }
+
+    function abrirModalEstadoPedido() {
+        document.getElementById("modal-estado-pedido").style.display = "flex";
+    }
+    function cerrarModalEstadoPedido() {
+        document.getElementById("modal-estado-pedido").style.display = "none";
+    }
+
+    // Si el cliente ya tenía un pedido en seguimiento (por ejemplo, recargó la
+    // página o volvió más tarde), lo restauramos automáticamente.
+    function restaurarSeguimientoPedidoGuardado() {
+        try {
+            const guardado = JSON.parse(localStorage.getItem(CLAVE_SEGUIMIENTO_PEDIDO) || "null");
+            if (guardado && guardado.id) {
+                const datosIniciales = guardado.datos
+                    ? { ...guardado.datos, fecha: new Date(guardado.datos.fecha) }
+                    : null;
+                iniciarSeguimientoPedido(guardado.id, datosIniciales);
+            }
+        } catch (error) {}
+    }
+
+    // ==========================================
+    // CARTELES DE AVISO Y CONFIRMACIÓN (reemplazan alert() y confirm())
+    // ==========================================
+    const ICONOS_AVISO = {
+        info: "💬",
+        exito: "🎉",
+        error: "😔",
+        advertencia: "⚠️"
+    };
+
+    // Muestra un cartel bonito en vez del alert() nativo del navegador.
+    // tipo: "info" (por defecto), "exito", "error" o "advertencia".
+    function mostrarAviso(mensaje, tipo) {
+        const tipoFinal = tipo || "info";
+        const modal = document.getElementById("modal-aviso");
+        const icono = document.getElementById("icono-aviso");
+        const texto = document.getElementById("mensaje-aviso");
+
+        if (!modal || !icono || !texto) {
+            alert(mensaje); // resguardo por si el modal no llegó a existir en el DOM
+            return;
+        }
+
+        texto.textContent = mensaje;
+        icono.textContent = ICONOS_AVISO[tipoFinal] || ICONOS_AVISO.info;
+        icono.className = "icono-aviso icono-aviso-" + tipoFinal;
+        // Reinicia la animación del ícono cada vez que se muestra
+        icono.style.animation = "none";
+        void icono.offsetWidth;
+        icono.style.animation = "";
+        modal.style.display = "flex";
+    }
+
+    function cerrarModalAviso() {
+        document.getElementById("modal-aviso").style.display = "none";
+    }
+
+    // Muestra un cartel de confirmación bonito en vez del confirm() nativo.
+    // Devuelve una Promise<boolean>: true si el usuario confirma, false si cancela.
+    // Uso: const confirmado = await mostrarConfirmacion("¿Seguro?", "Sí, eliminar");
+    let resolverConfirmacionPendiente = null;
+
+    function mostrarConfirmacion(mensaje, textoBotonAceptar) {
+        return new Promise((resolve) => {
+            const modal = document.getElementById("modal-confirmacion");
+            const texto = document.getElementById("mensaje-confirmacion");
+            const botonAceptar = document.getElementById("boton-confirmacion-aceptar");
+
+            if (!modal || !texto || !botonAceptar) {
+                resolve(confirm(mensaje)); // resguardo por si el modal no llegó a existir en el DOM
+                return;
+            }
+
+            // Si ya había una confirmación pendiente sin responder, la damos
+            // por cancelada antes de abrir la nueva.
+            if (resolverConfirmacionPendiente) {
+                resolverConfirmacionPendiente(false);
+            }
+
+            texto.textContent = mensaje;
+            botonAceptar.textContent = textoBotonAceptar || "Sí, continuar";
+            resolverConfirmacionPendiente = resolve;
+            modal.style.display = "flex";
+        });
+    }
+
+    function responderConfirmacion(respuesta) {
+        document.getElementById("modal-confirmacion").style.display = "none";
+        if (resolverConfirmacionPendiente) {
+            resolverConfirmacionPendiente(respuesta);
+            resolverConfirmacionPendiente = null;
+        }
     }
 
     // ==========================================
@@ -1342,7 +1719,7 @@
         db.collection("pedidos").doc(idPedido).update({ estado: nuevoEstado })
             .catch((error) => {
                 console.error("Error al cambiar el estado del pedido: ", error);
-                alert("No se pudo cambiar el estado del pedido. Intenta de nuevo.");
+                mostrarAviso("No se pudo cambiar el estado del pedido. Intenta de nuevo.", "error");
             });
     }
 
@@ -1356,6 +1733,10 @@
         const envoltura = selectElemento.closest(".selector-estado-envoltura");
         if (envoltura) {
             envoltura.className = "selector-estado-envoltura selector-estado-" + nuevoEstado;
+            // Reinicia la animación de "rebote" para dar feedback visual del cambio
+            envoltura.classList.remove("animar-cambio");
+            void envoltura.offsetWidth;
+            envoltura.classList.add("animar-cambio");
         }
         cambiarEstadoPedidoAdmin(idPedido, nuevoEstado);
 
@@ -1424,7 +1805,7 @@
         db.collection("testimonios").doc(idTestimonio).update({ aprobado: true })
             .catch((error) => {
                 console.error("Error al aprobar el testimonio: ", error);
-                alert("No se pudo aprobar la opinión. Intenta de nuevo.");
+                mostrarAviso("No se pudo aprobar la opinión. Intenta de nuevo.", "error");
             });
     }
 
@@ -1472,21 +1853,19 @@
 
     async function agregarCupon() {
         const codigoInput = document.getElementById("nuevo-cupon-codigo");
-        const tipoInput = document.getElementById("nuevo-cupon-tipo");
         const valorInput = document.getElementById("nuevo-cupon-valor");
 
         const codigo = (codigoInput.value || "").trim().toUpperCase();
-        const tipo = tipoInput.value;
         const valor = parseFloat(valorInput.value);
 
-        if (!codigo || !valor || valor <= 0) {
-            alert("Escribe un código y un valor válido para el descuento.");
+        if (!codigo || !valor || valor <= 0 || valor > 100) {
+            mostrarAviso("Escribe un código y un porcentaje de descuento válido (entre 1 y 100).", "advertencia");
             return;
         }
 
         try {
             await db.collection("cupones").doc(codigo).set({
-                tipo,
+                tipo: "porcentaje",
                 valor,
                 activo: true,
                 creado: new Date()
@@ -1495,7 +1874,7 @@
             valorInput.value = "";
         } catch (error) {
             console.error("Error al crear el cupón: ", error);
-            alert("No se pudo crear el código. Intenta de nuevo.");
+            mostrarAviso("No se pudo crear el código. Intenta de nuevo.", "error");
         }
     }
 
@@ -1504,8 +1883,9 @@
             .catch((error) => console.error("Error al actualizar el cupón: ", error));
     }
 
-    function eliminarCupon(codigo) {
-        if (!confirm(`¿Eliminar el código "${codigo}"?`)) return;
+    async function eliminarCupon(codigo) {
+        const confirmado = await mostrarConfirmacion(`¿Eliminar el código "${codigo}"?`, "Sí, eliminar");
+        if (!confirmado) return;
         db.collection("cupones").doc(codigo).delete()
             .catch((error) => console.error("Error al eliminar el cupón: ", error));
     }
@@ -1553,7 +1933,7 @@
             const ticketPromedio = cantidadPedidos > 0 ? Math.round(totalVendido / cantidadPedidos) : 0;
             const nombreMes = ahora.toLocaleDateString("es-CL", { month: "long", year: "numeric" });
 
-            ultimasEstadisticasMes = { totalVendido, cantidadPedidos, productoTop, ticketPromedio, nombreMes };
+            ultimasEstadisticasMes = { totalVendido, cantidadPedidos, productoTop, ticketPromedio, nombreMes, conteoProductos };
 
             contenedor.innerHTML = `
                 <div class="tarjeta-metrica"><span class="etiqueta-metrica">Vendido en ${nombreMes}</span><span class="valor-metrica">${formatearPrecio(totalVendido)}</span></div>
@@ -1567,46 +1947,117 @@
         }
     }
 
-    // Arma un informe limpio (sin el resto de la página) y lanza la impresión del navegador
-    function imprimirEstadisticasMes() {
+    // Genera un informe en PDF (encabezado con marca, tabla de métricas y
+    // detalle de productos vendidos) y lo descarga directo, sin pasar por
+    // el diálogo de impresión del navegador.
+    function guardarEstadisticasPDF() {
         if (!ultimasEstadisticasMes) {
-            alert("Espera a que carguen las estadísticas antes de imprimir.");
+            mostrarAviso("Espera a que carguen las estadísticas antes de guardar el PDF.", "advertencia");
             return;
         }
-        const { totalVendido, cantidadPedidos, productoTop, ticketPromedio, nombreMes } = ultimasEstadisticasMes;
-        const reporte = document.getElementById("reporte-imprimible");
-        reporte.innerHTML = `
-            <h1>Chrisnut · Informe de ${nombreMes}</h1>
-            <p>Generado el ${new Date().toLocaleDateString("es-CL")}</p>
-            <table>
-                <tr><td>Total vendido</td><td>${formatearPrecio(totalVendido)}</td></tr>
-                <tr><td>Cantidad de pedidos</td><td>${cantidadPedidos}</td></tr>
-                <tr><td>Ticket promedio</td><td>${formatearPrecio(ticketPromedio)}</td></tr>
-                <tr><td>Producto más pedido</td><td>${productoTop}</td></tr>
-            </table>
-        `;
-        document.body.classList.add("modo-impresion");
-        window.print();
-        setTimeout(() => document.body.classList.remove("modo-impresion"), 500);
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+            mostrarAviso("No se pudo cargar el generador de PDF. Revisa tu conexión e intenta de nuevo.", "error");
+            return;
+        }
+
+        const { totalVendido, cantidadPedidos, productoTop, ticketPromedio, nombreMes, conteoProductos } = ultimasEstadisticasMes;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: "pt", format: "a4" });
+        const anchoPagina = doc.internal.pageSize.getWidth();
+        const colorAcento = [180, 83, 9]; // tono cálido, coherente con la marca Chrisnut
+
+        // --- Encabezado con marca ---
+        doc.setFillColor(colorAcento[0], colorAcento[1], colorAcento[2]);
+        doc.rect(0, 0, anchoPagina, 90, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.text("Chrisnut", 40, 45);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.text("Panadería y Dulzura Artesanal", 40, 65);
+
+        doc.setFontSize(11);
+        const nombreMesCapitalizado = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
+        doc.text(`Informe de estadísticas · ${nombreMesCapitalizado}`, anchoPagina - 40, 45, { align: "right" });
+        doc.text(`Generado el ${new Date().toLocaleDateString("es-CL")}`, anchoPagina - 40, 65, { align: "right" });
+
+        // --- Tabla de métricas principales ---
+        doc.autoTable({
+            startY: 120,
+            head: [["Métrica", "Valor"]],
+            body: [
+                ["Total vendido", formatearPrecio(totalVendido)],
+                ["Cantidad de pedidos", String(cantidadPedidos)],
+                ["Ticket promedio", formatearPrecio(ticketPromedio)],
+                ["Producto más pedido", productoTop]
+            ],
+            theme: "striped",
+            headStyles: { fillColor: colorAcento, textColor: 255, fontStyle: "bold" },
+            styles: { fontSize: 11, cellPadding: 8 },
+            margin: { left: 40, right: 40 }
+        });
+
+        // --- Detalle de productos vendidos en el mes ---
+        const filasProductos = Object.entries(conteoProductos || {})
+            .sort((a, b) => b[1] - a[1])
+            .map(([nombre, cantidad]) => [nombre, String(cantidad)]);
+
+        if (filasProductos.length > 0) {
+            const siguienteY = doc.lastAutoTable.finalY + 30;
+            doc.setTextColor(40, 40, 40);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(13);
+            doc.text("Detalle de productos vendidos", 40, siguienteY);
+
+            doc.autoTable({
+                startY: siguienteY + 12,
+                head: [["Producto", "Unidades vendidas"]],
+                body: filasProductos,
+                theme: "grid",
+                headStyles: { fillColor: colorAcento, textColor: 255, fontStyle: "bold" },
+                styles: { fontSize: 10.5, cellPadding: 7 },
+                margin: { left: 40, right: 40 }
+            });
+        }
+
+        // --- Pie de página ---
+        const totalPaginas = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPaginas; i++) {
+            doc.setPage(i);
+            const alturaPagina = doc.internal.pageSize.getHeight();
+            doc.setDrawColor(220, 220, 220);
+            doc.line(40, alturaPagina - 50, anchoPagina - 40, alturaPagina - 50);
+            doc.setFontSize(9);
+            doc.setTextColor(120, 120, 120);
+            doc.setFont("helvetica", "normal");
+            doc.text("Chrisnut · Panadería y Dulzura Artesanal", 40, alturaPagina - 32);
+            doc.text(`Página ${i} de ${totalPaginas}`, anchoPagina - 40, alturaPagina - 32, { align: "right" });
+        }
+
+        const nombreArchivo = `Chrisnut-informe-${nombreMes.replace(/\s+/g, "-").toLowerCase()}.pdf`;
+        doc.save(nombreArchivo);
     }
 
-    function rechazarTestimonioAdmin(idTestimonio) {
-        if (!confirm("¿Eliminar esta opinión pendiente? Esta acción no se puede deshacer.")) return;
+    async function rechazarTestimonioAdmin(idTestimonio) {
+        const confirmado = await mostrarConfirmacion("¿Eliminar esta opinión pendiente? Esta acción no se puede deshacer.", "Sí, eliminar");
+        if (!confirmado) return;
         db.collection("testimonios").doc(idTestimonio).delete()
             .catch((error) => {
                 console.error("Error al eliminar el testimonio: ", error);
-                alert("No se pudo eliminar la opinión. Intenta de nuevo.");
+                mostrarAviso("No se pudo eliminar la opinión. Intenta de nuevo.", "error");
             });
     }
 
     // Permite al admin borrar, desde la sección pública "Ustedes", una opinión
     // que ya estaba publicada (no solo las pendientes por aprobar).
-    function eliminarTestimonioPublicoAdmin(idTestimonio) {
-        if (!confirm("¿Eliminar esta opinión ya publicada? Esta acción no se puede deshacer.")) return;
+    async function eliminarTestimonioPublicoAdmin(idTestimonio) {
+        const confirmado = await mostrarConfirmacion("¿Eliminar esta opinión ya publicada? Esta acción no se puede deshacer.", "Sí, eliminar");
+        if (!confirmado) return;
         db.collection("testimonios").doc(idTestimonio).delete()
             .catch((error) => {
                 console.error("Error al eliminar el testimonio publicado: ", error);
-                alert("No se pudo eliminar la opinión. Intenta de nuevo.");
+                mostrarAviso("No se pudo eliminar la opinión. Intenta de nuevo.", "error");
             });
     }
 
@@ -1629,6 +2080,10 @@
         // Sincroniza el contador/botón flotante del carrito con lo que ya
         // estaba guardado en este dispositivo, apenas carga la página.
         actualizarContadorCarrito();
+
+        // Si había un pedido en seguimiento (logo flotante de estado), lo
+        // restauramos para que el cliente lo siga viendo aunque recargue.
+        restaurarSeguimientoPedidoGuardado();
 
         botonModoOscuro.addEventListener("click", () => {
             const esOscuroActual = document.documentElement.getAttribute("data-tema") === "oscuro";
@@ -1663,6 +2118,12 @@
 
         // Botón flotante del carrito (arriba de WhatsApp, solo visible con items)
         document.getElementById("boton-carrito-flotante").addEventListener("click", abrirModalCarrito);
+
+        // Logo flotante de estado del pedido (aparece al enviar un pedido)
+        document.getElementById("boton-estado-pedido-flotante").addEventListener("click", abrirModalEstadoPedido);
+
+        // Filtro por mes del historial de pedidos del cliente
+        document.getElementById("filtro-mes-historial-pedidos").addEventListener("change", renderizarHistorialPedidosFiltrado);
 
         // Enlace "Mis Favoritos" dentro del desplegable de atajos
         document.getElementById("enlace-favoritos-menu").addEventListener("click", (e) => {
@@ -2053,6 +2514,9 @@
         const modalCarrito = document.getElementById('modal-carrito');
         const modalPerfil = document.getElementById('modal-perfil');
         const modalFavoritos = document.getElementById('modal-favoritos');
+        const modalEstadoPedido = document.getElementById('modal-estado-pedido');
+        const modalAviso = document.getElementById('modal-aviso');
+        const modalConfirmacion = document.getElementById('modal-confirmacion');
         if (event.target == modalTestimonio) {
             modalTestimonio.style.display = 'none';
         }
@@ -2064,6 +2528,15 @@
         }
         if (event.target == modalFavoritos) {
             modalFavoritos.style.display = 'none';
+        }
+        if (event.target == modalEstadoPedido) {
+            modalEstadoPedido.style.display = 'none';
+        }
+        if (event.target == modalAviso) {
+            cerrarModalAviso();
+        }
+        if (event.target == modalConfirmacion) {
+            responderConfirmacion(false);
         }
     }
     </script>

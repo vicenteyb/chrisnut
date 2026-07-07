@@ -1020,6 +1020,87 @@ main > section {
     color: #991b1b;
 }
 
+/* Selector de estado del pedido (panel admin): un <select> real y bonito,
+   coloreado según el estado actual, para poder elegir cualquier estado
+   directamente en vez de solo avanzar de a uno. */
+.selector-estado-envoltura {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 12px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selector-estado-envoltura::after {
+    content: "▾";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+.selector-estado-pedido {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 5px 26px 5px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: inherit;
+    transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.selector-estado-pedido:hover {
+    filter: brightness(1.08);
+}
+
+.selector-estado-pedido:focus {
+    outline: none;
+}
+
+.selector-estado-envoltura:has(.selector-estado-pedido:focus) {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
+
+.selector-estado-envoltura:active {
+    transform: scale(0.98);
+}
+
+.selector-estado-pendiente {
+    background-color: #f59e0b;
+    color: #ffffff;
+}
+
+.selector-estado-confirmado {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+
+.selector-estado-entregado {
+    background-color: #22c55e;
+    color: #ffffff;
+}
+
+.selector-estado-cancelado {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+.selector-estado-pedido option {
+    color: #1f2937;
+    background-color: #ffffff;
+    font-weight: 600;
+}
+
 .pedido-items {
     margin: 0 0 8px;
     padding-left: 18px;
@@ -1531,6 +1612,12 @@ html[data-tema="oscuro"] .pedido-estado-pendiente { background-color: #4a3a12; c
 html[data-tema="oscuro"] .pedido-estado-confirmado { background-color: #123a4a; color: #7cc2f5; }
 html[data-tema="oscuro"] .pedido-estado-entregado { background-color: #163d1f; color: #86e29b; }
 html[data-tema="oscuro"] .pedido-estado-cancelado { background-color: #4a1616; color: #f58686; }
+
+html[data-tema="oscuro"] .selector-estado-pendiente { background-color: #b8760a; color: #fff5e0; }
+html[data-tema="oscuro"] .selector-estado-confirmado { background-color: #2563eb; color: #eaf1ff; }
+html[data-tema="oscuro"] .selector-estado-entregado { background-color: #16a34a; color: #eafff0; }
+html[data-tema="oscuro"] .selector-estado-cancelado { background-color: #dc2626; color: #ffecec; }
+html[data-tema="oscuro"] .selector-estado-envoltura:has(.selector-estado-pedido:focus) { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15); }
 html[data-tema="oscuro"] .error-formulario { color: #f58686; }
 html[data-tema="oscuro"] .exito-formulario { color: #86e29b; }
 html[data-tema="oscuro"] .boton-secundario-modal { background-color: transparent; color: #f58686; border-color: #f58686; }
@@ -1709,4 +1796,297 @@ html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(
 .pedido-estado-clickeable:hover {
     filter: brightness(1.08);
     transform: scale(1.04);
+}
+/* ==========================================
+   CUPONES DE DESCUENTO (carrito del cliente)
+   ========================================== */
+.grupo-cupon {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.grupo-cupon input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.grupo-cupon button {
+    background-color: var(--color-acento);
+    color: white;
+    border: none;
+    padding: 0 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.mensaje-cupon {
+    font-size: 0.8rem;
+    margin: 6px 0 0;
+    min-height: 1em;
+}
+
+.mensaje-cupon-exito { color: #166534; }
+.mensaje-cupon-error { color: #991b1b; }
+
+.subtotal-tachado {
+    text-decoration: line-through;
+    color: var(--color-texto-suave);
+    font-size: 0.85em;
+    margin-right: 4px;
+}
+
+.etiqueta-descuento-total {
+    font-size: 0.75em;
+    color: #166534;
+}
+
+.grupo-telefono-carrito {
+    margin-top: 14px;
+}
+
+/* ==========================================
+   REPETIR PEDIDO (historial del cliente)
+   ========================================== */
+.boton-repetir-pedido {
+    margin-top: 10px;
+    width: 100%;
+    background-color: var(--color-acento);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.boton-repetir-pedido:hover {
+    filter: brightness(1.08);
+}
+
+/* ==========================================
+   PANEL ADMIN: notificaciones, estadísticas, cupones
+   ========================================== */
+#boton-activar-notificaciones {
+    margin-bottom: 4px;
+}
+
+.panel-estadisticas-mes {
+    margin: 18px 0;
+    padding: 14px;
+    border-radius: 10px;
+    background-color: var(--color-fondo);
+    border: 1px solid var(--color-borde-suave);
+}
+
+.panel-estadisticas-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.panel-estadisticas-encabezado h4 {
+    margin: 0;
+}
+
+.boton-imprimir-estadisticas {
+    border: 1px solid var(--color-borde);
+    background-color: var(--color-tarjeta);
+    color: var(--color-texto-principal);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.grid-estadisticas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.tarjeta-metrica {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background-color: var(--color-tarjeta);
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.etiqueta-metrica {
+    font-size: 0.72rem;
+    color: var(--color-texto-suave);
+}
+
+.valor-metrica {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: var(--color-titulo);
+}
+
+.panel-cupones {
+    margin: 18px 0;
+    padding: 14px;
+    border-radius: 10px;
+    background-color: var(--color-fondo);
+    border: 1px solid var(--color-borde-suave);
+}
+
+.panel-cupones h4 {
+    margin: 0 0 10px;
+}
+
+.grupo-nuevo-cupon {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.grupo-nuevo-cupon input,
+.grupo-nuevo-cupon select {
+    flex: 1;
+    min-width: 90px;
+    padding: 8px;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+.grupo-nuevo-cupon button {
+    background-color: var(--color-acento);
+    color: white;
+    border: none;
+    padding: 0 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.lista-cupones-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fila-cupon-admin {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--color-tarjeta);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+.fila-cupon-inactivo {
+    opacity: 0.55;
+}
+
+.codigo-cupon-admin {
+    font-weight: bold;
+    flex: 1;
+}
+
+.fila-cupon-admin button {
+    border: none;
+    background-color: var(--color-fondo);
+    border-radius: 5px;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+/* ==========================================
+   INFORME IMPRIMIBLE (estadísticas del mes)
+   ========================================== */
+.reporte-imprimible {
+    display: none;
+}
+
+@media print {
+    body.modo-impresion > *:not(#reporte-imprimible) {
+        display: none !important;
+    }
+    body.modo-impresion .reporte-imprimible {
+        display: block !important;
+        color: #000;
+    }
+    .reporte-imprimible table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 16px;
+    }
+    .reporte-imprimible td {
+        border: 1px solid #999;
+        padding: 8px 12px;
+    }
+}
+
+/* ==========================================
+   OPTIMIZACIÓN MÓVIL (iPhone / Android)
+   ========================================== */
+.header-principal {
+    padding-top: max(12px, env(safe-area-inset-top));
+}
+
+.menu-principal {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+}
+
+.modal-contenido {
+    max-height: 85vh;
+    overflow-y: auto;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    -webkit-overflow-scrolling: touch;
+}
+
+button, select, input, textarea, a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    touch-action: manipulation;
+}
+
+@media (hover: none) {
+    .pedido-estado-clickeable:hover,
+    .boton-aprobar-testimonio:hover,
+    .boton-rechazar-testimonio:hover,
+    .selector-estado-pedido:hover {
+        filter: none;
+        transform: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-estadisticas {
+        grid-template-columns: 1fr 1fr;
+    }
+    .grupo-nuevo-cupon input,
+    .grupo-nuevo-cupon select,
+    .grupo-nuevo-cupon button {
+        flex: 1 1 100%;
+    }
+    .grupo-cupon {
+        flex-direction: column;
+    }
+    .grupo-cupon button {
+        padding: 10px;
+    }
 }

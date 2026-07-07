@@ -2,7 +2,7 @@
 <html lang="es-CL">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Chrisnut - Panadería y Dulzura Artesanal | Pan Amasado, Alfajores y Más</title>
 
     <!-- SEO básico -->
@@ -255,6 +255,8 @@
         </section>
     </main>
 
+    <div id="reporte-imprimible" class="reporte-imprimible"></div>
+
     <div id="modal-testimonio" class="modal-fondo">
         <div class="modal-contenido">
             <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
@@ -291,6 +293,20 @@
 
             <div id="lista-carrito" class="lista-carrito">
                 <p class="carrito-vacio">Tu carrito está vacío.</p>
+            </div>
+
+            <div class="grupo-cupon">
+                <input type="text" id="input-cupon" placeholder="¿Tienes un código de descuento?">
+                <button type="button" id="boton-aplicar-cupon" onclick="aplicarCupon()">Aplicar</button>
+            </div>
+            <p id="mensaje-cupon" class="mensaje-cupon"></p>
+
+            <div class="grupo-modal grupo-telefono-carrito">
+                <label for="telefono-carrito">Tu número de WhatsApp (para avisarte del estado de tu pedido):</label>
+                <div class="input-telefono-contenedor">
+                    <span class="prefijo-fijo">+56 9</span>
+                    <input type="tel" id="telefono-carrito" placeholder="1234 5678" pattern="[0-9]{8}" maxlength="8">
+                </div>
             </div>
 
             <div class="carrito-total">
@@ -382,6 +398,38 @@
 
                 <div id="panel-admin-pedidos" class="panel-admin" style="display:none;">
                     <h3>📦 Panel de administrador</h3>
+
+                    <button id="boton-activar-notificaciones" class="boton-secundario-modal" onclick="activarNotificacionesAdmin()">
+                        🔔 Activar notificaciones de pedidos nuevos
+                    </button>
+                    <p id="estado-notificaciones-admin" class="texto-medidor-clave"></p>
+
+                    <div class="panel-estadisticas-mes">
+                        <div class="panel-estadisticas-encabezado">
+                            <h4>📊 Estadísticas del mes</h4>
+                            <button type="button" class="boton-imprimir-estadisticas" onclick="imprimirEstadisticasMes()">🖨️ Imprimir</button>
+                        </div>
+                        <div id="contenido-estadisticas-mes" class="grid-estadisticas">
+                            <p class="carrito-vacio">Cargando estadísticas...</p>
+                        </div>
+                    </div>
+
+                    <div class="panel-cupones">
+                        <h4>🏷️ Códigos de descuento</h4>
+                        <div class="grupo-nuevo-cupon">
+                            <input type="text" id="nuevo-cupon-codigo" placeholder="Código, ej: VERANO10">
+                            <select id="nuevo-cupon-tipo">
+                                <option value="porcentaje">% Porcentaje</option>
+                                <option value="monto">$ Monto fijo</option>
+                            </select>
+                            <input type="number" id="nuevo-cupon-valor" placeholder="Valor" min="1">
+                            <button type="button" onclick="agregarCupon()">Agregar</button>
+                        </div>
+                        <div id="lista-cupones-admin" class="lista-cupones-admin">
+                            <p class="carrito-vacio">Cargando cupones...</p>
+                        </div>
+                    </div>
+
                     <p class="panel-admin-subtitulo">Pedidos activos (pendientes / confirmados)</p>
                     <div id="lista-admin-pedidos" class="lista-admin-testimonios">
                         <p class="carrito-vacio">Cargando...</p>
@@ -617,12 +665,15 @@
                 if (contenidoModalPerfil) contenidoModalPerfil.classList.add("modal-ancho-admin");
                 suscribirTestimoniosPendientesAdmin();
                 suscribirPedidosAdmin();
+                suscribirCuponesAdmin();
+                cargarEstadisticasMes();
             } else {
                 panelAdmin.style.display = "none";
                 panelAdminPedidos.style.display = "none";
                 if (contenidoModalPerfil) contenidoModalPerfil.classList.remove("modal-ancho-admin");
                 desuscribirTestimoniosPendientesAdmin();
                 desuscribirPedidosAdmin();
+                desuscribirCuponesAdmin();
             }
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
         } else {
@@ -633,6 +684,7 @@
             if (contenidoModalPerfilSalida) contenidoModalPerfilSalida.classList.remove("modal-ancho-admin");
             desuscribirTestimoniosPendientesAdmin();
             desuscribirPedidosAdmin();
+            desuscribirCuponesAdmin();
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
             textoPerfil.textContent = "Hola, Inicia sesión";
             opcionesInvitado.forEach(li => li.style.display = "block");
@@ -686,6 +738,7 @@
             }
 
             let html = "";
+            let esElPrimero = true;
             snapshot.forEach((doc) => {
                 const pedido = doc.data();
                 const estadoClave = pedido.estado || "pendiente";
@@ -704,8 +757,10 @@
                         </div>
                         <ul class="pedido-items">${itemsHtml}</ul>
                         <div class="pedido-total">Total: ${formatearPrecio(pedido.total || 0)}</div>
+                        ${esElPrimero ? `<button type="button" class="boton-repetir-pedido" onclick='repetirPedido(${JSON.stringify(pedido.items || [])})'>🔁 Repetir este pedido</button>` : ""}
                     </div>
                 `;
+                esElPrimero = false;
             });
 
             contenedor.innerHTML = html;
@@ -787,6 +842,24 @@
         }
     }
 
+    // Vuelve a agregar al carrito todos los productos de un pedido anterior
+    function repetirPedido(itemsPedido) {
+        (itemsPedido || []).forEach(item => {
+            const existente = carrito.find(i => i.nombre === item.nombre);
+            if (existente) {
+                existente.cantidad += item.cantidad;
+            } else {
+                carrito.push({ nombre: item.nombre, precio: item.precio, cantidad: item.cantidad });
+            }
+        });
+        actualizarContadorCarrito();
+        renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
+        cerrarModalPerfil();
+        abrirModalCarrito();
+    }
+
     function agregarAlCarrito(nombre, precio) {
         const existente = carrito.find(item => item.nombre === nombre);
         if (existente) {
@@ -845,6 +918,9 @@
         botonFlotante.style.display = totalItems > 0 ? "flex" : "none";
     }
 
+    // Cupón de descuento aplicado en la sesión actual del carrito (o null si no hay ninguno)
+    let cuponAplicado = null;
+
     function renderizarCarrito() {
         const contenedor = document.getElementById("lista-carrito");
         const totalSpan = document.getElementById("total-carrito");
@@ -880,7 +956,58 @@
         });
 
         contenedor.innerHTML = html;
-        totalSpan.textContent = formatearPrecio(total);
+
+        const { totalFinal, montoDescuento } = calcularTotalConDescuento(total);
+        if (cuponAplicado && montoDescuento > 0) {
+            totalSpan.innerHTML = `<span class="subtotal-tachado">${formatearPrecio(total)}</span> ${formatearPrecio(totalFinal)} <span class="etiqueta-descuento-total">(-${formatearPrecio(montoDescuento)})</span>`;
+        } else {
+            totalSpan.textContent = formatearPrecio(total);
+        }
+    }
+
+    // Calcula el total ya aplicando el cupón vigente, sin dejar que el total baje de 0
+    function calcularTotalConDescuento(totalBruto) {
+        if (!cuponAplicado) return { totalFinal: totalBruto, montoDescuento: 0 };
+        let montoDescuento = cuponAplicado.tipo === "porcentaje"
+            ? Math.round(totalBruto * (cuponAplicado.valor / 100))
+            : cuponAplicado.valor;
+        montoDescuento = Math.min(montoDescuento, totalBruto);
+        return { totalFinal: totalBruto - montoDescuento, montoDescuento };
+    }
+
+    // Busca el código ingresado en Firestore y lo aplica si existe y está activo
+    async function aplicarCupon() {
+        const input = document.getElementById("input-cupon");
+        const mensaje = document.getElementById("mensaje-cupon");
+        const codigo = (input.value || "").trim().toUpperCase();
+
+        if (!codigo) {
+            mensaje.textContent = "Escribe un código para aplicarlo.";
+            mensaje.className = "mensaje-cupon mensaje-cupon-error";
+            return;
+        }
+
+        try {
+            const doc = await db.collection("cupones").doc(codigo).get();
+            if (!doc.exists || doc.data().activo === false) {
+                cuponAplicado = null;
+                mensaje.textContent = "Ese código no existe o ya no está disponible.";
+                mensaje.className = "mensaje-cupon mensaje-cupon-error";
+                renderizarCarrito();
+                return;
+            }
+
+            const datos = doc.data();
+            cuponAplicado = { codigo, tipo: datos.tipo, valor: datos.valor };
+            const textoValor = datos.tipo === "porcentaje" ? `${datos.valor}%` : formatearPrecio(datos.valor);
+            mensaje.textContent = `¡Código aplicado! Descuento de ${textoValor}.`;
+            mensaje.className = "mensaje-cupon mensaje-cupon-exito";
+            renderizarCarrito();
+        } catch (error) {
+            console.error("Error al aplicar el cupón: ", error);
+            mensaje.textContent = "No se pudo validar el código. Intenta de nuevo.";
+            mensaje.className = "mensaje-cupon mensaje-cupon-error";
+        }
     }
 
     function abrirModalCarrito() {
@@ -906,15 +1033,18 @@
 
     // Guarda una copia del pedido en Firestore para tener historial,
     // aunque el cliente no termine de enviarlo por WhatsApp
-    async function registrarPedidoFirestore(itemsPedido, total) {
+    async function registrarPedidoFirestore(itemsPedido, total, telefonoCliente, descuentoInfo) {
         const usuario = auth.currentUser;
         try {
             await db.collection("pedidos").add({
                 uid: usuario ? usuario.uid : null,
                 nombreCliente: usuario ? (usuario.displayName || "Sin nombre") : "Invitado",
                 correoCliente: usuario ? usuario.email : null,
+                telefonoCliente: telefonoCliente || null,
                 items: itemsPedido,
                 total: total,
+                codigoDescuento: descuentoInfo ? descuentoInfo.codigo : null,
+                montoDescuento: descuentoInfo ? descuentoInfo.montoDescuento : 0,
                 estado: "pendiente",
                 fecha: new Date()
             });
@@ -929,26 +1059,48 @@
             return;
         }
 
+        const inputTelefono = document.getElementById("telefono-carrito");
+        const telefonoDigitado = (inputTelefono.value || "").trim();
+        if (!/^[0-9]{8}$/.test(telefonoDigitado)) {
+            alert("Ingresa tu número de WhatsApp (8 dígitos, sin el +56 9) para poder avisarte del estado de tu pedido.");
+            inputTelefono.focus();
+            return;
+        }
+        const telefonoCliente = "569" + telefonoDigitado;
+
         let lineas = "¡Hola Chrisnut! 👋 Quiero hacer el siguiente pedido:\n\n";
-        let total = 0;
+        let totalBruto = 0;
 
         carrito.forEach(item => {
             const subtotal = item.precio * item.cantidad;
-            total += subtotal;
+            totalBruto += subtotal;
             const emoji = emojiProducto[item.nombre] || "🛍️";
             lineas += `${emoji} ${item.cantidad} ${item.nombre} = ${formatearPrecio(subtotal)}\n`;
         });
 
-        lineas += `\n💰 *Total: ${formatearPrecio(total)}*\n\n¡Muchas gracias!`;
+        const { totalFinal, montoDescuento } = calcularTotalConDescuento(totalBruto);
+        if (cuponAplicado && montoDescuento > 0) {
+            lineas += `\nSubtotal: ${formatearPrecio(totalBruto)}`;
+            lineas += `\nDescuento (${cuponAplicado.codigo}): -${formatearPrecio(montoDescuento)}`;
+        }
+        lineas += `\n\n💰 *Total: ${formatearPrecio(totalFinal)}*\n\n¡Muchas gracias!`;
+
+        const descuentoInfo = (cuponAplicado && montoDescuento > 0)
+            ? { codigo: cuponAplicado.codigo, montoDescuento }
+            : null;
 
         // Guardamos el pedido antes de abrir WhatsApp (copiamos el arreglo tal cual está)
-        await registrarPedidoFirestore(carrito.map(item => ({ ...item })), total);
+        await registrarPedidoFirestore(carrito.map(item => ({ ...item })), totalFinal, telefonoCliente, descuentoInfo);
 
         const mensajeCodificado = encodeURIComponent(lineas);
         const urlWhatsapp = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP_CHRISNUT}&text=${mensajeCodificado}`;
         window.open(urlWhatsapp, "_blank");
 
         // El pedido ya quedó registrado y enviado, así que vaciamos el carrito
+        cuponAplicado = null;
+        document.getElementById("input-cupon").value = "";
+        document.getElementById("mensaje-cupon").textContent = "";
+        inputTelefono.value = "";
         carrito = [];
         actualizarContadorCarrito();
         renderizarCarrito();
@@ -1103,6 +1255,7 @@
         if (cancelarSuscripcionPedidosAdmin) return; // ya está escuchando
 
         const contenedor = document.getElementById("lista-admin-pedidos");
+        let esLaPrimeraCarga = true;
 
         // Traemos los pedidos más recientes y mostramos solo los activos
         // (pendiente/confirmado); los ya entregados o cancelados quedan
@@ -1111,6 +1264,20 @@
             .orderBy("fecha", "desc")
             .limit(50)
             .onSnapshot((snapshot) => {
+                // Avisamos (notificación + sonido) cuando llega un pedido pendiente
+                // nuevo, salvo en la primera carga de la página.
+                if (!esLaPrimeraCarga) {
+                    snapshot.docChanges().forEach((cambio) => {
+                        if (cambio.type === "added") {
+                            const datos = cambio.doc.data();
+                            if ((datos.estado || "pendiente") === "pendiente") {
+                                notificarPedidoNuevoAdmin(datos);
+                            }
+                        }
+                    });
+                }
+                esLaPrimeraCarga = false;
+
                 const pedidosActivos = [];
                 snapshot.forEach((doc) => {
                     const datos = doc.data();
@@ -1128,37 +1295,32 @@
                 let html = "";
                 pedidosActivos.forEach(({ id, datos }) => {
                     const estadoActual = datos.estado || "pendiente";
-                    const indiceActual = ORDEN_AVANCE_ESTADO.indexOf(estadoActual);
-                    const siguienteEstado = indiceActual >= 0 && indiceActual < ORDEN_AVANCE_ESTADO.length - 1
-                        ? ORDEN_AVANCE_ESTADO[indiceActual + 1]
-                        : null;
-                    const textoSiguiente = siguienteEstado ? (textoEstadoPedido[siguienteEstado] || siguienteEstado) : null;
 
                     let itemsHtml = "";
                     (datos.items || []).forEach(item => {
                         itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
                     });
 
+                    let opcionesHtml = "";
+                    OPCIONES_ESTADO_PEDIDO.forEach(opcion => {
+                        opcionesHtml += `<option value="${opcion.valor}" ${opcion.valor === estadoActual ? "selected" : ""}>${opcion.texto}</option>`;
+                    });
+
                     html += `
                         <div class="tarjeta-admin-testimonio">
                             <div class="pedido-encabezado">
                                 <span class="pedido-fecha">${formatearFechaPedido(datos.fecha)}</span>
-                                ${siguienteEstado ? `
-                                    <span class="pedido-estado pedido-estado-${estadoActual} pedido-estado-clickeable"
-                                          onclick="avanzarEstadoPedidoAdmin('${id}', '${estadoActual}')"
-                                          title="Click para marcar como ${textoSiguiente}">
-                                        ${textoEstadoPedido[estadoActual] || estadoActual} → ${textoSiguiente}
-                                    </span>
-                                ` : `
-                                    <span class="pedido-estado pedido-estado-${estadoActual}">${textoEstadoPedido[estadoActual] || estadoActual}</span>
-                                `}
+                                <div class="selector-estado-envoltura selector-estado-${estadoActual}">
+                                    <select class="selector-estado-pedido"
+                                            onchange="cambiarEstadoPedidoDesdeSelector(this, '${id}', '${datos.telefonoCliente || ""}')"
+                                            title="Cambiar estado del pedido">
+                                        ${opcionesHtml}
+                                    </select>
+                                </div>
                             </div>
-                            <p class="comentario">${datos.nombreCliente || "Cliente"}${datos.correoCliente ? " · " + datos.correoCliente : ""}</p>
+                            <p class="comentario">${datos.nombreCliente || "Cliente"}${datos.correoCliente ? " · " + datos.correoCliente : ""}${datos.telefonoCliente ? " · +" + datos.telefonoCliente : ""}</p>
                             <ul class="pedido-items">${itemsHtml}</ul>
                             <div class="pedido-total">Total: ${formatearPrecio(datos.total || 0)}</div>
-                            <div class="acciones-admin-testimonio">
-                                <button class="boton-rechazar-testimonio" onclick="cambiarEstadoPedidoAdmin('${id}', 'cancelado')">✕ Cancelar pedido</button>
-                            </div>
                         </div>
                     `;
                 });
@@ -1184,12 +1346,78 @@
             });
     }
 
-    // Avanza el pedido al siguiente estado de la secuencia (pendiente → confirmado → entregado)
-    function avanzarEstadoPedidoAdmin(idPedido, estadoActual) {
-        const indiceActual = ORDEN_AVANCE_ESTADO.indexOf(estadoActual);
-        if (indiceActual === -1 || indiceActual >= ORDEN_AVANCE_ESTADO.length - 1) return;
-        const siguienteEstado = ORDEN_AVANCE_ESTADO[indiceActual + 1];
-        cambiarEstadoPedidoAdmin(idPedido, siguienteEstado);
+    // Se llama al elegir una opción en el <select> de estado de un pedido.
+    // Actualiza al instante el color del selector (para dar feedback visual
+    // inmediato), guarda el cambio en Firebase y abre WhatsApp con un mensaje
+    // ya redactado para avisarle al cliente (el admin solo debe presionar enviar,
+    // ya que un envío 100% automático requeriría la API paga de WhatsApp Business).
+    function cambiarEstadoPedidoDesdeSelector(selectElemento, idPedido, telefonoCliente) {
+        const nuevoEstado = selectElemento.value;
+        const envoltura = selectElemento.closest(".selector-estado-envoltura");
+        if (envoltura) {
+            envoltura.className = "selector-estado-envoltura selector-estado-" + nuevoEstado;
+        }
+        cambiarEstadoPedidoAdmin(idPedido, nuevoEstado);
+
+        if (telefonoCliente) {
+            const mensajesEstado = {
+                confirmado: "¡Hola! 👋 Te escribimos de Chrisnut para contarte que tu pedido fue *confirmado* y ya lo estamos preparando. 🥐",
+                entregado: "¡Hola! 👋 Tu pedido de Chrisnut ya fue *entregado*. ¡Que lo disfrutes mucho! 🍞💛",
+                cancelado: "Hola, te escribimos de Chrisnut para avisarte que tu pedido fue *cancelado*. Cualquier duda, escríbenos por este mismo medio."
+            };
+            const mensaje = mensajesEstado[nuevoEstado];
+            if (mensaje) {
+                const url = `https://api.whatsapp.com/send?phone=${telefonoCliente}&text=${encodeURIComponent(mensaje)}`;
+                window.open(url, "_blank");
+            }
+        }
+    }
+
+    // ==========================================
+    // NOTIFICACIONES EN EL CELULAR/NAVEGADOR AL RECIBIR UN PEDIDO NUEVO
+    // ==========================================
+    // Nota: esto avisa al instante mientras el panel de administrador esté
+    // abierto en el navegador (computador o celular). Para recibir avisos con
+    // el celular bloqueado o la app cerrada se necesita además una notificación
+    // push real (Firebase Cloud Messaging + una función en el servidor), que
+    // por seguridad no se puede activar sola: hay que desplegarla desde la
+    // consola de Firebase de este proyecto.
+    function notificarPedidoNuevoAdmin(datosPedido) {
+        try {
+            const ContextoAudio = window.AudioContext || window.webkitAudioContext;
+            const contexto = new ContextoAudio();
+            const oscilador = contexto.createOscillator();
+            const ganancia = contexto.createGain();
+            oscilador.type = "sine";
+            oscilador.frequency.value = 880;
+            ganancia.gain.value = 0.15;
+            oscilador.connect(ganancia);
+            ganancia.connect(contexto.destination);
+            oscilador.start();
+            oscilador.stop(contexto.currentTime + 0.25);
+        } catch (error) {}
+
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("🥐 ¡Pedido nuevo en Chrisnut!", {
+                body: `${datosPedido.nombreCliente || "Un cliente"} · Total: ${formatearPrecio(datosPedido.total || 0)}`
+            });
+        }
+    }
+
+    function activarNotificacionesAdmin() {
+        const estadoTexto = document.getElementById("estado-notificaciones-admin");
+        if (!("Notification" in window)) {
+            estadoTexto.textContent = "Tu navegador no soporta notificaciones.";
+            return;
+        }
+        Notification.requestPermission().then((permiso) => {
+            if (permiso === "granted") {
+                estadoTexto.textContent = "✅ Notificaciones activadas. Deja esta pestaña abierta para recibir avisos.";
+                new Notification("Chrisnut", { body: "¡Listo! Te avisaremos cuando llegue un pedido nuevo. 🥐" });
+            } else {
+                estadoTexto.textContent = "No se activaron las notificaciones. Puedes habilitarlas desde los ajustes del navegador.";
+            }
+        });
     }
 
     function aprobarTestimonioAdmin(idTestimonio) {
@@ -1198,6 +1426,168 @@
                 console.error("Error al aprobar el testimonio: ", error);
                 alert("No se pudo aprobar la opinión. Intenta de nuevo.");
             });
+    }
+
+    // ==========================================
+    // CUPONES DE DESCUENTO (gestión desde el panel admin)
+    // ==========================================
+    let cancelarSuscripcionCuponesAdmin = null;
+
+    function suscribirCuponesAdmin() {
+        if (cancelarSuscripcionCuponesAdmin) return;
+
+        const contenedor = document.getElementById("lista-cupones-admin");
+        cancelarSuscripcionCuponesAdmin = db.collection("cupones")
+            .onSnapshot((snapshot) => {
+                if (snapshot.empty) {
+                    contenedor.innerHTML = '<p class="carrito-vacio">Todavía no has creado ningún código.</p>';
+                    return;
+                }
+                let html = "";
+                snapshot.forEach((doc) => {
+                    const datos = doc.data();
+                    const textoValor = datos.tipo === "porcentaje" ? `${datos.valor}%` : formatearPrecio(datos.valor);
+                    html += `
+                        <div class="fila-cupon-admin ${datos.activo === false ? "fila-cupon-inactivo" : ""}">
+                            <span class="codigo-cupon-admin">${doc.id}</span>
+                            <span class="valor-cupon-admin">${textoValor}</span>
+                            <button type="button" onclick="alternarCupon('${doc.id}', ${datos.activo === false})">${datos.activo === false ? "Activar" : "Desactivar"}</button>
+                            <button type="button" onclick="eliminarCupon('${doc.id}')">🗑️</button>
+                        </div>
+                    `;
+                });
+                contenedor.innerHTML = html;
+            }, (error) => {
+                console.error("Error al cargar cupones: ", error);
+                contenedor.innerHTML = '<p class="carrito-vacio">No se pudieron cargar los cupones.</p>';
+            });
+    }
+
+    function desuscribirCuponesAdmin() {
+        if (cancelarSuscripcionCuponesAdmin) {
+            cancelarSuscripcionCuponesAdmin();
+            cancelarSuscripcionCuponesAdmin = null;
+        }
+    }
+
+    async function agregarCupon() {
+        const codigoInput = document.getElementById("nuevo-cupon-codigo");
+        const tipoInput = document.getElementById("nuevo-cupon-tipo");
+        const valorInput = document.getElementById("nuevo-cupon-valor");
+
+        const codigo = (codigoInput.value || "").trim().toUpperCase();
+        const tipo = tipoInput.value;
+        const valor = parseFloat(valorInput.value);
+
+        if (!codigo || !valor || valor <= 0) {
+            alert("Escribe un código y un valor válido para el descuento.");
+            return;
+        }
+
+        try {
+            await db.collection("cupones").doc(codigo).set({
+                tipo,
+                valor,
+                activo: true,
+                creado: new Date()
+            });
+            codigoInput.value = "";
+            valorInput.value = "";
+        } catch (error) {
+            console.error("Error al crear el cupón: ", error);
+            alert("No se pudo crear el código. Intenta de nuevo.");
+        }
+    }
+
+    function alternarCupon(codigo, nuevoValorActivo) {
+        db.collection("cupones").doc(codigo).update({ activo: nuevoValorActivo })
+            .catch((error) => console.error("Error al actualizar el cupón: ", error));
+    }
+
+    function eliminarCupon(codigo) {
+        if (!confirm(`¿Eliminar el código "${codigo}"?`)) return;
+        db.collection("cupones").doc(codigo).delete()
+            .catch((error) => console.error("Error al eliminar el cupón: ", error));
+    }
+
+    // ==========================================
+    // ESTADÍSTICAS DEL MES + INFORME IMPRIMIBLE
+    // ==========================================
+    let ultimasEstadisticasMes = null;
+
+    async function cargarEstadisticasMes() {
+        const contenedor = document.getElementById("contenido-estadisticas-mes");
+        if (!contenedor) return;
+
+        const ahora = new Date();
+        const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
+
+        try {
+            const snapshot = await db.collection("pedidos")
+                .where("fecha", ">=", inicioMes)
+                .get();
+
+            let totalVendido = 0;
+            let cantidadPedidos = 0;
+            const conteoProductos = {};
+
+            snapshot.forEach((doc) => {
+                const datos = doc.data();
+                if ((datos.estado || "pendiente") === "cancelado") return;
+                totalVendido += datos.total || 0;
+                cantidadPedidos += 1;
+                (datos.items || []).forEach(item => {
+                    conteoProductos[item.nombre] = (conteoProductos[item.nombre] || 0) + item.cantidad;
+                });
+            });
+
+            let productoTop = "—";
+            let maxCantidad = 0;
+            Object.entries(conteoProductos).forEach(([nombre, cantidad]) => {
+                if (cantidad > maxCantidad) {
+                    maxCantidad = cantidad;
+                    productoTop = nombre;
+                }
+            });
+
+            const ticketPromedio = cantidadPedidos > 0 ? Math.round(totalVendido / cantidadPedidos) : 0;
+            const nombreMes = ahora.toLocaleDateString("es-CL", { month: "long", year: "numeric" });
+
+            ultimasEstadisticasMes = { totalVendido, cantidadPedidos, productoTop, ticketPromedio, nombreMes };
+
+            contenedor.innerHTML = `
+                <div class="tarjeta-metrica"><span class="etiqueta-metrica">Vendido en ${nombreMes}</span><span class="valor-metrica">${formatearPrecio(totalVendido)}</span></div>
+                <div class="tarjeta-metrica"><span class="etiqueta-metrica">Pedidos</span><span class="valor-metrica">${cantidadPedidos}</span></div>
+                <div class="tarjeta-metrica"><span class="etiqueta-metrica">Ticket promedio</span><span class="valor-metrica">${formatearPrecio(ticketPromedio)}</span></div>
+                <div class="tarjeta-metrica"><span class="etiqueta-metrica">Producto más pedido</span><span class="valor-metrica">${productoTop}</span></div>
+            `;
+        } catch (error) {
+            console.error("Error al cargar estadísticas del mes: ", error);
+            contenedor.innerHTML = '<p class="carrito-vacio">No se pudieron cargar las estadísticas.</p>';
+        }
+    }
+
+    // Arma un informe limpio (sin el resto de la página) y lanza la impresión del navegador
+    function imprimirEstadisticasMes() {
+        if (!ultimasEstadisticasMes) {
+            alert("Espera a que carguen las estadísticas antes de imprimir.");
+            return;
+        }
+        const { totalVendido, cantidadPedidos, productoTop, ticketPromedio, nombreMes } = ultimasEstadisticasMes;
+        const reporte = document.getElementById("reporte-imprimible");
+        reporte.innerHTML = `
+            <h1>Chrisnut · Informe de ${nombreMes}</h1>
+            <p>Generado el ${new Date().toLocaleDateString("es-CL")}</p>
+            <table>
+                <tr><td>Total vendido</td><td>${formatearPrecio(totalVendido)}</td></tr>
+                <tr><td>Cantidad de pedidos</td><td>${cantidadPedidos}</td></tr>
+                <tr><td>Ticket promedio</td><td>${formatearPrecio(ticketPromedio)}</td></tr>
+                <tr><td>Producto más pedido</td><td>${productoTop}</td></tr>
+            </table>
+        `;
+        document.body.classList.add("modo-impresion");
+        window.print();
+        setTimeout(() => document.body.classList.remove("modo-impresion"), 500);
     }
 
     function rechazarTestimonioAdmin(idTestimonio) {

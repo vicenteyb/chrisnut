@@ -310,6 +310,16 @@
                 <div id="avatar-usuario" class="avatar-usuario">A</div>
                 <h3>¡Hola, <span id="nombre-usuario-perfil">amigo/a</span>! 👋</h3>
                 <p id="correo-usuario-perfil" class="correo-usuario-perfil"></p>
+
+                <hr class="separador-perfil">
+
+                <div class="seccion-pedidos-perfil">
+                    <h3>Tu historial de pedidos</h3>
+                    <div id="lista-pedidos-perfil" class="lista-pedidos-perfil">
+                        <p class="carrito-vacio">Cargando tus pedidos...</p>
+                    </div>
+                </div>
+
                 <button id="boton-cerrar-sesion" class="boton-secundario-modal" onclick="cerrarSesion()">Cerrar Sesión</button>
             </div>
         </div>
@@ -474,6 +484,8 @@
     }
 
     // Cuando cambia el estado de sesión, actualizamos toda la interfaz
+    let uidCarritoActual = null;
+
     auth.onAuthStateChanged((usuario) => {
         const textoPerfil = document.getElementById("texto-perfil");
         const opcionesInvitado = document.querySelectorAll("#submenu-perfil .solo-invitado");
@@ -490,25 +502,165 @@
             document.getElementById("avatar-usuario").textContent = iniciales(usuario.displayName);
             document.getElementById("nombre-usuario-perfil").textContent = usuario.displayName || "amigo/a";
             document.getElementById("correo-usuario-perfil").textContent = usuario.email;
+
+            // Si es un inicio de sesión nuevo (no solo Firebase revalidando), cargamos su carrito guardado
+            if (uidCarritoActual !== usuario.uid) {
+                uidCarritoActual = usuario.uid;
+                cargarCarritoUsuario(usuario.uid);
+            }
+            cargarHistorialPedidos(usuario.uid);
         } else {
             textoPerfil.textContent = "Hola, Inicia sesión";
             opcionesInvitado.forEach(li => li.style.display = "block");
             opcionesCuenta.forEach(li => li.style.display = "none");
             vistaInvitado.style.display = "block";
             vistaCuenta.style.display = "none";
+
+            // Si veníamos de una sesión iniciada, limpiamos el carrito local
+            // (sus productos ya quedaron guardados en su cuenta)
+            if (uidCarritoActual !== null) {
+                carrito = [];
+                actualizarContadorCarrito();
+                renderizarCarrito();
+                localStorage.removeItem(CLAVE_CARRITO_LOCAL);
+            }
+            uidCarritoActual = null;
         }
     });
+
+    // Trae y muestra el historial de pedidos del usuario logueado
+    function formatearFechaPedido(fecha) {
+        try {
+            const fechaJS = fecha.toDate ? fecha.toDate() : new Date(fecha);
+            return fechaJS.toLocaleDateString("es-CL", { day: "numeric", month: "short", year: "numeric" }) +
+                " · " + fechaJS.toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" });
+        } catch (error) {
+            return "";
+        }
+    }
+
+    const textoEstadoPedido = {
+        pendiente: "Pendiente",
+        confirmado: "Confirmado",
+        entregado: "Entregado",
+        cancelado: "Cancelado"
+    };
+
+    async function cargarHistorialPedidos(uid) {
+        const contenedor = document.getElementById("lista-pedidos-perfil");
+        if (!contenedor) return;
+
+        try {
+            const snapshot = await db.collection("pedidos")
+                .where("uid", "==", uid)
+                .orderBy("fecha", "desc")
+                .get();
+
+            if (snapshot.empty) {
+                contenedor.innerHTML = '<p class="carrito-vacio">Todavía no has hecho ningún pedido.</p>';
+                return;
+            }
+
+            let html = "";
+            snapshot.forEach((doc) => {
+                const pedido = doc.data();
+                const estadoClave = pedido.estado || "pendiente";
+                const estadoTexto = textoEstadoPedido[estadoClave] || estadoClave;
+
+                let itemsHtml = "";
+                (pedido.items || []).forEach(item => {
+                    itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
+                });
+
+                html += `
+                    <div class="pedido-tarjeta">
+                        <div class="pedido-encabezado">
+                            <span class="pedido-fecha">${formatearFechaPedido(pedido.fecha)}</span>
+                            <span class="pedido-estado pedido-estado-${estadoClave}">${estadoTexto}</span>
+                        </div>
+                        <ul class="pedido-items">${itemsHtml}</ul>
+                        <div class="pedido-total">Total: ${formatearPrecio(pedido.total || 0)}</div>
+                    </div>
+                `;
+            });
+
+            contenedor.innerHTML = html;
+        } catch (error) {
+            console.error("Error al cargar el historial de pedidos: ", error);
+            contenedor.innerHTML = '<p class="carrito-vacio">No pudimos cargar tus pedidos. Intenta de nuevo más tarde.</p>';
+        }
+    }
 
     // ==========================================
     // CARRITO DE COMPRAS
     // ==========================================
 
-    // El carrito vive en memoria mientras la página está abierta.
+    // El carrito vive en memoria mientras la página está abierta,
+    // y además se guarda en LocalStorage para que un cliente invitado
+    // no pierda su pedido si recarga la página o cierra la pestaña.
     // Cada producto se guarda como: { nombre, precio, cantidad }
-    let carrito = [];
+    const CLAVE_CARRITO_LOCAL = "chrisnut_carrito";
+
+    function guardarCarritoLocal() {
+        try {
+            localStorage.setItem(CLAVE_CARRITO_LOCAL, JSON.stringify(carrito));
+        } catch (error) {
+            console.error("Error al guardar el carrito en este dispositivo: ", error);
+        }
+    }
+
+    function cargarCarritoLocalInicial() {
+        try {
+            const guardado = localStorage.getItem(CLAVE_CARRITO_LOCAL);
+            const items = guardado ? JSON.parse(guardado) : [];
+            return Array.isArray(items) ? items : [];
+        } catch (error) {
+            console.error("Error al leer el carrito guardado en este dispositivo: ", error);
+            return [];
+        }
+    }
+
+    let carrito = cargarCarritoLocalInicial();
 
     function formatearPrecio(numero) {
         return "$" + numero.toLocaleString("es-CL");
+    }
+
+    // Guarda el carrito actual en Firestore, solo si hay una sesión activa
+    function guardarCarritoEnFirestore() {
+        const usuario = auth.currentUser;
+        if (!usuario) return;
+        db.collection("carritos").doc(usuario.uid).set({
+            items: carrito,
+            actualizado: new Date()
+        }).catch((error) => {
+            console.error("Error al guardar el carrito: ", error);
+        });
+    }
+
+    // Al iniciar sesión, trae el carrito guardado y lo fusiona con lo que
+    // el usuario ya tenía agregado en esta misma sesión como invitado
+    async function cargarCarritoUsuario(uid) {
+        try {
+            const doc = await db.collection("carritos").doc(uid).get();
+            const carritoGuardado = (doc.exists && Array.isArray(doc.data().items)) ? doc.data().items : [];
+
+            carritoGuardado.forEach((itemGuardado) => {
+                const existente = carrito.find(item => item.nombre === itemGuardado.nombre);
+                if (existente) {
+                    existente.cantidad += itemGuardado.cantidad;
+                } else {
+                    carrito.push({ ...itemGuardado });
+                }
+            });
+
+            actualizarContadorCarrito();
+            renderizarCarrito();
+            guardarCarritoLocal();
+            guardarCarritoEnFirestore();
+        } catch (error) {
+            console.error("Error al cargar el carrito guardado: ", error);
+        }
     }
 
     function agregarAlCarrito(nombre, precio) {
@@ -520,6 +672,8 @@
         }
         actualizarContadorCarrito();
         renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
     }
 
     function cambiarCantidad(nombre, delta) {
@@ -534,12 +688,16 @@
 
         actualizarContadorCarrito();
         renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
     }
 
     function eliminarDelCarrito(nombre) {
         carrito = carrito.filter(item => item.nombre !== nombre);
         actualizarContadorCarrito();
         renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
     }
 
     function vaciarCarrito() {
@@ -548,6 +706,8 @@
             carrito = [];
             actualizarContadorCarrito();
             renderizarCarrito();
+            guardarCarritoLocal();
+            guardarCarritoEnFirestore();
         }
     }
 
@@ -615,7 +775,26 @@
     // Ejemplo Chile: 56912345678
     const NUMERO_WHATSAPP_CHRISNUT = "56955395216";
 
-    function enviarPedidoWhatsapp() {
+    // Guarda una copia del pedido en Firestore para tener historial,
+    // aunque el cliente no termine de enviarlo por WhatsApp
+    async function registrarPedidoFirestore(itemsPedido, total) {
+        const usuario = auth.currentUser;
+        try {
+            await db.collection("pedidos").add({
+                uid: usuario ? usuario.uid : null,
+                nombreCliente: usuario ? (usuario.displayName || "Sin nombre") : "Invitado",
+                correoCliente: usuario ? usuario.email : null,
+                items: itemsPedido,
+                total: total,
+                estado: "pendiente",
+                fecha: new Date()
+            });
+        } catch (error) {
+            console.error("Error al registrar el pedido: ", error);
+        }
+    }
+
+    async function enviarPedidoWhatsapp() {
         if (carrito.length === 0) {
             alert("Tu carrito está vacío. Agrega algún producto antes de enviar tu pedido.");
             return;
@@ -633,9 +812,20 @@
 
         lineas += `\n💰 *Total: ${formatearPrecio(total)}*\n\n¡Muchas gracias!`;
 
+        // Guardamos el pedido antes de abrir WhatsApp (copiamos el arreglo tal cual está)
+        await registrarPedidoFirestore(carrito.map(item => ({ ...item })), total);
+
         const mensajeCodificado = encodeURIComponent(lineas);
         const urlWhatsapp = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP_CHRISNUT}&text=${mensajeCodificado}`;
         window.open(urlWhatsapp, "_blank");
+
+        // El pedido ya quedó registrado y enviado, así que vaciamos el carrito
+        carrito = [];
+        actualizarContadorCarrito();
+        renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
+        cerrarModalCarrito();
     }
 
     // ==========================================
@@ -853,6 +1043,9 @@
             e.preventDefault();
             cerrarSubmenuPerfil();
             abrirModalPerfil();
+            if (auth.currentUser) {
+                cargarHistorialPedidos(auth.currentUser.uid);
+            }
         });
 
         document.getElementById("enlace-cerrar-sesion-menu").addEventListener("click", (e) => {
@@ -998,7 +1191,11 @@
             }
         });
 
-        db.collection("testimonios").orderBy("fecha", "desc").onSnapshot((snapshot) => {
+        // Solo mostramos los testimonios que ya fueron aprobados por el administrador
+        db.collection("testimonios")
+            .where("aprobado", "==", true)
+            .orderBy("fecha", "desc")
+            .onSnapshot((snapshot) => {
             const tarjetasDinamicas = document.querySelectorAll(".tarjeta-dinamica");
             tarjetasDinamicas.forEach(tarjeta => tarjeta.remove());
 
@@ -1038,12 +1235,14 @@
                 nombre: nombreInput,
                 estrellas: puntuacionInput,
                 comentario: comentarioInput,
+                aprobado: false,
                 fecha: new Date()
             })
             .then(() => {
                 formulario.reset();
                 grecaptcha.reset();
                 cerrarModal();
+                alert("¡Gracias por tu opinión! Se publicará en cuanto sea revisada.");
             })
             .catch((error) => {
                 console.error("Error al guardar testimonio: ", error);

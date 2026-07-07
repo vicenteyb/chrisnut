@@ -732,6 +732,80 @@ body {
     margin: 0;
 }
 
+.seccion-pedidos-perfil h3 {
+    margin-bottom: 10px;
+}
+
+.lista-pedidos-perfil {
+    max-height: 260px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pedido-tarjeta {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 12px 14px;
+    background-color: #fdf6ec;
+}
+
+.pedido-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pedido-fecha {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.pedido-estado {
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+}
+
+.pedido-estado-pendiente {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.pedido-estado-confirmado {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.pedido-estado-entregado {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.pedido-estado-cancelado {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.pedido-items {
+    margin: 0 0 8px;
+    padding-left: 18px;
+    font-size: 0.85rem;
+    color: #3d2817;
+}
+
+.pedido-total {
+    font-weight: bold;
+    color: #7d4f38;
+    font-size: 0.9rem;
+}
+
 .formulario-modal {
     margin-top: 20px;
 }

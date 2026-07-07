@@ -1095,6 +1095,10 @@
         { valor: "cancelado", texto: "Cancelado" }
     ];
 
+    // Orden en el que avanza un pedido al hacer clic en su insignia de estado.
+    // Al llegar a "entregado" ya no avanza más (y además sale de este listado).
+    const ORDEN_AVANCE_ESTADO = ["pendiente", "confirmado", "entregado"];
+
     function suscribirPedidosAdmin() {
         if (cancelarSuscripcionPedidosAdmin) return; // ya está escuchando
 
@@ -1124,30 +1128,36 @@
                 let html = "";
                 pedidosActivos.forEach(({ id, datos }) => {
                     const estadoActual = datos.estado || "pendiente";
+                    const indiceActual = ORDEN_AVANCE_ESTADO.indexOf(estadoActual);
+                    const siguienteEstado = indiceActual >= 0 && indiceActual < ORDEN_AVANCE_ESTADO.length - 1
+                        ? ORDEN_AVANCE_ESTADO[indiceActual + 1]
+                        : null;
+                    const textoSiguiente = siguienteEstado ? (textoEstadoPedido[siguienteEstado] || siguienteEstado) : null;
 
                     let itemsHtml = "";
                     (datos.items || []).forEach(item => {
                         itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
                     });
 
-                    let opcionesHtml = "";
-                    OPCIONES_ESTADO_PEDIDO.forEach(op => {
-                        opcionesHtml += `<option value="${op.valor}" ${op.valor === estadoActual ? "selected" : ""}>${op.texto}</option>`;
-                    });
-
                     html += `
                         <div class="tarjeta-admin-testimonio">
                             <div class="pedido-encabezado">
                                 <span class="pedido-fecha">${formatearFechaPedido(datos.fecha)}</span>
-                                <span class="pedido-estado pedido-estado-${estadoActual}">${textoEstadoPedido[estadoActual] || estadoActual}</span>
+                                ${siguienteEstado ? `
+                                    <span class="pedido-estado pedido-estado-${estadoActual} pedido-estado-clickeable"
+                                          onclick="avanzarEstadoPedidoAdmin('${id}', '${estadoActual}')"
+                                          title="Click para marcar como ${textoSiguiente}">
+                                        ${textoEstadoPedido[estadoActual] || estadoActual} → ${textoSiguiente}
+                                    </span>
+                                ` : `
+                                    <span class="pedido-estado pedido-estado-${estadoActual}">${textoEstadoPedido[estadoActual] || estadoActual}</span>
+                                `}
                             </div>
                             <p class="comentario">${datos.nombreCliente || "Cliente"}${datos.correoCliente ? " · " + datos.correoCliente : ""}</p>
                             <ul class="pedido-items">${itemsHtml}</ul>
                             <div class="pedido-total">Total: ${formatearPrecio(datos.total || 0)}</div>
                             <div class="acciones-admin-testimonio">
-                                <select class="selector-estado-pedido" onchange="cambiarEstadoPedidoAdmin('${id}', this.value)">
-                                    ${opcionesHtml}
-                                </select>
+                                <button class="boton-rechazar-testimonio" onclick="cambiarEstadoPedidoAdmin('${id}', 'cancelado')">✕ Cancelar pedido</button>
                             </div>
                         </div>
                     `;
@@ -1172,6 +1182,14 @@
                 console.error("Error al cambiar el estado del pedido: ", error);
                 alert("No se pudo cambiar el estado del pedido. Intenta de nuevo.");
             });
+    }
+
+    // Avanza el pedido al siguiente estado de la secuencia (pendiente → confirmado → entregado)
+    function avanzarEstadoPedidoAdmin(idPedido, estadoActual) {
+        const indiceActual = ORDEN_AVANCE_ESTADO.indexOf(estadoActual);
+        if (indiceActual === -1 || indiceActual >= ORDEN_AVANCE_ESTADO.length - 1) return;
+        const siguienteEstado = ORDEN_AVANCE_ESTADO[indiceActual + 1];
+        cambiarEstadoPedidoAdmin(idPedido, siguienteEstado);
     }
 
     function aprobarTestimonioAdmin(idTestimonio) {

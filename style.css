@@ -940,7 +940,7 @@ main > section {
 /* Cuando el panel de administrador está visible, el modal de perfil se
    ensancha para dar más espacio y comodidad al revisar/aprobar opiniones. */
 #modal-perfil .modal-contenido.modal-ancho-admin {
-    max-width: 640px;
+    max-width: 760px;
 }
 
 .separador-perfil {
@@ -1620,27 +1620,27 @@ html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(
     background-color: var(--color-gris-claro);
     border: 1px dashed var(--color-acento);
     border-radius: 10px;
-    padding: 22px;
+    padding: 26px;
     margin-top: 25px;
 }
 
 .panel-admin h3 {
     margin-top: 0;
     color: var(--color-titulo);
-    font-size: 1.3rem;
+    font-size: 1.4rem;
 }
 
 .panel-admin-subtitulo {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--color-texto-terciario);
-    margin: -6px 0 16px 0;
+    margin: -6px 0 18px 0;
 }
 
 .lista-admin-testimonios {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    max-height: 480px;
+    max-height: 620px;
     overflow-y: auto;
     padding-right: 4px;
 }
@@ -1700,14 +1700,13 @@ html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(
     filter: brightness(1.1);
 }
 
-.selector-estado-pedido {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--color-borde);
-    background-color: var(--color-tarjeta);
-    color: var(--color-texto-principal);
-    font-weight: bold;
-    font-size: 0.9rem;
+.pedido-estado-clickeable {
     cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+    user-select: none;
+}
+
+.pedido-estado-clickeable:hover {
+    filter: brightness(1.08);
+    transform: scale(1.04);
 }

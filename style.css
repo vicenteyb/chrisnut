@@ -39,6 +39,15 @@ body {
     white-space: nowrap;
 }
 
+.icono-perfil {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 5px;
+    position: relative;
+    top: -1px;
+}
+
 .enlace-perfil:hover {
     color: rgb(223, 186, 102);
 }
@@ -76,6 +85,83 @@ body {
 
 .menu-principal a:hover {
     color: rgb(223, 186, 102);
+}
+
+/* --- Botón desplegable de Perfil ("Hola, Inicia sesión") --- */
+.item-desplegable-perfil {
+    position: relative;
+}
+
+.boton-perfil {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 15px 10px;
+    white-space: nowrap;
+}
+
+.boton-perfil:hover {
+    color: rgb(223, 186, 102);
+}
+
+.boton-perfil .flecha-desplegable {
+    transition: transform 0.2s ease;
+    font-size: 0.8rem;
+}
+
+.boton-perfil.atajos-activo .flecha-desplegable {
+    transform: rotate(180deg);
+}
+
+.submenu-perfil {
+    display: none;
+    position: fixed;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #3d2817;
+    min-width: 220px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 0 0 8px 8px;
+    z-index: 1001;
+}
+
+.submenu-perfil.mostrar-submenu {
+    display: flex;
+}
+
+.submenu-perfil li {
+    margin: 0;
+    width: 100%;
+}
+
+.submenu-perfil a {
+    display: block;
+    padding: 14px 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.submenu-perfil a:hover {
+    color: rgb(223, 186, 102);
+}
+
+@media (max-width: 600px) {
+    .boton-perfil {
+        font-size: 0.85rem;
+        padding: 15px 8px;
+    }
 }
 
 /* --- Grupo derecho del menú (favoritos + carrito + rayas) --- */

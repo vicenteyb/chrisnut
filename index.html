@@ -16,7 +16,19 @@
 
     <nav class="menu-principal">
         <ul id="lista-menu" class="lista-menu">
-            <li><a href="#" id="enlace-perfil" class="enlace-perfil">Mi Perfil</a></li>
+            <li class="item-desplegable-perfil">
+                <button id="boton-perfil" class="boton-perfil" aria-label="Cuenta" aria-haspopup="true" aria-expanded="false">
+                    <svg class="icono-perfil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.42 3.58-8 8-8s8 3.58 8 8"></path></svg>
+                    <span id="texto-perfil">Hola, Inicia sesión</span>
+                    <span class="flecha-desplegable">⌄</span>
+                </button>
+                <ul id="submenu-perfil" class="submenu-perfil">
+                    <li class="solo-invitado"><a href="#" id="enlace-ir-login">Iniciar sesión</a></li>
+                    <li class="solo-invitado"><a href="#" id="enlace-ir-registro">Regístrate</a></li>
+                    <li class="solo-cuenta" style="display:none;"><a href="#" id="enlace-mi-cuenta">Mi cuenta</a></li>
+                    <li class="solo-cuenta" style="display:none;"><a href="#" id="enlace-cerrar-sesion-menu">Cerrar sesión</a></li>
+                </ul>
+            </li>
 
             <li class="item-desplegable">
                 <ul id="submenu-atajos" class="submenu-atajos">
@@ -463,20 +475,25 @@
 
     // Cuando cambia el estado de sesión, actualizamos toda la interfaz
     auth.onAuthStateChanged((usuario) => {
-        const enlacePerfil = document.getElementById("enlace-perfil");
+        const textoPerfil = document.getElementById("texto-perfil");
+        const opcionesInvitado = document.querySelectorAll("#submenu-perfil .solo-invitado");
+        const opcionesCuenta = document.querySelectorAll("#submenu-perfil .solo-cuenta");
         const vistaInvitado = document.getElementById("vista-invitado");
         const vistaCuenta = document.getElementById("vista-cuenta");
 
         if (usuario) {
-            const primerNombre = (usuario.displayName || "Mi Cuenta").split(" ")[0];
-            enlacePerfil.innerHTML = `<span class="avatar-mini">${iniciales(usuario.displayName)}</span> ${primerNombre}`;
+            textoPerfil.textContent = "Mi Perfil";
+            opcionesInvitado.forEach(li => li.style.display = "none");
+            opcionesCuenta.forEach(li => li.style.display = "block");
             vistaInvitado.style.display = "none";
             vistaCuenta.style.display = "block";
             document.getElementById("avatar-usuario").textContent = iniciales(usuario.displayName);
             document.getElementById("nombre-usuario-perfil").textContent = usuario.displayName || "amigo/a";
             document.getElementById("correo-usuario-perfil").textContent = usuario.email;
         } else {
-            enlacePerfil.innerHTML = "Mi Perfil";
+            textoPerfil.textContent = "Hola, Inicia sesión";
+            opcionesInvitado.forEach(li => li.style.display = "block");
+            opcionesCuenta.forEach(li => li.style.display = "none");
             vistaInvitado.style.display = "block";
             vistaCuenta.style.display = "none";
         }
@@ -739,12 +756,15 @@
 
         botonAtajos.addEventListener("click", (e) => {
             e.stopPropagation();
-            const seVaAAbrir = !submenuAtajos.classList.contains("mostrar-submenu");
-            if (seVaAAbrir) {
+            const estabaAbierto = submenuAtajos.classList.contains("mostrar-submenu");
+            cerrarSubmenuPerfil();
+            if (estabaAbierto) {
+                cerrarSubmenuAtajos();
+            } else {
                 posicionarSubmenuAtajos();
+                submenuAtajos.classList.add("mostrar-submenu");
+                botonAtajos.classList.add("atajos-activo");
             }
-            submenuAtajos.classList.toggle("mostrar-submenu");
-            botonAtajos.classList.toggle("atajos-activo");
         });
 
         // Se cierra al elegir una opción o al tocar fuera de él
@@ -763,10 +783,82 @@
         window.addEventListener("scroll", cerrarSubmenuAtajos, { passive: true });
         window.addEventListener("resize", cerrarSubmenuAtajos);
 
-        // Enlace de Perfil abre el modal de cuenta
-        document.getElementById("enlace-perfil").addEventListener("click", (e) => {
+        // Menú desplegable de perfil ("Hola, Inicia sesión" / "Hola, Nombre")
+        const botonPerfil = document.getElementById("boton-perfil");
+        const submenuPerfil = document.getElementById("submenu-perfil");
+        let menuPerfilAbierto = false;
+
+        function posicionarSubmenuPerfil() {
+            const rect = botonPerfil.getBoundingClientRect();
+            submenuPerfil.style.top = `${rect.bottom}px`;
+            submenuPerfil.style.left = `${rect.left}px`;
+        }
+
+        function abrirSubmenuPerfil() {
+            posicionarSubmenuPerfil();
+            submenuPerfil.style.display = "flex";
+            botonPerfil.classList.add("atajos-activo");
+            botonPerfil.setAttribute("aria-expanded", "true");
+            menuPerfilAbierto = true;
+        }
+
+        function cerrarSubmenuPerfil() {
+            submenuPerfil.style.display = "none";
+            botonPerfil.classList.remove("atajos-activo");
+            botonPerfil.setAttribute("aria-expanded", "false");
+            menuPerfilAbierto = false;
+        }
+
+        botonPerfil.addEventListener("click", (e) => {
             e.preventDefault();
+            e.stopPropagation();
+            cerrarSubmenuAtajos();
+            if (menuPerfilAbierto) {
+                cerrarSubmenuPerfil();
+            } else {
+                abrirSubmenuPerfil();
+            }
+        });
+
+        document.addEventListener("click", (e) => {
+            if (menuPerfilAbierto && !submenuPerfil.contains(e.target) && !botonPerfil.contains(e.target)) {
+                cerrarSubmenuPerfil();
+            }
+        });
+
+        window.addEventListener("scroll", () => {
+            if (menuPerfilAbierto) cerrarSubmenuPerfil();
+        }, { passive: true });
+        window.addEventListener("resize", () => {
+            if (menuPerfilAbierto) cerrarSubmenuPerfil();
+        });
+
+        // Opciones del desplegable (invitado)
+        document.getElementById("enlace-ir-login").addEventListener("click", (e) => {
+            e.preventDefault();
+            cerrarSubmenuPerfil();
             abrirModalPerfil();
+            mostrarPestana("login");
+        });
+
+        document.getElementById("enlace-ir-registro").addEventListener("click", (e) => {
+            e.preventDefault();
+            cerrarSubmenuPerfil();
+            abrirModalPerfil();
+            mostrarPestana("registro");
+        });
+
+        // Opciones del desplegable (con sesión iniciada)
+        document.getElementById("enlace-mi-cuenta").addEventListener("click", (e) => {
+            e.preventDefault();
+            cerrarSubmenuPerfil();
+            abrirModalPerfil();
+        });
+
+        document.getElementById("enlace-cerrar-sesion-menu").addEventListener("click", (e) => {
+            e.preventDefault();
+            cerrarSubmenuPerfil();
+            cerrarSesion();
         });
 
         // Medidor de fuerza de contraseña en tiempo real

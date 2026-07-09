@@ -715,10 +715,10 @@
         }
     }
 
-    // --- Anuncio de bienvenida (5% de descuento por crear una cuenta) ---
-    // Se muestra una sola vez, la primera vez que alguien visita la página
-    // y siempre que no haya iniciado sesión todavía.
-    const CLAVE_POPUP_BIENVENIDA = "chrisnut_popup_bienvenida_visto";
+    // --- Anuncio de bienvenida (10% de descuento por crear una cuenta) ---
+    // Se muestra siempre que alguien entra a la página y todavía no ha
+    // iniciado sesión (una vez por carga de página, no se repite en bucle
+    // gracias a "popupBienvenidaEvaluado").
 
     function cerrarModalBienvenida() {
         const modal = document.getElementById("modal-bienvenida");
@@ -732,19 +732,11 @@
     }
 
     function evaluarPopupBienvenida() {
-        try {
-            if (localStorage.getItem(CLAVE_POPUP_BIENVENIDA)) return;
-        } catch (e) {
-            return;
-        }
         setTimeout(() => {
             // Revisamos de nuevo por si justo en ese momento ya inició sesión
             if (auth.currentUser) return;
             const modal = document.getElementById("modal-bienvenida");
             if (modal) modal.style.display = "flex";
-            try {
-                localStorage.setItem(CLAVE_POPUP_BIENVENIDA, "1");
-            } catch (e) {}
         }, 1400);
     }
 
@@ -1025,6 +1017,12 @@
         if (!contenedor) return;
 
         const mesElegido = selectorMes ? selectorMes.value : "todos";
+
+        if (mesElegido === "ninguno") {
+            contenedor.innerHTML = '<p class="carrito-vacio">No se está mostrando ningún pedido.</p>';
+            return;
+        }
+
         const pedidosFiltrados = mesElegido === "todos"
             ? historialPedidosUsuarioActual
             : historialPedidosUsuarioActual.filter(pedido => claveMesPedido(pedido.fecha) === mesElegido);
@@ -1089,6 +1087,7 @@
                         opcionesHtml += `<option value="${clave}">${nombresMes[mes - 1]} ${año}</option>`;
                     }
                 });
+                opcionesHtml += `<option value="ninguno">Ninguno</option>`;
                 selectorMes.innerHTML = opcionesHtml;
                 selectorMes.value = "todos";
                 selectorMes.style.display = "inline-block";
@@ -3329,6 +3328,15 @@
                     correo: correo,
                     fecha: new Date()
                 });
+
+                // El listener onAuthStateChanged ya se disparó al crear la cuenta,
+                // ANTES de que termináramos de guardar el nombre (updateProfile es
+                // asíncrono), así que la pantalla se había quedado con el nombre
+                // vacío. Lo actualizamos a mano para que se vea de inmediato.
+                document.getElementById("avatar-usuario").textContent = iniciales(nombre);
+                document.getElementById("nombre-usuario-perfil").textContent = nombre || "amigo/a";
+                document.getElementById("correo-usuario-perfil").textContent = correo;
+                document.getElementById("editar-nombre").value = nombre;
 
                 document.getElementById("formulario-registro").reset();
                 evaluarFuerzaClave("");

@@ -122,57 +122,78 @@
             <h2>Nuestra Vitrina</h2>
             <p>Descubre las delicias que preparamos con amor cada día.</p>
 
-            <div class="barra-herramientas-vitrina">
-                <button type="button" id="boton-filtros-vitrina" class="boton-filtros-vitrina" aria-expanded="false" aria-controls="panel-filtros-vitrina">
-                    <span class="icono-filtros-vitrina">☰</span> Filtros
-                </button>
-
-                <div class="control-orden-vitrina">
-                    <label for="select-orden-vitrina">Ordenar por</label>
-                    <select id="select-orden-vitrina">
-                        <option value="destacado">Destacado</option>
-                        <option value="precio-asc">Precio: menor a mayor</option>
-                        <option value="precio-desc">Precio: mayor a menor</option>
-                        <option value="nombre-asc">Nombre: A-Z</option>
-                        <option value="nombre-desc">Nombre: Z-A</option>
-                    </select>
-                </div>
-
-                <div class="control-vista-vitrina">
-                    <span class="etiqueta-ver-como">Ver como</span>
-                    <button type="button" id="boton-vista-grilla" class="boton-vista activo" aria-label="Ver en cuadrícula" title="Ver en cuadrícula">▦</button>
-                    <button type="button" id="boton-vista-lista" class="boton-vista" aria-label="Ver en lista" title="Ver en lista">☰</button>
-                </div>
-            </div>
-
             <div class="contenedor-vitrina-principal">
                 <aside id="panel-filtros-vitrina" class="panel-filtros-vitrina">
-                    <div class="grupo-filtro">
-                        <h4>Disponibilidad</h4>
-                        <label class="opcion-filtro">
-                            <input type="checkbox" id="filtro-en-stock" checked>
-                            En stock <span class="conteo-filtro" id="conteo-en-stock">(0)</span>
-                        </label>
-                        <label class="opcion-filtro">
-                            <input type="checkbox" id="filtro-agotado" checked>
-                            Agotado <span class="conteo-filtro" id="conteo-agotado">(0)</span>
-                        </label>
-                    </div>
+                    <h3 class="titulo-panel-filtros">Filtros</h3>
 
                     <div class="grupo-filtro">
-                        <h4>Precio</h4>
-                        <div class="fila-precio-filtro">
-                            <input type="number" id="filtro-precio-min" placeholder="Mín" min="0" inputmode="numeric">
-                            <span class="separador-precio-filtro">-</span>
-                            <input type="number" id="filtro-precio-max" placeholder="Máx" min="0" inputmode="numeric">
+                        <button type="button" class="cabecera-grupo-filtro" data-grupo="disponibilidad" aria-expanded="true">
+                            <span>Disponibilidad</span>
+                            <span class="icono-colapsar-filtro">−</span>
+                        </button>
+                        <div class="contenido-grupo-filtro" id="contenido-filtro-disponibilidad">
+                            <label class="opcion-filtro">
+                                <input type="checkbox" id="filtro-en-stock" checked>
+                                En stock <span class="conteo-filtro" id="conteo-en-stock">(0)</span>
+                            </label>
+                            <label class="opcion-filtro">
+                                <input type="checkbox" id="filtro-agotado" checked>
+                                Agotado <span class="conteo-filtro" id="conteo-agotado">(0)</span>
+                            </label>
                         </div>
                     </div>
+
+                    <hr class="separador-grupo-filtro">
+
+                    <div class="grupo-filtro">
+                        <button type="button" class="cabecera-grupo-filtro" data-grupo="precio" aria-expanded="true">
+                            <span>Precio</span>
+                            <span class="icono-colapsar-filtro">−</span>
+                        </button>
+                        <div class="contenido-grupo-filtro" id="contenido-filtro-precio">
+                            <div class="fila-precio-filtro">
+                                <span class="signo-peso-filtro">$</span>
+                                <input type="number" id="filtro-precio-min" placeholder="Mín" min="0" inputmode="numeric">
+                            </div>
+                            <div class="fila-precio-filtro">
+                                <span class="signo-peso-filtro">$</span>
+                                <input type="number" id="filtro-precio-max" placeholder="Máx" min="0" inputmode="numeric">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="separador-grupo-filtro">
 
                     <button type="button" id="boton-limpiar-filtros-vitrina" class="boton-limpiar-filtros-vitrina">Limpiar filtros</button>
                 </aside>
 
-                <div class="contenedor-productos vista-grilla" id="contenedor-productos">
-                    <p class="carrito-vacio">Cargando productos...</p>
+                <div class="columna-vitrina-productos">
+                    <div class="barra-herramientas-vitrina">
+                        <button type="button" id="boton-filtros-vitrina" class="boton-filtros-vitrina-movil" aria-expanded="false" aria-controls="panel-filtros-vitrina">
+                            <span class="icono-filtros-vitrina">☰</span> Filtros
+                        </button>
+
+                        <div class="control-orden-vitrina">
+                            <label for="select-orden-vitrina">Ordenar por</label>
+                            <select id="select-orden-vitrina">
+                                <option value="destacado">Destacado</option>
+                                <option value="precio-asc">Precio: menor a mayor</option>
+                                <option value="precio-desc">Precio: mayor a menor</option>
+                                <option value="nombre-asc">Nombre: A-Z</option>
+                                <option value="nombre-desc">Nombre: Z-A</option>
+                            </select>
+                        </div>
+
+                        <div class="control-vista-vitrina">
+                            <span class="etiqueta-ver-como">Ver como</span>
+                            <button type="button" id="boton-vista-grilla" class="boton-vista activo" aria-label="Ver en cuadrícula" title="Ver en cuadrícula">▦</button>
+                            <button type="button" id="boton-vista-lista" class="boton-vista" aria-label="Ver en lista" title="Ver en lista">☰</button>
+                        </div>
+                    </div>
+
+                    <div class="contenedor-productos vista-grilla" id="contenedor-productos">
+                        <p class="carrito-vacio">Cargando productos...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -2780,6 +2801,19 @@
                 botonFiltrosVitrina.setAttribute("aria-expanded", abierto ? "true" : "false");
             });
         }
+
+        // Encabezados "Disponibilidad" / "Precio" dentro del panel de
+        // filtros: se pueden colapsar tocando el título, igual que en el
+        // ejemplo de referencia.
+        document.querySelectorAll(".cabecera-grupo-filtro").forEach((cabecera) => {
+            cabecera.addEventListener("click", () => {
+                const grupo = cabecera.closest(".grupo-filtro");
+                const abierto = !grupo.classList.toggle("colapsado");
+                cabecera.setAttribute("aria-expanded", abierto ? "true" : "false");
+                const icono = cabecera.querySelector(".icono-colapsar-filtro");
+                if (icono) icono.textContent = abierto ? "−" : "+";
+            });
+        });
 
         const filtroEnStock = document.getElementById("filtro-en-stock");
         const filtroAgotado = document.getElementById("filtro-agotado");

@@ -413,6 +413,36 @@ main > section {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
+/* Cuadro con "+" para agregar un producto nuevo, visible solo para el admin */
+.tarjeta-agregar-producto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    background-color: transparent;
+    border: 2px dashed var(--color-borde);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.tarjeta-agregar-producto:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-acento);
+    background-color: var(--color-fondo);
+}
+
+.icono-agregar-producto {
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--color-texto-suave);
+    transition: color 0.3s ease;
+}
+
+.tarjeta-agregar-producto:hover .icono-agregar-producto {
+    color: var(--color-acento);
+}
+
 .tarjeta-producto h3 {
     color: var(--color-titulo);
     margin-top: 0;

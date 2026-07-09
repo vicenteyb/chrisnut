@@ -122,61 +122,8 @@
             <h2>Nuestra Vitrina</h2>
             <p>Descubre las delicias que preparamos con amor cada día.</p>
             
-            <div class="contenedor-productos">
-                <article class="tarjeta-producto" data-nombre="Medialunas" data-precio="1000">
-                    <div class="imagen-contenedor">
-                        <img src="medialuna.jpeg" alt="Medialunas" class="imagen-producto">
-                        <button class="boton-favorito" aria-label="Agregar a favoritos">🤍</button>
-                    </div>
-                    <h3>Medialunas</h3>
-                    <p class="descripcion">Medialunas bañadas en almibar perfectas para acompañarlas con café.dulces y saladas.</p>
-                    <span class="precio">$1.000</span>
-                    <button class="boton-agregar-carrito">Agregar al carrito</button>
-                </article>
-
-                <article class="tarjeta-producto" data-nombre="Rollitos de Canela" data-precio="500">
-                    <div class="imagen-contenedor">
-                        <img src="rollito-canela.jpeg" alt="Rollitos de Canela" class="imagen-producto">
-                        <button class="boton-favorito" aria-label="Agregar a favoritos">🤍</button>
-                    </div>
-                    <h3>Rollitos de Canela</h3>
-                    <p class="descripcion">El toque dulce ideal para tus celebraciones y cumpleaños.</p>
-                    <span class="precio">$500</span>
-                    <button class="boton-agregar-carrito">Agregar al carrito</button>
-                </article>
-
-                <article class="tarjeta-producto" data-nombre="Berlín" data-precio="1000">
-                    <div class="imagen-contenedor">
-                        <img src="berlin.jpeg" alt="Berlín" class="imagen-producto">
-                        <button class="boton-favorito" aria-label="Agregar a favoritos">🤍</button>
-                    </div>
-                    <h3>Berlín</h3>
-                    <p class="descripcion">Deliciosos berlines tradicionales, rellenos con crema pastelera o manjar, perfectos para disfrutar con quienes mas quieres.</p>
-                    <span class="precio">$1.000</span>
-                    <button class="boton-agregar-carrito">Agregar al carrito</button>
-                </article>
-
-                <article class="tarjeta-producto" data-nombre="Alfajores Simples" data-precio="500">
-                    <div class="imagen-contenedor">
-                        <img src="alfajor.jpeg" alt="alfajores" class="imagen-producto">
-                        <button class="boton-favorito" aria-label="Agregar a favoritos">🤍</button>
-                    </div>
-                    <h3>Alfajores Simples</h3>
-                    <p class="descripcion">Ricos alfajores artesanales rellenos con manjar preparados con muchos cariño.</p>
-                    <span class="precio">$500</span>
-                    <button class="boton-agregar-carrito">Agregar al carrito</button>
-                </article>
-
-                <article class="tarjeta-producto" data-nombre="Pan Amasado" data-precio="300">
-                    <div class="imagen-contenedor">
-                        <img src="pan-amasado.jpeg" alt="Pan Artesanal" class="imagen-producto">
-                        <button class="boton-favorito" aria-label="Agregar a favoritos">🤍</button>
-                    </div>
-                    <h3>Pan Amasado</h3>
-                    <p class="descripcion">Horneado cada mañana, crujiente y calientito.</p>
-                    <span class="precio">$300</span>
-                    <button class="boton-agregar-carrito">Agregar al carrito</button>
-                </article>
+            <div class="contenedor-productos" id="contenedor-productos">
+                <p class="carrito-vacio">Cargando productos...</p>
             </div>
         </section>
 
@@ -282,6 +229,33 @@
                 <div class="g-recaptcha" data-sitekey="6LeSFkgtAAAAAMFw-9WvXShifIY7yolLhkbTbJEx"></div>
 
                 <button type="submit" class="boton-enviar-modal">Enviar Opinión</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-nuevo-producto" class="modal-fondo">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalNuevoProducto()">&times;</span>
+            <h3>🥐 Nuevo producto</h3>
+            <form id="formulario-nuevo-producto" class="formulario-modal">
+                <div class="grupo-modal">
+                    <label for="nuevo-producto-nombre">Nombre del producto:</label>
+                    <input type="text" id="nuevo-producto-nombre" placeholder="Ej: Kuchen de Manzana" required>
+                </div>
+                <div class="grupo-modal">
+                    <label for="nuevo-producto-descripcion">Descripción:</label>
+                    <textarea id="nuevo-producto-descripcion" rows="3" placeholder="Cuéntale al cliente de qué se trata" required></textarea>
+                </div>
+                <div class="grupo-modal">
+                    <label for="nuevo-producto-precio">Precio (CLP):</label>
+                    <input type="number" id="nuevo-producto-precio" placeholder="Ej: 2500" min="1" required>
+                </div>
+                <div class="grupo-modal">
+                    <label for="nuevo-producto-imagen">Foto del producto:</label>
+                    <input type="file" id="nuevo-producto-imagen" accept="image/*" required>
+                </div>
+                <p id="estado-nuevo-producto" class="texto-medidor-clave"></p>
+                <button type="submit" id="boton-agregar-producto" class="boton-enviar-modal">Agregar producto</button>
             </form>
         </div>
     </div>
@@ -445,6 +419,14 @@
                     </div>
                 </div>
 
+                <div id="panel-admin-productos" class="panel-admin" style="display:none;">
+                    <h3>🥐 Productos de la vitrina</h3>
+                    <p class="panel-admin-subtitulo">Toca el cuadro con el "+" en la vitrina para agregar uno nuevo</p>
+                    <div id="lista-productos-admin" class="lista-cupones-admin">
+                        <p class="carrito-vacio">Cargando productos...</p>
+                    </div>
+                </div>
+
 
                 <div id="panel-admin-testimonios" class="panel-admin" style="display:none;">
                     <h3>🛠️ Panel de administrador</h3>
@@ -530,6 +512,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
@@ -547,6 +530,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
+    const storage = firebase.storage();
 
     // ⚠️ IMPORTANTE: reemplaza esto por el/los correos que deben ver el panel
     // de administrador. También debes restringir esto en las reglas de
@@ -708,20 +692,25 @@
             // Panel simple de administrador (solo visible para correos autorizados)
             const panelAdmin = document.getElementById("panel-admin-testimonios");
             const panelAdminPedidos = document.getElementById("panel-admin-pedidos");
+            const panelAdminProductos = document.getElementById("panel-admin-productos");
             const contenidoModalPerfil = document.querySelector("#modal-perfil .modal-contenido");
             window._esAdminActual = esAdmin(usuario);
+            renderizarVitrina();
             if (esAdmin(usuario)) {
                 panelAdmin.style.display = "block";
                 panelAdminPedidos.style.display = "block";
+                panelAdminProductos.style.display = "block";
                 if (contenidoModalPerfil) contenidoModalPerfil.classList.add("modal-ancho-admin");
                 suscribirTestimoniosPendientesAdmin();
                 suscribirPedidosAdmin();
                 suscribirCuponesAdmin();
                 suscribirStockAdmin();
+                renderizarListaProductosAdmin();
                 cargarEstadisticasMes();
             } else {
                 panelAdmin.style.display = "none";
                 panelAdminPedidos.style.display = "none";
+                panelAdminProductos.style.display = "none";
                 if (contenidoModalPerfil) contenidoModalPerfil.classList.remove("modal-ancho-admin");
                 desuscribirTestimoniosPendientesAdmin();
                 desuscribirPedidosAdmin();
@@ -731,8 +720,10 @@
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
         } else {
             window._esAdminActual = false;
+            renderizarVitrina();
             document.getElementById("panel-admin-testimonios").style.display = "none";
             document.getElementById("panel-admin-pedidos").style.display = "none";
+            document.getElementById("panel-admin-productos").style.display = "none";
             const contenidoModalPerfilSalida = document.querySelector("#modal-perfil .modal-contenido");
             if (contenidoModalPerfilSalida) contenidoModalPerfilSalida.classList.remove("modal-ancho-admin");
             desuscribirTestimoniosPendientesAdmin();
@@ -1824,11 +1815,198 @@
     }
 
     // ==========================================
+    // PRODUCTOS DE LA VITRINA (catálogo dinámico desde Firestore)
+    // ==========================================
+    // Guarda en memoria la última lista de productos que llegó desde
+    // Firestore, para no tener que volver a pedirla cada vez que se
+    // necesita (por ejemplo, para pintar el panel de stock del admin).
+    let productosCache = [];
+
+    // Se llama una sola vez al cargar la página. Deja la vitrina escuchando
+    // los cambios en la colección "productos" en tiempo real: si el admin
+    // agrega o elimina un producto, todos los que tengan la página abierta
+    // lo ven al instante, sin recargar.
+    function iniciarEscuchaProductos() {
+        db.collection("productos").orderBy("creado").onSnapshot((snapshot) => {
+            productosCache = snapshot.docs.map(doc => doc.data());
+            renderizarVitrina();
+            renderizarListaProductosAdmin();
+            renderizarListaStockAdmin();
+        }, (error) => {
+            console.error("Error al cargar los productos: ", error);
+            const contenedor = document.getElementById("contenedor-productos");
+            if (contenedor) contenedor.innerHTML = '<p class="carrito-vacio">No se pudieron cargar los productos.</p>';
+        });
+    }
+
+    function renderizarVitrina() {
+        const contenedor = document.getElementById("contenedor-productos");
+        if (!contenedor) return;
+
+        let html = "";
+
+        if (productosCache.length === 0) {
+            html = '<p class="carrito-vacio">Todavía no hay productos cargados.</p>';
+        } else {
+            productosCache.forEach((producto) => {
+                html += `
+                    <article class="tarjeta-producto" data-nombre="${producto.nombre}" data-precio="${producto.precio}">
+                        <div class="imagen-contenedor">
+                            <img src="${producto.imagenURL}" alt="${producto.nombre}" class="imagen-producto">
+                            <button class="boton-favorito" aria-label="Agregar a favoritos">🤍</button>
+                        </div>
+                        <h3>${producto.nombre}</h3>
+                        <p class="descripcion">${producto.descripcion}</p>
+                        <span class="precio">${formatearPrecio(producto.precio)}</span>
+                        <button class="boton-agregar-carrito">Agregar al carrito</button>
+                    </article>
+                `;
+            });
+        }
+
+        // El cuadro con "+" para agregar un producto solo se ve si la
+        // persona con sesión iniciada es administradora.
+        if (window._esAdminActual) {
+            html += `
+                <button type="button" class="tarjeta-agregar-producto" onclick="abrirModalNuevoProducto()" aria-label="Agregar producto nuevo">
+                    <span class="icono-agregar-producto">+</span>
+                </button>
+            `;
+        }
+
+        contenedor.innerHTML = html;
+    }
+
+    function abrirModalNuevoProducto() {
+        document.getElementById("modal-nuevo-producto").style.display = "flex";
+    }
+
+    function cerrarModalNuevoProducto() {
+        document.getElementById("modal-nuevo-producto").style.display = "none";
+        document.getElementById("estado-nuevo-producto").textContent = "";
+    }
+
+    // Lista de productos con botón de eliminar, dentro del panel admin.
+    function renderizarListaProductosAdmin() {
+        const contenedor = document.getElementById("lista-productos-admin");
+        if (!contenedor) return;
+
+        if (productosCache.length === 0) {
+            contenedor.innerHTML = '<p class="carrito-vacio">Todavía no hay productos.</p>';
+            return;
+        }
+
+        let html = "";
+        productosCache.forEach((producto) => {
+            const nombreEscapado = producto.nombre.replace(/'/g, "\\'");
+            const imagenEscapada = (producto.imagenURL || "").replace(/'/g, "\\'");
+            html += `
+                <div class="fila-cupon-admin">
+                    <span class="codigo-cupon-admin">${producto.nombre}</span>
+                    <span class="valor-cupon-admin">${formatearPrecio(producto.precio)}</span>
+                    <button type="button" onclick="eliminarProducto('${nombreEscapado}', '${imagenEscapada}')">🗑️</button>
+                </div>
+            `;
+        });
+        contenedor.innerHTML = html;
+    }
+
+    async function eliminarProducto(nombre, imagenURL) {
+        const confirmado = await mostrarConfirmacion(`¿Eliminar "${nombre}" de la vitrina? Esto no se puede deshacer.`, "Sí, eliminar");
+        if (!confirmado) return;
+
+        try {
+            await db.collection("productos").doc(nombre).delete();
+            // Si la imagen está guardada en Firebase Storage, intentamos borrarla
+            // también. Si falla (por ejemplo, es una imagen local antigua), no pasa nada.
+            if (imagenURL && imagenURL.includes("firebasestorage")) {
+                storage.refFromURL(imagenURL).delete().catch(() => {});
+            }
+        } catch (error) {
+            console.error("Error al eliminar el producto: ", error);
+            mostrarAviso("No se pudo eliminar el producto. Intenta de nuevo.", "error");
+        }
+    }
+
+    // Sube la foto elegida a Firebase Storage y crea el producto en Firestore.
+    // El id del documento es el nombre del producto, para que coincida con
+    // lo que ya usan el carrito, los pedidos y el stock diario.
+    async function agregarProductoNuevo(evento) {
+        evento.preventDefault();
+
+        const nombre = document.getElementById("nuevo-producto-nombre").value.trim();
+        const descripcion = document.getElementById("nuevo-producto-descripcion").value.trim();
+        const precio = parseInt(document.getElementById("nuevo-producto-precio").value, 10);
+        const archivoInput = document.getElementById("nuevo-producto-imagen");
+        const archivo = archivoInput.files[0];
+        const estado = document.getElementById("estado-nuevo-producto");
+        const boton = document.getElementById("boton-agregar-producto");
+
+        if (!nombre || !descripcion || !precio || precio <= 0 || !archivo) {
+            mostrarAviso("Completa el nombre, la descripción, el precio y elige una foto.", "advertencia");
+            return;
+        }
+
+        alternarCargaBoton(boton, true);
+        estado.textContent = "Subiendo foto...";
+
+        try {
+            const referenciaImagen = storage.ref(`productos/${Date.now()}-${archivo.name}`);
+            await referenciaImagen.put(archivo);
+            const urlImagen = await referenciaImagen.getDownloadURL();
+
+            estado.textContent = "Guardando producto...";
+            await db.collection("productos").doc(nombre).set({
+                nombre,
+                descripcion,
+                precio,
+                imagenURL: urlImagen,
+                creado: new Date()
+            });
+
+            document.getElementById("formulario-nuevo-producto").reset();
+            estado.textContent = "";
+            cerrarModalNuevoProducto();
+            mostrarAviso("¡Producto agregado con éxito!", "exito");
+        } catch (error) {
+            console.error("Error al agregar el producto: ", error);
+            estado.textContent = "";
+            mostrarAviso("No se pudo agregar el producto. Intenta de nuevo.", "error");
+        } finally {
+            alternarCargaBoton(boton, false);
+        }
+    }
+
+    // ⚠️ Función de uso único: crea en Firestore los 5 productos que ya
+    // existían antes de tener el catálogo dinámico, usando sus fotos que ya
+    // están en la carpeta del sitio. Ejecútala UNA sola vez desde la consola
+    // del navegador (F12 → pestaña "Console" → escribe migrarProductosIniciales()
+    // y presiona Enter) después de publicar estos cambios. Si la vuelves a
+    // ejecutar por error no genera duplicados, solo sobrescribe los mismos 5.
+    async function migrarProductosIniciales() {
+        const productosOriginales = [
+            { nombre: "Medialunas", descripcion: "Medialunas bañadas en almibar perfectas para acompañarlas con café.dulces y saladas.", precio: 1000, imagenURL: "medialuna.jpeg" },
+            { nombre: "Rollitos de Canela", descripcion: "El toque dulce ideal para tus celebraciones y cumpleaños.", precio: 500, imagenURL: "rollito-canela.jpeg" },
+            { nombre: "Berlín", descripcion: "Deliciosos berlines tradicionales, rellenos con crema pastelera o manjar, perfectos para disfrutar con quienes mas quieres.", precio: 1000, imagenURL: "berlin.jpeg" },
+            { nombre: "Alfajores Simples", descripcion: "Ricos alfajores artesanales rellenos con manjar preparados con muchos cariño.", precio: 500, imagenURL: "alfajor.jpeg" },
+            { nombre: "Pan Amasado", descripcion: "Horneado cada mañana, crujiente y calientito.", precio: 300, imagenURL: "pan-amasado.jpeg" }
+        ];
+
+        for (let i = 0; i < productosOriginales.length; i++) {
+            const producto = productosOriginales[i];
+            await db.collection("productos").doc(producto.nombre).set({
+                ...producto,
+                // Fechas antiguas y en orden, para que aparezcan primero y en
+                // el mismo orden en que ya estaban en la vitrina.
+                creado: new Date(2024, 0, i + 1)
+            });
+        }
+        console.log("Productos migrados con éxito ✅");
+    }
+
+    // ==========================================
     // STOCK DIARIO (gestión desde el panel admin)
     // ==========================================
-    // Debe coincidir exactamente con los data-nombre de la vitrina.
-    const PRODUCTOS_STOCK = ["Medialunas", "Rollitos de Canela", "Berlín", "Alfajores Simples", "Pan Amasado"];
-
     // Fecha de hoy en formato YYYY-MM-DD (hora local), para saber si el
     // stock guardado en Firestore corresponde al día de hoy o quedó viejo.
     function obtenerFechaHoy() {
@@ -1854,52 +2032,26 @@
             .toLowerCase();
     }
 
+    // Última copia del stock de hoy que llegó desde Firestore (doc.id -> datos).
+    let cacheStockHoy = {};
     let cancelarSuscripcionStockAdmin = null;
 
     function suscribirStockAdmin() {
         if (cancelarSuscripcionStockAdmin) return;
 
-        const contenedor = document.getElementById("lista-stock-admin");
         const etiquetaFecha = document.getElementById("fecha-stock-admin");
         const fechaHoy = obtenerFechaHoy();
         if (etiquetaFecha) etiquetaFecha.textContent = `Cantidades para hoy (${formatearFechaLegible(fechaHoy)})`;
 
         cancelarSuscripcionStockAdmin = db.collection("stock")
             .onSnapshot((snapshot) => {
-                const stockPorProducto = {};
-                snapshot.forEach((doc) => { stockPorProducto[doc.id] = doc.data(); });
-
-                let html = "";
-                PRODUCTOS_STOCK.forEach((nombre) => {
-                    const idSeguro = idStockSeguro(nombre);
-                    const datos = stockPorProducto[nombre];
-                    const esDeHoy = datos && datos.fecha === fechaHoy;
-                    const restante = esDeHoy ? datos.cantidad : null;
-
-                    let textoEstado;
-                    let claseEstado = "";
-                    if (restante === null) {
-                        textoEstado = "Sin definir hoy";
-                    } else if (restante > 0) {
-                        textoEstado = `Quedan ${restante}`;
-                    } else {
-                        textoEstado = "Agotado";
-                        claseEstado = "fila-cupon-inactivo";
-                    }
-
-                    html += `
-                        <div class="fila-cupon-admin ${claseEstado}">
-                            <span class="codigo-cupon-admin">${nombre}</span>
-                            <span class="valor-cupon-admin">${textoEstado}</span>
-                            <input type="number" id="input-stock-${idSeguro}" class="input-stock-admin" placeholder="Cant." min="0">
-                            <button type="button" onclick="guardarStockProducto('${nombre.replace(/'/g, "\\'")}')">Guardar</button>
-                        </div>
-                    `;
-                });
-                contenedor.innerHTML = html;
+                cacheStockHoy = {};
+                snapshot.forEach((doc) => { cacheStockHoy[doc.id] = doc.data(); });
+                renderizarListaStockAdmin();
             }, (error) => {
                 console.error("Error al cargar el stock: ", error);
-                contenedor.innerHTML = '<p class="carrito-vacio">No se pudo cargar el stock.</p>';
+                const contenedor = document.getElementById("lista-stock-admin");
+                if (contenedor) contenedor.innerHTML = '<p class="carrito-vacio">No se pudo cargar el stock.</p>';
             });
     }
 
@@ -1908,6 +2060,49 @@
             cancelarSuscripcionStockAdmin();
             cancelarSuscripcionStockAdmin = null;
         }
+    }
+
+    // Pinta una fila de stock por cada producto que exista hoy en la vitrina.
+    // Se llama cada vez que cambia el stock guardado O la lista de productos.
+    function renderizarListaStockAdmin() {
+        const contenedor = document.getElementById("lista-stock-admin");
+        if (!contenedor) return;
+
+        if (productosCache.length === 0) {
+            contenedor.innerHTML = '<p class="carrito-vacio">Agrega productos a la vitrina primero.</p>';
+            return;
+        }
+
+        const fechaHoy = obtenerFechaHoy();
+        let html = "";
+        productosCache.forEach((producto) => {
+            const nombre = producto.nombre;
+            const idSeguro = idStockSeguro(nombre);
+            const datos = cacheStockHoy[nombre];
+            const esDeHoy = datos && datos.fecha === fechaHoy;
+            const restante = esDeHoy ? datos.cantidad : null;
+
+            let textoEstado;
+            let claseEstado = "";
+            if (restante === null) {
+                textoEstado = "Sin definir hoy";
+            } else if (restante > 0) {
+                textoEstado = `Quedan ${restante}`;
+            } else {
+                textoEstado = "Agotado";
+                claseEstado = "fila-cupon-inactivo";
+            }
+
+            html += `
+                <div class="fila-cupon-admin ${claseEstado}">
+                    <span class="codigo-cupon-admin">${nombre}</span>
+                    <span class="valor-cupon-admin">${textoEstado}</span>
+                    <input type="number" id="input-stock-${idSeguro}" class="input-stock-admin" placeholder="Cant." min="0">
+                    <button type="button" onclick="guardarStockProducto('${nombre.replace(/'/g, "\\'")}')">Guardar</button>
+                </div>
+            `;
+        });
+        contenedor.innerHTML = html;
     }
 
     // El admin escribe una cantidad y la guarda como el stock de HOY para
@@ -2229,6 +2424,16 @@
         // estaba guardado en este dispositivo, apenas carga la página.
         actualizarContadorCarrito();
 
+        // Carga la vitrina de productos desde Firestore y la deja escuchando
+        // cambios en tiempo real (nuevos productos, eliminados, etc.)
+        iniciarEscuchaProductos();
+
+        // Formulario del panel admin para agregar un producto nuevo
+        const formularioNuevoProducto = document.getElementById("formulario-nuevo-producto");
+        if (formularioNuevoProducto) {
+            formularioNuevoProducto.addEventListener("submit", agregarProductoNuevo);
+        }
+
         // Si había un pedido en seguimiento (logo flotante de estado), lo
         // restauramos para que el cliente lo siga viendo aunque recargue.
         restaurarSeguimientoPedidoGuardado();
@@ -2279,15 +2484,44 @@
             abrirModalFavoritos();
         });
 
-        // Corazón de favorito sobre cada imagen de producto
-        document.querySelectorAll(".boton-favorito").forEach(boton => {
-            boton.addEventListener("click", () => {
-                const tarjeta = boton.closest(".tarjeta-producto");
-                const nombre = tarjeta.dataset.nombre;
-                const precio = parseInt(tarjeta.dataset.precio, 10);
-                alternarFavorito(nombre, precio, boton);
+        // Corazón de favorito y "Agregar al carrito": como las tarjetas de
+        // producto ahora se generan dinámicamente (vienen de Firestore), en
+        // vez de agregar un listener a cada botón (que no existiría todavía
+        // al cargar la página), escuchamos los clics en el contenedor que
+        // los envuelve a todos. Así funciona sin importar cuándo se creen.
+        const contenedorProductos = document.getElementById("contenedor-productos");
+        if (contenedorProductos) {
+            contenedorProductos.addEventListener("click", (e) => {
+                const botonFavorito = e.target.closest(".boton-favorito");
+                if (botonFavorito) {
+                    const tarjeta = botonFavorito.closest(".tarjeta-producto");
+                    const nombre = tarjeta.dataset.nombre;
+                    const precio = parseInt(tarjeta.dataset.precio, 10);
+                    alternarFavorito(nombre, precio, botonFavorito);
+                    return;
+                }
+
+                const botonCarrito = e.target.closest(".boton-agregar-carrito");
+                if (botonCarrito) {
+                    const tarjeta = botonCarrito.closest(".tarjeta-producto");
+                    const nombre = tarjeta.dataset.nombre;
+                    const precio = parseInt(tarjeta.dataset.precio, 10);
+                    agregarAlCarrito(nombre, precio);
+
+                    // Pequeño efecto visual de confirmación
+                    const textoOriginal = botonCarrito.dataset.textoOriginal || botonCarrito.textContent;
+                    botonCarrito.dataset.textoOriginal = textoOriginal;
+                    botonCarrito.classList.remove("animar-agregado");
+                    void botonCarrito.offsetWidth; // fuerza el reinicio de la animación
+                    botonCarrito.classList.add("animar-agregado");
+                    botonCarrito.textContent = "¡Agregado! ✅";
+                    clearTimeout(botonCarrito._timeoutTexto);
+                    botonCarrito._timeoutTexto = setTimeout(() => {
+                        botonCarrito.textContent = textoOriginal;
+                    }, 900);
+                }
             });
-        });
+        }
 
         // Menú desplegable de atajos (solo aparece como tal en celular)
         const botonAtajos = document.getElementById("boton-atajos");
@@ -2509,27 +2743,6 @@
             }
         });
 
-        // Cada botón "Agregar al carrito" toma el nombre y precio de su tarjeta
-        document.querySelectorAll(".boton-agregar-carrito").forEach(boton => {
-            const textoOriginal = boton.textContent;
-            boton.addEventListener("click", () => {
-                const tarjeta = boton.closest(".tarjeta-producto");
-                const nombre = tarjeta.dataset.nombre;
-                const precio = parseInt(tarjeta.dataset.precio, 10);
-                agregarAlCarrito(nombre, precio);
-
-                // Pequeño efecto visual de confirmación
-                boton.classList.remove("animar-agregado");
-                void boton.offsetWidth; // fuerza el reinicio de la animación
-                boton.classList.add("animar-agregado");
-                boton.textContent = "¡Agregado! ✅";
-                clearTimeout(boton._timeoutTexto);
-                boton._timeoutTexto = setTimeout(() => {
-                    boton.textContent = textoOriginal;
-                }, 900);
-            });
-        });
-
         formularioContacto.addEventListener("submit", async (e) => {
             e.preventDefault();
 
@@ -2659,6 +2872,7 @@
 
     window.onclick = function(event) {
         const modalTestimonio = document.getElementById('modal-testimonio');
+        const modalNuevoProducto = document.getElementById('modal-nuevo-producto');
         const modalCarrito = document.getElementById('modal-carrito');
         const modalPerfil = document.getElementById('modal-perfil');
         const modalFavoritos = document.getElementById('modal-favoritos');
@@ -2667,6 +2881,9 @@
         const modalConfirmacion = document.getElementById('modal-confirmacion');
         if (event.target == modalTestimonio) {
             modalTestimonio.style.display = 'none';
+        }
+        if (event.target == modalNuevoProducto) {
+            cerrarModalNuevoProducto();
         }
         if (event.target == modalCarrito) {
             modalCarrito.style.display = 'none';

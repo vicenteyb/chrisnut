@@ -538,20 +538,13 @@
                         </div>
                     </div>
 
-                    <div class="panel-cupones">
-                        <div class="panel-estadisticas-encabezado">
-                            <h4>📦 Stock del día</h4>
-                        </div>
-                        <p id="fecha-stock-admin" class="panel-admin-subtitulo"></p>
-                        <div id="lista-stock-admin" class="lista-cupones-admin">
-                            <p class="carrito-vacio">Cargando stock...</p>
-                        </div>
-                    </div>
                 </div>
 
                 <div id="panel-admin-productos" class="panel-admin" style="display:none;">
-                    <h3>🥐 Productos de la vitrina</h3>
-                    <p class="panel-admin-subtitulo">Toca el cuadro con el "+" en la vitrina para agregar uno nuevo</p>
+                    <div class="panel-estadisticas-encabezado">
+                        <h3>🥐 Productos de la vitrina</h3>
+                        <button type="button" class="boton-agregar-producto-admin" onclick="abrirModalNuevoProducto()" aria-label="Agregar producto nuevo" title="Agregar producto nuevo">+</button>
+                    </div>
                     <div id="lista-productos-admin" class="lista-cupones-admin">
                         <p class="carrito-vacio">Cargando productos...</p>
                     </div>
@@ -691,12 +684,18 @@
     // ==========================================
     function abrirModalPerfil() {
         document.getElementById("modal-perfil").style.display = "flex";
+        if (window.location.hash !== "#mi-cuenta") {
+            history.pushState({ modal: "mi-cuenta" }, "", "#mi-cuenta");
+        }
     }
     function cerrarModalPerfil() {
         document.getElementById("modal-perfil").style.display = "none";
         document.getElementById("error-login").textContent = "";
         document.getElementById("error-registro").textContent = "";
         document.getElementById("exito-login").textContent = "";
+        if (window.location.hash === "#mi-cuenta") {
+            history.pushState(null, "", window.location.pathname + window.location.search);
+        }
     }
 
     function mostrarPestana(pestana) {
@@ -1707,9 +1706,15 @@
 
     function abrirModalFavoritos() {
         document.getElementById("modal-favoritos").style.display = "flex";
+        if (window.location.hash !== "#favoritos") {
+            history.pushState({ modal: "favoritos" }, "", "#favoritos");
+        }
     }
     function cerrarModalFavoritos() {
         document.getElementById("modal-favoritos").style.display = "none";
+        if (window.location.hash === "#favoritos") {
+            history.pushState(null, "", window.location.pathname + window.location.search);
+        }
     }
 
     // ==========================================
@@ -2782,20 +2787,22 @@
         // Botón flotante del carrito (arriba de WhatsApp, solo visible con items)
         document.getElementById("boton-carrito-flotante").addEventListener("click", abrirModalCarrito);
 
-        // Si la URL trae #carrito al cargar (ej: alguien entra directo a
-        // tusitio.com/#carrito), abrimos el carrito automáticamente.
+        // Si la URL trae #carrito, #mi-cuenta o #favoritos al cargar (ej: alguien
+        // entra directo a ese link o lo recarga), abrimos el modal correspondiente.
         if (window.location.hash === "#carrito") {
             abrirModalCarrito();
+        } else if (window.location.hash === "#mi-cuenta") {
+            abrirModalPerfil();
+        } else if (window.location.hash === "#favoritos") {
+            abrirModalFavoritos();
         }
 
         // Si el usuario usa el botón "atrás/adelante" del navegador,
-        // sincronizamos el modal con la URL.
+        // sincronizamos los modales con la URL.
         window.addEventListener("popstate", () => {
-            if (window.location.hash === "#carrito") {
-                document.getElementById("modal-carrito").style.display = "flex";
-            } else {
-                document.getElementById("modal-carrito").style.display = "none";
-            }
+            document.getElementById("modal-carrito").style.display = (window.location.hash === "#carrito") ? "flex" : "none";
+            document.getElementById("modal-perfil").style.display = (window.location.hash === "#mi-cuenta") ? "flex" : "none";
+            document.getElementById("modal-favoritos").style.display = (window.location.hash === "#favoritos") ? "flex" : "none";
         });
 
         // Logo flotante de estado del pedido (aparece al enviar un pedido)
@@ -2887,6 +2894,9 @@
             botonFiltrosVitrina.addEventListener("click", () => {
                 const abierto = panelFiltrosVitrina.classList.toggle("abierto");
                 botonFiltrosVitrina.setAttribute("aria-expanded", abierto ? "true" : "false");
+                if (abierto) {
+                    panelFiltrosVitrina.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
             });
         }
 

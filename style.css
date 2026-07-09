@@ -1448,14 +1448,28 @@ main > section {
 
 /* --- Modal de Perfil: permite scroll si el contenido crece (datos + favoritos) --- */
 #modal-perfil .modal-contenido {
-    max-height: 85vh;
+    max-height: 100vh;
+    height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    margin: 0;
     overflow-y: auto;
 }
 
 /* Cuando el panel de administrador está visible, el modal de perfil se
    ensancha para dar más espacio y comodidad al revisar/aprobar opiniones. */
 #modal-perfil .modal-contenido.modal-ancho-admin {
-    max-width: 760px;
+    max-width: 100%;
+}
+
+/* Favoritos también se ve en pantalla completa, como una página aparte */
+#modal-favoritos .modal-contenido {
+    max-width: 100%;
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    margin: 0;
 }
 
 .separador-perfil {
@@ -2464,8 +2478,29 @@ html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(
     gap: 8px;
 }
 
+.panel-estadisticas-encabezado h3,
 .panel-estadisticas-encabezado h4 {
     margin: 0;
+}
+
+.boton-agregar-producto-admin {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-acento);
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.boton-agregar-producto-admin:hover {
+    background-color: var(--color-acento-hover);
 }
 
 .boton-imprimir-estadisticas {
@@ -2646,5 +2681,40 @@ button {
     }
     .grupo-cupon button {
         padding: 10px;
+    }
+}
+
+/* --- Centrado y accesibilidad general en celular --- */
+@media (max-width: 600px) {
+    .seccion-vitrina,
+    .seccion-contacto,
+    .seccion-pasos,
+    .seccion-testimonios {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    /* La barra de "Filtros / Ordenar por / Ver como" se centra y respira mejor */
+    .barra-herramientas-vitrina {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .control-orden-vitrina,
+    .control-vista-vitrina {
+        justify-content: center;
+    }
+
+    /* Botones de icono con área táctil más grande (mínimo recomendado 44px) */
+    .boton-vista,
+    .boton-filtros-vitrina-movil,
+    .cerrar-modal,
+    .boton-favorito {
+        min-height: 40px;
+        min-width: 40px;
+    }
+
+    .tarjetas-info-contacto {
+        padding: 0;
     }
 }

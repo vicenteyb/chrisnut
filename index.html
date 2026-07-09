@@ -592,6 +592,19 @@
         </div>
     </div>
 
+    <!-- Anuncio de bienvenida: se muestra solo en la primera visita, invitando a crear una cuenta -->
+    <div id="modal-bienvenida" class="modal-fondo">
+        <div class="modal-contenido modal-bienvenida-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalBienvenida()">&times;</span>
+            <div class="modal-bienvenida-insignia">🥐</div>
+            <h3 class="modal-bienvenida-titulo">¡Bienvenido/a a Chrisnut!</h3>
+            <p class="modal-bienvenida-descuento"><strong>5% OFF</strong> en tu primera compra</p>
+            <p class="modal-bienvenida-texto">Crea tu cuenta gratis y el descuento se aplicará automáticamente al pagar tu primer pedido.</p>
+            <button type="button" class="boton-enviar-modal" onclick="irARegistroDesdeBienvenida()">Crear cuenta gratis</button>
+            <button type="button" class="modal-bienvenida-mas-tarde" onclick="cerrarModalBienvenida()">Ahora no, gracias</button>
+        </div>
+    </div>
+
     <!-- Reemplaza los alert() nativos del navegador por un cartel lindo y acorde a la marca -->
     <div id="modal-aviso" class="modal-fondo modal-aviso-fondo">
         <div class="modal-contenido modal-aviso-contenido">
@@ -700,6 +713,39 @@
         }
     }
 
+    // --- Anuncio de bienvenida (5% de descuento por crear una cuenta) ---
+    // Se muestra una sola vez, la primera vez que alguien visita la página
+    // y siempre que no haya iniciado sesión todavía.
+    const CLAVE_POPUP_BIENVENIDA = "chrisnut_popup_bienvenida_visto";
+
+    function cerrarModalBienvenida() {
+        const modal = document.getElementById("modal-bienvenida");
+        if (modal) modal.style.display = "none";
+    }
+
+    function irARegistroDesdeBienvenida() {
+        cerrarModalBienvenida();
+        mostrarPestana("registro");
+        abrirModalPerfil();
+    }
+
+    function evaluarPopupBienvenida() {
+        try {
+            if (localStorage.getItem(CLAVE_POPUP_BIENVENIDA)) return;
+        } catch (e) {
+            return;
+        }
+        setTimeout(() => {
+            // Revisamos de nuevo por si justo en ese momento ya inició sesión
+            if (auth.currentUser) return;
+            const modal = document.getElementById("modal-bienvenida");
+            if (modal) modal.style.display = "flex";
+            try {
+                localStorage.setItem(CLAVE_POPUP_BIENVENIDA, "1");
+            } catch (e) {}
+        }, 1400);
+    }
+
     function mostrarPestana(pestana) {
         const tabLogin = document.getElementById("tab-login");
         const tabRegistro = document.getElementById("tab-registro");
@@ -795,6 +841,7 @@
 
     // Cuando cambia el estado de sesión, actualizamos toda la interfaz
     let uidCarritoActual = null;
+    let popupBienvenidaEvaluado = false;
 
     auth.onAuthStateChanged((usuario) => {
         const textoPerfil = document.getElementById("texto-perfil");
@@ -804,6 +851,8 @@
         const vistaCuenta = document.getElementById("vista-cuenta");
 
         if (usuario) {
+            popupBienvenidaEvaluado = true;
+            cerrarModalBienvenida();
             textoPerfil.textContent = "Mi Perfil";
             opcionesInvitado.forEach(li => li.style.display = "none");
             opcionesCuenta.forEach(li => li.style.display = "block");
@@ -821,6 +870,10 @@
             db.collection("usuarios").doc(usuario.uid).get().then((doc) => {
                 if (doc.exists && doc.data().telefono) {
                     document.getElementById("editar-telefono").value = doc.data().telefono;
+                } else {
+                    // Si esta cuenta todavía no tiene teléfono guardado, usamos
+                    // el que el cliente ya haya escrito antes en este dispositivo.
+                    rellenarTelefonosGuardados();
                 }
             }).catch((error) => console.error("Error al cargar el teléfono guardado: ", error));
 
@@ -889,6 +942,11 @@
                 localStorage.removeItem(CLAVE_CARRITO_LOCAL);
             }
             uidCarritoActual = null;
+
+            if (!popupBienvenidaEvaluado) {
+                popupBienvenidaEvaluado = true;
+                evaluarPopupBienvenida();
+            }
         }
     });
 
@@ -1283,12 +1341,51 @@
         }
     }
 
+    // --- Teléfono recordado: si el cliente lo escribe en cualquier campo
+    // (contacto, carrito o su perfil), se guarda en este dispositivo y se
+    // autocompleta en los demás campos que también piden su número. ---
+    const CLAVE_TELEFONO_GUARDADO = "chrisnut_telefono_guardado";
+    const IDS_CAMPOS_TELEFONO = ["telefono", "telefono-carrito", "editar-telefono"];
+
+    function guardarTelefonoGuardado(valor) {
+        if (!/^\d{8}$/.test(valor)) return;
+        try {
+            localStorage.setItem(CLAVE_TELEFONO_GUARDADO, valor);
+        } catch (e) {}
+        IDS_CAMPOS_TELEFONO.forEach((id) => {
+            const campo = document.getElementById(id);
+            if (campo && campo.value.trim() === "") campo.value = valor;
+        });
+    }
+
+    function rellenarTelefonosGuardados() {
+        let telefonoGuardado = "";
+        try {
+            telefonoGuardado = localStorage.getItem(CLAVE_TELEFONO_GUARDADO) || "";
+        } catch (e) {}
+        if (!telefonoGuardado) return;
+        IDS_CAMPOS_TELEFONO.forEach((id) => {
+            const campo = document.getElementById(id);
+            if (campo && campo.value.trim() === "") campo.value = telefonoGuardado;
+        });
+    }
+
+    function inicializarCamposTelefono() {
+        rellenarTelefonosGuardados();
+        IDS_CAMPOS_TELEFONO.forEach((id) => {
+            const campo = document.getElementById(id);
+            if (!campo) return;
+            campo.addEventListener("blur", () => guardarTelefonoGuardado(campo.value.trim()));
+        });
+    }
+
     function abrirModalCarrito() {
         document.getElementById("modal-carrito").style.display = "flex";
         if (window.location.hash !== "#carrito") {
             history.pushState({ modal: "carrito" }, "", "#carrito");
         }
         mostrarAvisoDescuentoBienvenida();
+        rellenarTelefonosGuardados();
     }
     function cerrarModalCarrito() {
         document.getElementById("modal-carrito").style.display = "none";
@@ -2783,6 +2880,10 @@
         // estaba guardado en este dispositivo, apenas carga la página.
         actualizarContadorCarrito();
 
+        // Autocompleta y empieza a recordar el número de teléfono en los
+        // distintos formularios del sitio (contacto, carrito, mi perfil).
+        inicializarCamposTelefono();
+
         // Carga la vitrina de productos desde Firestore y la deja escuchando
         // cambios en tiempo real (nuevos productos, eliminados, etc.)
         iniciarEscuchaProductos();
@@ -3304,12 +3405,12 @@
                     headers: { 'Accept': 'application/json' }
                 });
 
-                alert("¡Gracias! Tu mensaje fue enviado con éxito. Te contactaremos pronto.");
+                mostrarAviso("¡Gracias! Tu mensaje fue enviado con éxito. Te contactaremos pronto.", "exito");
                 formularioContacto.reset();
 
             } catch (error) {
                 console.error("Error al enviar el formulario de contacto: ", error);
-                alert("Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo.");
+                mostrarAviso("Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo.", "error");
             }
         });
 
@@ -3363,7 +3464,7 @@
             const captchaRespuesta = grecaptcha.getResponse();
 
             if (captchaRespuesta.length === 0) {
-                alert("Por favor, marca la casilla 'No soy un robot' antes de enviar tu opinión.");
+                mostrarAviso("Por favor, marca la casilla 'No soy un robot' antes de enviar tu opinión.", "advertencia");
                 return;
             }
 
@@ -3382,11 +3483,11 @@
                 formulario.reset();
                 grecaptcha.reset();
                 cerrarModal();
-                alert("¡Gracias por tu opinión! Se publicará en cuanto sea revisada.");
+                mostrarAviso("¡Gracias por tu opinión! Se publicará en cuanto sea revisada.", "exito");
             })
             .catch((error) => {
                 console.error("Error al guardar testimonio: ", error);
-                alert("Hubo un problema al enviar tu comentario. Inténtalo de nuevo.");
+                mostrarAviso("Hubo un problema al enviar tu comentario. Inténtalo de nuevo.", "error");
             });
         });
     });

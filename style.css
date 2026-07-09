@@ -2418,6 +2418,32 @@ html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(
 .mensaje-cupon-exito { color: #166534; }
 .mensaje-cupon-error { color: #991b1b; }
 
+.aviso-descuento-bienvenida {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    background-color: var(--color-gris-claro);
+    color: var(--color-texto-secundario);
+    border: 1px dashed var(--color-borde);
+}
+
+.aviso-descuento-bienvenida a {
+    color: var(--color-acento);
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.aviso-descuento-activo {
+    background-color: #fef3c7;
+    color: #78350f;
+    border: 1px solid #fcd34d;
+    font-weight: 600;
+    text-align: center;
+}
+
 .subtotal-tachado {
     text-decoration: line-through;
     color: var(--color-texto-suave);

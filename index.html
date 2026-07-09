@@ -370,6 +370,8 @@
                 <p class="carrito-vacio">Tu carrito está vacío.</p>
             </div>
 
+            <div id="aviso-descuento-bienvenida" class="aviso-descuento-bienvenida" style="display:none;"></div>
+
             <div class="grupo-cupon">
                 <input type="text" id="input-cupon" placeholder="¿Tienes un código de descuento?">
                 <button type="button" id="boton-aplicar-cupon" onclick="aplicarCupon()">Aplicar</button>
@@ -860,6 +862,7 @@
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
         } else {
             window._esAdminActual = false;
+            usuarioEsPrimeraCompra = false;
             renderizarVitrina();
             document.getElementById("panel-admin-testimonios").style.display = "none";
             document.getElementById("panel-admin-pedidos").style.display = "none";
@@ -995,12 +998,14 @@
 
             if (snapshot.empty) {
                 historialPedidosUsuarioActual = [];
+                usuarioEsPrimeraCompra = true;
                 if (selectorMes) selectorMes.style.display = "none";
                 contenedor.innerHTML = '<p class="carrito-vacio">Todavía no has hecho ningún pedido.</p>';
                 return;
             }
 
             historialPedidosUsuarioActual = snapshot.docs.map(doc => doc.data());
+            usuarioEsPrimeraCompra = false;
 
             // Arma las opciones del filtro solo con los meses que realmente
             // tienen pedidos (en orden del más reciente al más antiguo).
@@ -1180,6 +1185,13 @@
     // Cupón de descuento aplicado en la sesión actual del carrito (o null si no hay ninguno)
     let cuponAplicado = null;
 
+    // true si el usuario logueado todavía no tiene ningún pedido registrado
+    // (se usa para ofrecerle el 5% de descuento de bienvenida, solo a quien
+    // decide crear una cuenta; los invitados no lo obtienen).
+    let usuarioEsPrimeraCompra = false;
+    const CODIGO_DESCUENTO_BIENVENIDA = "BIENVENIDA5";
+    const VALOR_DESCUENTO_BIENVENIDA = 5;
+
     function renderizarCarrito() {
         const contenedor = document.getElementById("lista-carrito");
         const totalSpan = document.getElementById("total-carrito");
@@ -1261,6 +1273,8 @@
             const textoValor = datos.tipo === "porcentaje" ? `${datos.valor}%` : formatearPrecio(datos.valor);
             mensaje.textContent = `¡Código aplicado! Descuento de ${textoValor}.`;
             mensaje.className = "mensaje-cupon mensaje-cupon-exito";
+            const avisoBienvenida = document.getElementById("aviso-descuento-bienvenida");
+            if (avisoBienvenida && codigo !== CODIGO_DESCUENTO_BIENVENIDA) avisoBienvenida.style.display = "none";
             renderizarCarrito();
         } catch (error) {
             console.error("Error al aplicar el cupón: ", error);
@@ -1274,11 +1288,48 @@
         if (window.location.hash !== "#carrito") {
             history.pushState({ modal: "carrito" }, "", "#carrito");
         }
+        mostrarAvisoDescuentoBienvenida();
     }
     function cerrarModalCarrito() {
         document.getElementById("modal-carrito").style.display = "none";
         if (window.location.hash === "#carrito") {
             history.pushState(null, "", window.location.pathname + window.location.search);
+        }
+    }
+
+    // Muestra (o no) el aviso del 5% de descuento de bienvenida al abrir el
+    // carrito. Es completamente opcional: a un invitado solo se le invita a
+    // crear una cuenta, nunca se le obliga. Si ya inició sesión y es su
+    // primera compra, el descuento se aplica solo.
+    function mostrarAvisoDescuentoBienvenida() {
+        const aviso = document.getElementById("aviso-descuento-bienvenida");
+        if (!aviso) return;
+        const usuario = auth.currentUser;
+
+        if (usuario && usuarioEsPrimeraCompra) {
+            // Solo lo aplicamos si no hay ya otro cupón puesto a mano
+            if (!cuponAplicado) {
+                cuponAplicado = { codigo: CODIGO_DESCUENTO_BIENVENIDA, tipo: "porcentaje", valor: VALOR_DESCUENTO_BIENVENIDA };
+                renderizarCarrito();
+            }
+            aviso.style.display = "block";
+            aviso.className = "aviso-descuento-bienvenida aviso-descuento-activo";
+            aviso.innerHTML = `🎉 ¡Tienes ${VALOR_DESCUENTO_BIENVENIDA}% de descuento por tu primera compra!`;
+        } else if (!usuario) {
+            aviso.style.display = "block";
+            aviso.className = "aviso-descuento-bienvenida";
+            aviso.innerHTML = `¿Sabías que si creas una cuenta obtienes <strong>${VALOR_DESCUENTO_BIENVENIDA}% de descuento</strong> en tu primera compra? <a href="#" id="enlace-crear-cuenta-descuento">Crear cuenta</a>`;
+            const enlace = document.getElementById("enlace-crear-cuenta-descuento");
+            if (enlace) {
+                enlace.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    cerrarModalCarrito();
+                    mostrarPestana("registro");
+                    abrirModalPerfil();
+                });
+            }
+        } else {
+            aviso.style.display = "none";
         }
     }
 
@@ -1368,8 +1419,10 @@
 
         // El pedido ya quedó registrado y enviado, así que vaciamos el carrito
         cuponAplicado = null;
+        usuarioEsPrimeraCompra = false;
         document.getElementById("input-cupon").value = "";
         document.getElementById("mensaje-cupon").textContent = "";
+        document.getElementById("aviso-descuento-bienvenida").style.display = "none";
         inputTelefono.value = "";
         carrito = [];
         actualizarContadorCarrito();

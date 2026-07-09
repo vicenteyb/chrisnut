@@ -433,6 +433,16 @@
                             <p class="carrito-vacio">Cargando cupones...</p>
                         </div>
                     </div>
+
+                    <div class="panel-cupones">
+                        <div class="panel-estadisticas-encabezado">
+                            <h4>📦 Stock del día</h4>
+                        </div>
+                        <p id="fecha-stock-admin" class="panel-admin-subtitulo"></p>
+                        <div id="lista-stock-admin" class="lista-cupones-admin">
+                            <p class="carrito-vacio">Cargando stock...</p>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -707,6 +717,7 @@
                 suscribirTestimoniosPendientesAdmin();
                 suscribirPedidosAdmin();
                 suscribirCuponesAdmin();
+                suscribirStockAdmin();
                 cargarEstadisticasMes();
             } else {
                 panelAdmin.style.display = "none";
@@ -715,6 +726,7 @@
                 desuscribirTestimoniosPendientesAdmin();
                 desuscribirPedidosAdmin();
                 desuscribirCuponesAdmin();
+                desuscribirStockAdmin();
             }
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
         } else {
@@ -726,6 +738,7 @@
             desuscribirTestimoniosPendientesAdmin();
             desuscribirPedidosAdmin();
             desuscribirCuponesAdmin();
+            desuscribirStockAdmin();
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
             textoPerfil.textContent = "Hola, Inicia sesión";
             opcionesInvitado.forEach(li => li.style.display = "block");
@@ -1163,6 +1176,7 @@
                 estado: "pendiente",
                 fecha: new Date()
             });
+            descontarStockPedido(itemsPedido);
             return referenciaPedido.id;
         } catch (error) {
             console.error("Error al registrar el pedido: ", error);
@@ -1807,6 +1821,140 @@
                 console.error("Error al aprobar el testimonio: ", error);
                 mostrarAviso("No se pudo aprobar la opinión. Intenta de nuevo.", "error");
             });
+    }
+
+    // ==========================================
+    // STOCK DIARIO (gestión desde el panel admin)
+    // ==========================================
+    // Debe coincidir exactamente con los data-nombre de la vitrina.
+    const PRODUCTOS_STOCK = ["Medialunas", "Rollitos de Canela", "Berlín", "Alfajores Simples", "Pan Amasado"];
+
+    // Fecha de hoy en formato YYYY-MM-DD (hora local), para saber si el
+    // stock guardado en Firestore corresponde al día de hoy o quedó viejo.
+    function obtenerFechaHoy() {
+        const hoy = new Date();
+        const año = hoy.getFullYear();
+        const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+        const dia = String(hoy.getDate()).padStart(2, "0");
+        return `${año}-${mes}-${dia}`;
+    }
+
+    function formatearFechaLegible(fechaTexto) {
+        const [año, mes, dia] = fechaTexto.split("-");
+        return `${dia}/${mes}/${año}`;
+    }
+
+    // Genera un id de HTML válido a partir del nombre del producto
+    // (sin tildes ni espacios), para usar en los inputs de cada fila.
+    function idStockSeguro(nombre) {
+        return nombre
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-zA-Z0-9]/g, "-")
+            .toLowerCase();
+    }
+
+    let cancelarSuscripcionStockAdmin = null;
+
+    function suscribirStockAdmin() {
+        if (cancelarSuscripcionStockAdmin) return;
+
+        const contenedor = document.getElementById("lista-stock-admin");
+        const etiquetaFecha = document.getElementById("fecha-stock-admin");
+        const fechaHoy = obtenerFechaHoy();
+        if (etiquetaFecha) etiquetaFecha.textContent = `Cantidades para hoy (${formatearFechaLegible(fechaHoy)})`;
+
+        cancelarSuscripcionStockAdmin = db.collection("stock")
+            .onSnapshot((snapshot) => {
+                const stockPorProducto = {};
+                snapshot.forEach((doc) => { stockPorProducto[doc.id] = doc.data(); });
+
+                let html = "";
+                PRODUCTOS_STOCK.forEach((nombre) => {
+                    const idSeguro = idStockSeguro(nombre);
+                    const datos = stockPorProducto[nombre];
+                    const esDeHoy = datos && datos.fecha === fechaHoy;
+                    const restante = esDeHoy ? datos.cantidad : null;
+
+                    let textoEstado;
+                    let claseEstado = "";
+                    if (restante === null) {
+                        textoEstado = "Sin definir hoy";
+                    } else if (restante > 0) {
+                        textoEstado = `Quedan ${restante}`;
+                    } else {
+                        textoEstado = "Agotado";
+                        claseEstado = "fila-cupon-inactivo";
+                    }
+
+                    html += `
+                        <div class="fila-cupon-admin ${claseEstado}">
+                            <span class="codigo-cupon-admin">${nombre}</span>
+                            <span class="valor-cupon-admin">${textoEstado}</span>
+                            <input type="number" id="input-stock-${idSeguro}" class="input-stock-admin" placeholder="Cant." min="0">
+                            <button type="button" onclick="guardarStockProducto('${nombre.replace(/'/g, "\\'")}')">Guardar</button>
+                        </div>
+                    `;
+                });
+                contenedor.innerHTML = html;
+            }, (error) => {
+                console.error("Error al cargar el stock: ", error);
+                contenedor.innerHTML = '<p class="carrito-vacio">No se pudo cargar el stock.</p>';
+            });
+    }
+
+    function desuscribirStockAdmin() {
+        if (cancelarSuscripcionStockAdmin) {
+            cancelarSuscripcionStockAdmin();
+            cancelarSuscripcionStockAdmin = null;
+        }
+    }
+
+    // El admin escribe una cantidad y la guarda como el stock de HOY para
+    // ese producto (reemplaza lo que hubiera, por eso "agrega" el stock del día).
+    async function guardarStockProducto(nombre) {
+        const idSeguro = idStockSeguro(nombre);
+        const input = document.getElementById(`input-stock-${idSeguro}`);
+        const cantidad = parseInt(input.value, 10);
+
+        if (isNaN(cantidad) || cantidad < 0) {
+            mostrarAviso("Ingresa una cantidad válida (0 o más).", "advertencia");
+            return;
+        }
+
+        try {
+            await db.collection("stock").doc(nombre).set({
+                cantidad,
+                fecha: obtenerFechaHoy(),
+                actualizado: new Date()
+            });
+            input.value = "";
+        } catch (error) {
+            console.error("Error al guardar el stock: ", error);
+            mostrarAviso("No se pudo guardar el stock. Intenta de nuevo.", "error");
+        }
+    }
+
+    // Descuenta del stock de hoy las cantidades de un pedido recién realizado.
+    // Si el producto no tiene stock definido para hoy, simplemente no se toca
+    // (así el conteo es opcional: solo se activa para lo que el admin define).
+    async function descontarStockPedido(itemsPedido) {
+        const fechaHoy = obtenerFechaHoy();
+        for (const item of itemsPedido) {
+            const referenciaStock = db.collection("stock").doc(item.nombre);
+            try {
+                await db.runTransaction(async (transaccion) => {
+                    const doc = await transaccion.get(referenciaStock);
+                    if (!doc.exists) return;
+                    const datos = doc.data();
+                    if (datos.fecha !== fechaHoy) return;
+                    const nuevaCantidad = Math.max(0, (datos.cantidad || 0) - item.cantidad);
+                    transaccion.update(referenciaStock, { cantidad: nuevaCantidad });
+                });
+            } catch (error) {
+                console.error(`Error al descontar stock de ${item.nombre}: `, error);
+            }
+        }
     }
 
     // ==========================================

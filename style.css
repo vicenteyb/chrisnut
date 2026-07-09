@@ -2123,6 +2123,15 @@ html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(
     cursor: pointer;
 }
 
+.input-stock-admin {
+    width: 60px;
+    padding: 6px;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-family: inherit;
+}
+
 /* ==========================================
    OPTIMIZACIÓN MÓVIL (iPhone / Android)
    ========================================== */
@@ -2169,6 +2178,12 @@ button {
     .grupo-nuevo-cupon select,
     .grupo-nuevo-cupon button {
         flex: 1 1 100%;
+    }
+    .fila-cupon-admin {
+        flex-wrap: wrap;
+    }
+    .input-stock-admin {
+        width: 70px;
     }
     .grupo-cupon {
         flex-direction: column;

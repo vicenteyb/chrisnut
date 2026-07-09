@@ -1005,6 +1005,7 @@
                 <ul class="pedido-items">${itemsHtml}</ul>
                 <div class="pedido-total">Total: ${formatearPrecio(pedido.total || 0)}</div>
                 ${mostrarBotonRepetir ? `<button type="button" class="boton-repetir-pedido" onclick='repetirPedido(${JSON.stringify(pedido.items || [])})'>🔁 Repetir este pedido</button>` : ""}
+                ${estadoClave === "cancelado" && pedido.id ? `<button type="button" class="boton-eliminar-pedido" onclick="eliminarPedidoCancelado('${pedido.id}')">🗑️ Eliminar de mi historial</button>` : ""}
             </div>
         `;
     }
@@ -1062,7 +1063,7 @@
                 return;
             }
 
-            historialPedidosUsuarioActual = snapshot.docs.map(doc => doc.data());
+            historialPedidosUsuarioActual = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             usuarioEsPrimeraCompra = false;
 
             // Arma las opciones del filtro con TODOS los meses (enero a diciembre)
@@ -1097,6 +1098,30 @@
         } catch (error) {
             console.error("Error al cargar el historial de pedidos: ", error);
             contenedor.innerHTML = '<p class="carrito-vacio">No pudimos cargar tus pedidos. Intenta de nuevo más tarde.</p>';
+        }
+    }
+
+    // Permite que el usuario borre de su historial un pedido que ya está
+    // cancelado (no se puede borrar un pedido pendiente/confirmado/entregado,
+    // solo limpiar los cancelados que ya no le sirven de nada).
+    async function eliminarPedidoCancelado(idPedido) {
+        const usuario = auth.currentUser;
+        if (!usuario) return;
+
+        const confirmado = await mostrarConfirmacion(
+            "¿Eliminar este pedido cancelado de tu historial? Esta acción no se puede deshacer.",
+            "Sí, eliminar"
+        );
+        if (!confirmado) return;
+
+        try {
+            await db.collection("pedidos").doc(idPedido).delete();
+            historialPedidosUsuarioActual = historialPedidosUsuarioActual.filter(p => p.id !== idPedido);
+            renderizarHistorialPedidosFiltrado();
+            mostrarAviso("Pedido eliminado de tu historial.", "exito");
+        } catch (error) {
+            console.error("Error al eliminar el pedido: ", error);
+            mostrarAviso("No pudimos eliminar el pedido. Intenta de nuevo más tarde.", "error");
         }
     }
 

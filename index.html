@@ -121,9 +121,59 @@
         <section id="vitrina" class="vitrina-productos seccion-animada">
             <h2>Nuestra Vitrina</h2>
             <p>Descubre las delicias que preparamos con amor cada día.</p>
-            
-            <div class="contenedor-productos" id="contenedor-productos">
-                <p class="carrito-vacio">Cargando productos...</p>
+
+            <div class="barra-herramientas-vitrina">
+                <button type="button" id="boton-filtros-vitrina" class="boton-filtros-vitrina" aria-expanded="false" aria-controls="panel-filtros-vitrina">
+                    <span class="icono-filtros-vitrina">☰</span> Filtros
+                </button>
+
+                <div class="control-orden-vitrina">
+                    <label for="select-orden-vitrina">Ordenar por</label>
+                    <select id="select-orden-vitrina">
+                        <option value="destacado">Destacado</option>
+                        <option value="precio-asc">Precio: menor a mayor</option>
+                        <option value="precio-desc">Precio: mayor a menor</option>
+                        <option value="nombre-asc">Nombre: A-Z</option>
+                        <option value="nombre-desc">Nombre: Z-A</option>
+                    </select>
+                </div>
+
+                <div class="control-vista-vitrina">
+                    <span class="etiqueta-ver-como">Ver como</span>
+                    <button type="button" id="boton-vista-grilla" class="boton-vista activo" aria-label="Ver en cuadrícula" title="Ver en cuadrícula">▦</button>
+                    <button type="button" id="boton-vista-lista" class="boton-vista" aria-label="Ver en lista" title="Ver en lista">☰</button>
+                </div>
+            </div>
+
+            <div class="contenedor-vitrina-principal">
+                <aside id="panel-filtros-vitrina" class="panel-filtros-vitrina">
+                    <div class="grupo-filtro">
+                        <h4>Disponibilidad</h4>
+                        <label class="opcion-filtro">
+                            <input type="checkbox" id="filtro-en-stock" checked>
+                            En stock <span class="conteo-filtro" id="conteo-en-stock">(0)</span>
+                        </label>
+                        <label class="opcion-filtro">
+                            <input type="checkbox" id="filtro-agotado" checked>
+                            Agotado <span class="conteo-filtro" id="conteo-agotado">(0)</span>
+                        </label>
+                    </div>
+
+                    <div class="grupo-filtro">
+                        <h4>Precio</h4>
+                        <div class="fila-precio-filtro">
+                            <input type="number" id="filtro-precio-min" placeholder="Mín" min="0" inputmode="numeric">
+                            <span class="separador-precio-filtro">-</span>
+                            <input type="number" id="filtro-precio-max" placeholder="Máx" min="0" inputmode="numeric">
+                        </div>
+                    </div>
+
+                    <button type="button" id="boton-limpiar-filtros-vitrina" class="boton-limpiar-filtros-vitrina">Limpiar filtros</button>
+                </aside>
+
+                <div class="contenedor-productos vista-grilla" id="contenedor-productos">
+                    <p class="carrito-vacio">Cargando productos...</p>
+                </div>
             </div>
         </section>
 
@@ -232,6 +282,10 @@
             </form>
         </div>
     </div>
+
+    <!-- Input oculto: permite que el admin cambie la foto de un producto
+         presionando directamente la imagen que ya tiene en la vitrina. -->
+    <input type="file" id="input-cambiar-foto-producto" accept="image/*" style="display:none;">
 
     <div id="modal-nuevo-producto" class="modal-fondo">
         <div class="modal-contenido">
@@ -1839,26 +1893,122 @@
         });
     }
 
+    // ==========================================
+    // ORDENAR, FILTRAR Y CAMBIAR VISTA DE LA VITRINA
+    // ==========================================
+    // Estado actual de los controles de la vitrina (se mantiene en memoria
+    // mientras la persona navega la página).
+    let vitrinaOrden = "destacado";
+    let vitrinaVista = "grilla"; // "grilla" o "lista"
+    let vitrinaMostrarEnStock = true;
+    let vitrinaMostrarAgotado = true;
+    let vitrinaPrecioMin = null;
+    let vitrinaPrecioMax = null;
+
+    // Un producto se considera "agotado" solo si el admin definió stock
+    // para HOY y quedó en 0. Si no hay stock definido para hoy, se asume
+    // disponible (así el conteo de stock sigue siendo opcional).
+    function estaProductoAgotado(nombreProducto) {
+        const datos = cacheStockHoy[nombreProducto];
+        if (datos && datos.fecha === obtenerFechaHoy()) {
+            return datos.cantidad <= 0;
+        }
+        return false;
+    }
+
+    // Actualiza los números "(40)" / "(12)" que aparecen junto a cada
+    // casilla de disponibilidad, según el total real de productos.
+    function actualizarConteosFiltroVitrina() {
+        const conteoEnStock = document.getElementById("conteo-en-stock");
+        const conteoAgotado = document.getElementById("conteo-agotado");
+        if (!conteoEnStock || !conteoAgotado) return;
+
+        let enStock = 0;
+        let agotados = 0;
+        productosCache.forEach((producto) => {
+            if (estaProductoAgotado(producto.nombre)) agotados++;
+            else enStock++;
+        });
+
+        conteoEnStock.textContent = `(${enStock})`;
+        conteoAgotado.textContent = `(${agotados})`;
+    }
+
+    // Devuelve la lista de productos ya filtrada (disponibilidad y precio)
+    // y ordenada, lista para pintar en la vitrina.
+    function obtenerProductosFiltradosYOrdenados() {
+        let lista = productosCache.filter((producto) => {
+            const agotado = estaProductoAgotado(producto.nombre);
+            if (agotado && !vitrinaMostrarAgotado) return false;
+            if (!agotado && !vitrinaMostrarEnStock) return false;
+
+            if (vitrinaPrecioMin !== null && producto.precio < vitrinaPrecioMin) return false;
+            if (vitrinaPrecioMax !== null && producto.precio > vitrinaPrecioMax) return false;
+
+            return true;
+        });
+
+        switch (vitrinaOrden) {
+            case "precio-asc":
+                lista = lista.slice().sort((a, b) => a.precio - b.precio);
+                break;
+            case "precio-desc":
+                lista = lista.slice().sort((a, b) => b.precio - a.precio);
+                break;
+            case "nombre-asc":
+                lista = lista.slice().sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+                break;
+            case "nombre-desc":
+                lista = lista.slice().sort((a, b) => b.nombre.localeCompare(a.nombre, "es"));
+                break;
+            // "destacado" deja el orden original (por fecha de creación)
+        }
+
+        return lista;
+    }
+
     function renderizarVitrina() {
         const contenedor = document.getElementById("contenedor-productos");
         if (!contenedor) return;
 
+        actualizarConteosFiltroVitrina();
+        contenedor.classList.toggle("vista-grilla", vitrinaVista === "grilla");
+        contenedor.classList.toggle("vista-lista", vitrinaVista === "lista");
+
         let html = "";
+        const productosAMostrar = obtenerProductosFiltradosYOrdenados();
 
         if (productosCache.length === 0) {
             html = '<p class="carrito-vacio">Todavía no hay productos cargados.</p>';
+        } else if (productosAMostrar.length === 0) {
+            html = '<p class="carrito-vacio">Ningún producto coincide con los filtros elegidos.</p>';
         } else {
-            productosCache.forEach((producto) => {
+            productosAMostrar.forEach((producto) => {
+                const agotado = estaProductoAgotado(producto.nombre);
+                const nombreEscapado = producto.nombre.replace(/'/g, "\\'");
+                const imagenEscapada = (producto.imagenURL || "").replace(/'/g, "\\'");
+
+                // En modo administrador, la propia foto del producto se puede
+                // presionar para cambiarla al instante (sin pasar por el
+                // modal de "Nuevo producto").
+                const overlayCambiarFoto = window._esAdminActual ? `
+                    <button type="button" class="boton-cambiar-foto-producto" title="Cambiar foto de ${producto.nombre}" onclick="abrirSelectorFotoProducto('${nombreEscapado}', '${imagenEscapada}')">
+                        📷 Cambiar foto
+                    </button>
+                ` : "";
+
                 html += `
                     <article class="tarjeta-producto" data-nombre="${producto.nombre}" data-precio="${producto.precio}">
-                        <div class="imagen-contenedor">
+                        <div class="imagen-contenedor ${window._esAdminActual ? "imagen-editable-admin" : ""}">
                             <img src="${producto.imagenURL}" alt="${producto.nombre}" class="imagen-producto">
+                            ${agotado ? '<span class="etiqueta-agotado-producto">Agotado</span>' : ""}
                             <button class="boton-favorito" aria-label="Agregar a favoritos">🤍</button>
+                            ${overlayCambiarFoto}
                         </div>
                         <h3>${producto.nombre}</h3>
                         <p class="descripcion">${producto.descripcion}</p>
                         <span class="precio">${formatearPrecio(producto.precio)}</span>
-                        <button class="boton-agregar-carrito">Agregar al carrito</button>
+                        <button class="boton-agregar-carrito"${agotado ? " disabled" : ""}>${agotado ? "Agotado" : "Agregar al carrito"}</button>
                     </article>
                 `;
             });
@@ -1875,6 +2025,61 @@
         }
 
         contenedor.innerHTML = html;
+    }
+
+    // ------------------------------------------
+    // Cambiar la foto de un producto ya existente
+    // presionando directamente su imagen (solo admin)
+    // ------------------------------------------
+    let _productoFotoPendiente = null;
+
+    function abrirSelectorFotoProducto(nombreProducto, imagenActual) {
+        if (!window._esAdminActual) return;
+        _productoFotoPendiente = { nombre: nombreProducto, imagenActual: imagenActual };
+        const input = document.getElementById("input-cambiar-foto-producto");
+        input.value = ""; // permite elegir el mismo archivo dos veces seguidas
+        input.click();
+    }
+
+    async function manejarCambioFotoProducto() {
+        const input = document.getElementById("input-cambiar-foto-producto");
+        const archivo = input.files[0];
+        if (!archivo || !_productoFotoPendiente) return;
+
+        const { nombre, imagenActual } = _productoFotoPendiente;
+        const tarjeta = document.querySelector(`.tarjeta-producto[data-nombre="${nombre.replace(/"/g, '\\"')}"]`);
+        const botonCambiar = tarjeta ? tarjeta.querySelector(".boton-cambiar-foto-producto") : null;
+
+        if (botonCambiar) {
+            botonCambiar.textContent = "Subiendo...";
+            botonCambiar.disabled = true;
+        }
+
+        try {
+            const referenciaImagen = storage.ref(`productos/${Date.now()}-${archivo.name}`);
+            await referenciaImagen.put(archivo);
+            const nuevaURL = await referenciaImagen.getDownloadURL();
+
+            await db.collection("productos").doc(nombre).update({
+                imagenURL: nuevaURL
+            });
+
+            // Si la foto anterior estaba en Firebase Storage, la borramos
+            // para no dejar archivos huérfanos ocupando espacio.
+            if (imagenActual && imagenActual.includes("firebasestorage")) {
+                storage.refFromURL(imagenActual).delete().catch(() => {});
+            }
+
+            mostrarAviso("¡Foto actualizada con éxito!", "exito");
+        } catch (error) {
+            console.error("Error al cambiar la foto del producto: ", error);
+            mostrarAviso("No se pudo cambiar la foto. Intenta de nuevo.", "error");
+        } finally {
+            _productoFotoPendiente = null;
+            // renderizarVitrina() se vuelve a llamar solo al recibir el
+            // snapshot actualizado de Firestore, así que no hace falta
+            // restaurar el botón manualmente aquí.
+        }
     }
 
     function abrirModalNuevoProducto() {
@@ -2048,6 +2253,9 @@
                 cacheStockHoy = {};
                 snapshot.forEach((doc) => { cacheStockHoy[doc.id] = doc.data(); });
                 renderizarListaStockAdmin();
+                // También refrescamos la vitrina pública: el filtro de
+                // "Disponibilidad" y la etiqueta "Agotado" dependen de esto.
+                renderizarVitrina();
             }, (error) => {
                 console.error("Error al cargar el stock: ", error);
                 const contenedor = document.getElementById("lista-stock-admin");
@@ -2428,6 +2636,15 @@
         // cambios en tiempo real (nuevos productos, eliminados, etc.)
         iniciarEscuchaProductos();
 
+        // Escuchamos el stock del día para toda visita (no solo el admin),
+        // así el filtro "Disponibilidad" y la etiqueta "Agotado" funcionan
+        // también para quien no tiene sesión iniciada.
+        // Nota: si no aparecen datos de disponibilidad para clientes sin
+        // sesión, revisa que las reglas de seguridad de Firestore permitan
+        // LECTURA pública de la colección "stock" (la escritura puede
+        // seguir restringida solo al admin).
+        suscribirStockAdmin();
+
         // Formulario del panel admin para agregar un producto nuevo
         const formularioNuevoProducto = document.getElementById("formulario-nuevo-producto");
         if (formularioNuevoProducto) {
@@ -2520,6 +2737,88 @@
                         botonCarrito.textContent = textoOriginal;
                     }, 900);
                 }
+            });
+        }
+
+        // --- Input oculto para cambiar la foto de un producto ya existente ---
+        const inputCambiarFotoProducto = document.getElementById("input-cambiar-foto-producto");
+        if (inputCambiarFotoProducto) {
+            inputCambiarFotoProducto.addEventListener("change", manejarCambioFotoProducto);
+        }
+
+        // --- Barra de herramientas de la vitrina: ordenar, ver como, filtros ---
+        const selectOrdenVitrina = document.getElementById("select-orden-vitrina");
+        if (selectOrdenVitrina) {
+            selectOrdenVitrina.addEventListener("change", () => {
+                vitrinaOrden = selectOrdenVitrina.value;
+                renderizarVitrina();
+            });
+        }
+
+        const botonVistaGrilla = document.getElementById("boton-vista-grilla");
+        const botonVistaLista = document.getElementById("boton-vista-lista");
+        if (botonVistaGrilla && botonVistaLista) {
+            botonVistaGrilla.addEventListener("click", () => {
+                vitrinaVista = "grilla";
+                botonVistaGrilla.classList.add("activo");
+                botonVistaLista.classList.remove("activo");
+                renderizarVitrina();
+            });
+            botonVistaLista.addEventListener("click", () => {
+                vitrinaVista = "lista";
+                botonVistaLista.classList.add("activo");
+                botonVistaGrilla.classList.remove("activo");
+                renderizarVitrina();
+            });
+        }
+
+        const botonFiltrosVitrina = document.getElementById("boton-filtros-vitrina");
+        const panelFiltrosVitrina = document.getElementById("panel-filtros-vitrina");
+        if (botonFiltrosVitrina && panelFiltrosVitrina) {
+            botonFiltrosVitrina.addEventListener("click", () => {
+                const abierto = panelFiltrosVitrina.classList.toggle("abierto");
+                botonFiltrosVitrina.setAttribute("aria-expanded", abierto ? "true" : "false");
+            });
+        }
+
+        const filtroEnStock = document.getElementById("filtro-en-stock");
+        const filtroAgotado = document.getElementById("filtro-agotado");
+        if (filtroEnStock && filtroAgotado) {
+            filtroEnStock.addEventListener("change", () => {
+                vitrinaMostrarEnStock = filtroEnStock.checked;
+                renderizarVitrina();
+            });
+            filtroAgotado.addEventListener("change", () => {
+                vitrinaMostrarAgotado = filtroAgotado.checked;
+                renderizarVitrina();
+            });
+        }
+
+        const filtroPrecioMin = document.getElementById("filtro-precio-min");
+        const filtroPrecioMax = document.getElementById("filtro-precio-max");
+        if (filtroPrecioMin && filtroPrecioMax) {
+            filtroPrecioMin.addEventListener("input", () => {
+                vitrinaPrecioMin = filtroPrecioMin.value === "" ? null : parseInt(filtroPrecioMin.value, 10);
+                renderizarVitrina();
+            });
+            filtroPrecioMax.addEventListener("input", () => {
+                vitrinaPrecioMax = filtroPrecioMax.value === "" ? null : parseInt(filtroPrecioMax.value, 10);
+                renderizarVitrina();
+            });
+        }
+
+        const botonLimpiarFiltrosVitrina = document.getElementById("boton-limpiar-filtros-vitrina");
+        if (botonLimpiarFiltrosVitrina) {
+            botonLimpiarFiltrosVitrina.addEventListener("click", () => {
+                vitrinaMostrarEnStock = true;
+                vitrinaMostrarAgotado = true;
+                vitrinaPrecioMin = null;
+                vitrinaPrecioMax = null;
+                filtroEnStock.checked = true;
+                filtroAgotado.checked = true;
+                filtroPrecioMin.value = "";
+                filtroPrecioMax.value = "";
+                renderizarVitrina();
             });
         }
 

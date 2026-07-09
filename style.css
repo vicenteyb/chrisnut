@@ -518,6 +518,341 @@ main > section {
     100% { transform: scale(1); }
 }
 
+.boton-agregar-carrito:disabled {
+    background: var(--color-gris-claro);
+    color: var(--color-texto-suave);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.boton-agregar-carrito:disabled::before {
+    content: "🚫";
+}
+
+.boton-agregar-carrito:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- Barra de herramientas: Filtros / Ordenar por / Ver como --- */
+.barra-herramientas-vitrina {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    max-width: 1100px;
+    margin: 30px auto 0;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--color-borde-suave);
+}
+
+.boton-filtros-vitrina {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: 1px solid var(--color-borde);
+    border-radius: 30px;
+    background-color: var(--color-tarjeta);
+    color: var(--color-texto-principal);
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.boton-filtros-vitrina:hover {
+    border-color: var(--color-acento);
+    background-color: var(--color-fondo);
+}
+
+.control-orden-vitrina {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--color-texto-secundario);
+}
+
+.control-orden-vitrina select {
+    padding: 9px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--color-borde);
+    background-color: var(--color-tarjeta);
+    color: var(--color-texto-principal);
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.control-vista-vitrina {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--color-texto-secundario);
+    margin-left: auto;
+}
+
+.boton-vista {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-borde);
+    background-color: var(--color-tarjeta);
+    color: var(--color-texto-secundario);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.boton-vista.activo {
+    border-color: var(--color-acento);
+    color: var(--color-acento);
+    background-color: var(--color-fondo);
+}
+
+/* --- Contenedor principal: panel de filtros + vitrina --- */
+.contenedor-vitrina-principal {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.panel-filtros-vitrina {
+    flex: 0 0 220px;
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde-suave);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+    position: sticky;
+    top: 20px;
+}
+
+.grupo-filtro {
+    margin-bottom: 22px;
+}
+
+.grupo-filtro:last-of-type {
+    margin-bottom: 16px;
+}
+
+.grupo-filtro h4 {
+    margin: 0 0 12px;
+    font-size: 0.95rem;
+    color: var(--color-titulo);
+}
+
+.opcion-filtro {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--color-texto-secundario);
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.opcion-filtro input {
+    cursor: pointer;
+}
+
+.conteo-filtro {
+    color: var(--color-texto-suave);
+}
+
+.fila-precio-filtro {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fila-precio-filtro input {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    font-family: inherit;
+}
+
+.separador-precio-filtro {
+    color: var(--color-texto-suave);
+}
+
+.boton-limpiar-filtros-vitrina {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--color-borde);
+    border-radius: 20px;
+    background-color: transparent;
+    color: var(--color-acento);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.boton-limpiar-filtros-vitrina:hover {
+    background-color: var(--color-fondo);
+}
+
+.contenedor-vitrina-principal .contenedor-productos {
+    flex: 1;
+    margin-top: 30px;
+    min-width: 0;
+}
+
+/* --- Vista de lista (alternativa a la cuadrícula) --- */
+.contenedor-productos.vista-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.vista-lista .tarjeta-producto {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-align: left;
+}
+
+.vista-lista .imagen-contenedor {
+    flex: 0 0 120px;
+}
+
+.vista-lista .imagen-producto {
+    width: 120px;
+    height: 100px;
+    margin-bottom: 0;
+}
+
+.vista-lista .tarjeta-producto h3 {
+    margin: 0 0 4px;
+}
+
+.vista-lista .tarjeta-producto .descripcion {
+    min-height: 0;
+    margin: 0 0 6px;
+}
+
+.vista-lista .tarjeta-producto .precio {
+    margin-top: 0;
+}
+
+.vista-lista .boton-agregar-carrito {
+    width: auto;
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
+.vista-lista .tarjeta-agregar-producto {
+    min-height: 100px;
+}
+
+/* En celular, el panel de filtros queda oculto por defecto y se abre
+   como una tarjeta desplegable al presionar el botón "Filtros". */
+@media (max-width: 900px) {
+    .contenedor-vitrina-principal {
+        flex-direction: column;
+    }
+
+    .panel-filtros-vitrina {
+        display: none;
+        width: 100%;
+        flex: 1 1 auto;
+        position: static;
+    }
+
+    .panel-filtros-vitrina.abierto {
+        display: block;
+    }
+}
+
+@media (max-width: 600px) {
+    .barra-herramientas-vitrina {
+        justify-content: flex-start;
+    }
+
+    .control-vista-vitrina {
+        margin-left: 0;
+    }
+
+    .vista-lista .tarjeta-producto {
+        flex-wrap: wrap;
+    }
+
+    .vista-lista .boton-agregar-carrito {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+/* --- Etiqueta "Agotado" sobre la imagen del producto --- */
+.etiqueta-agotado-producto {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(61, 40, 23, 0.85);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+/* --- Cambiar foto de un producto presionando su imagen (solo admin) --- */
+.imagen-editable-admin {
+    cursor: pointer;
+}
+
+.boton-cambiar-foto-producto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0);
+    color: transparent;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    z-index: 1;
+}
+
+.imagen-editable-admin:hover .boton-cambiar-foto-producto {
+    background-color: rgba(61, 40, 23, 0.55);
+    color: #fff;
+}
+
+.boton-cambiar-foto-producto:disabled {
+    background-color: rgba(61, 40, 23, 0.55);
+    color: #fff;
+    cursor: wait;
+}
+
+/* Los dispositivos táctiles no tienen "hover": mostramos el botón siempre
+   visible pero discreto para que se note que la foto se puede cambiar. */
+@media (hover: none) {
+    .imagen-editable-admin .boton-cambiar-foto-producto {
+        background-color: rgba(61, 40, 23, 0.4);
+        color: #fff;
+    }
+}
+
 /* --- Separador --- */
 .separador {
     border: 0;
@@ -1381,6 +1716,7 @@ main > section {
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease;
+    z-index: 2;
 }
 
 .boton-favorito:hover {

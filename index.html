@@ -203,6 +203,32 @@
         <section id="contacto" class="seccion-contacto seccion-animada">
             <h2>Contacto</h2>
             <p>¿Tienes un pedido especial o alguna duda? ¡Escríbenos!</p>
+
+            <div class="tarjetas-info-contacto">
+                <div class="tarjeta-info-contacto">
+                    <div class="icono-info-contacto">✉️</div>
+                    <div class="texto-info-contacto">
+                        <strong>Email</strong>
+                        <a href="mailto:chrisnut@outlook.cl">chrisnut@outlook.cl</a>
+                    </div>
+                </div>
+
+                <div class="tarjeta-info-contacto">
+                    <div class="icono-info-contacto">📍</div>
+                    <div class="texto-info-contacto">
+                        <strong>Ubicación</strong>
+                        <span>Llay-llay</span>
+                    </div>
+                </div>
+
+                <div class="tarjeta-info-contacto">
+                    <div class="icono-info-contacto">📞</div>
+                    <div class="texto-info-contacto">
+                        <strong>Teléfono</strong>
+                        <a href="tel:+56955395216">+56 9 5539 5216</a>
+                    </div>
+                </div>
+            </div>
             
             <form id="formulario-contacto" class="formulario-contacto" action="https://formspree.io/f/mojobepa" method="POST">
 
@@ -435,6 +461,35 @@
                 <div id="avatar-usuario" class="avatar-usuario">A</div>
                 <h3>¡Hola, <span id="nombre-usuario-perfil">amigo/a</span>! 👋</h3>
                 <p id="correo-usuario-perfil" class="correo-usuario-perfil"></p>
+
+                <hr class="separador-perfil">
+
+                <div class="seccion-editar-perfil">
+                    <h3>Mis datos</h3>
+                    <form id="formulario-editar-perfil" class="formulario-modal">
+                        <div class="grupo-modal">
+                            <label for="editar-nombre">Nombre:</label>
+                            <input type="text" id="editar-nombre" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="grupo-modal">
+                            <label for="editar-correo">Correo Electrónico:</label>
+                            <input type="email" id="editar-correo" placeholder="tu@correo.com" required>
+                        </div>
+                        <div class="grupo-modal">
+                            <label for="editar-telefono">Teléfono:</label>
+                            <div class="input-telefono-contenedor">
+                                <span class="prefijo-fijo">+56 9</span>
+                                <input type="tel" id="editar-telefono" placeholder="1234 5678" pattern="[0-9]{8}" maxlength="8">
+                            </div>
+                        </div>
+                        <p id="error-editar-perfil" class="error-formulario"></p>
+                        <p id="exito-editar-perfil" class="exito-formulario"></p>
+                        <button type="submit" id="boton-editar-perfil" class="boton-enviar-modal">
+                            <span class="texto-boton">Guardar cambios</span>
+                            <span class="spinner-boton"></span>
+                        </button>
+                    </form>
+                </div>
 
                 <hr class="separador-perfil">
 
@@ -756,6 +811,17 @@
             document.getElementById("avatar-usuario").textContent = iniciales(usuario.displayName);
             document.getElementById("nombre-usuario-perfil").textContent = usuario.displayName || "amigo/a";
             document.getElementById("correo-usuario-perfil").textContent = usuario.email;
+
+            // Prellenamos el formulario de edición de datos con lo que ya tenemos
+            document.getElementById("editar-nombre").value = usuario.displayName || "";
+            document.getElementById("editar-correo").value = usuario.email || "";
+            document.getElementById("error-editar-perfil").textContent = "";
+            document.getElementById("exito-editar-perfil").textContent = "";
+            db.collection("usuarios").doc(usuario.uid).get().then((doc) => {
+                if (doc.exists && doc.data().telefono) {
+                    document.getElementById("editar-telefono").value = doc.data().telefono;
+                }
+            }).catch((error) => console.error("Error al cargar el teléfono guardado: ", error));
 
             // Si es un inicio de sesión nuevo (no solo Firebase revalidando), cargamos su carrito guardado
             if (uidCarritoActual !== usuario.uid) {
@@ -1206,9 +1272,15 @@
 
     function abrirModalCarrito() {
         document.getElementById("modal-carrito").style.display = "flex";
+        if (window.location.hash !== "#carrito") {
+            history.pushState({ modal: "carrito" }, "", "#carrito");
+        }
     }
     function cerrarModalCarrito() {
         document.getElementById("modal-carrito").style.display = "none";
+        if (window.location.hash === "#carrito") {
+            history.pushState(null, "", window.location.pathname + window.location.search);
+        }
     }
 
     // Emoji representativo para cada producto (si no está en la lista, usa uno genérico)
@@ -2710,6 +2782,22 @@
         // Botón flotante del carrito (arriba de WhatsApp, solo visible con items)
         document.getElementById("boton-carrito-flotante").addEventListener("click", abrirModalCarrito);
 
+        // Si la URL trae #carrito al cargar (ej: alguien entra directo a
+        // tusitio.com/#carrito), abrimos el carrito automáticamente.
+        if (window.location.hash === "#carrito") {
+            abrirModalCarrito();
+        }
+
+        // Si el usuario usa el botón "atrás/adelante" del navegador,
+        // sincronizamos el modal con la URL.
+        window.addEventListener("popstate", () => {
+            if (window.location.hash === "#carrito") {
+                document.getElementById("modal-carrito").style.display = "flex";
+            } else {
+                document.getElementById("modal-carrito").style.display = "none";
+            }
+        });
+
         // Logo flotante de estado del pedido (aparece al enviar un pedido)
         document.getElementById("boton-estado-pedido-flotante").addEventListener("click", abrirModalEstadoPedido);
 
@@ -3073,6 +3161,58 @@
                 errorRegistro.textContent = traducirErrorFirebase(error.code);
             } finally {
                 alternarCargaBoton(botonRegistro, false);
+            }
+        });
+
+        // Formulario para que el usuario edite su nombre, correo y teléfono
+        document.getElementById("formulario-editar-perfil").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const usuario = auth.currentUser;
+            if (!usuario) return;
+
+            const nuevoNombre = document.getElementById("editar-nombre").value.trim();
+            const nuevoCorreo = document.getElementById("editar-correo").value.trim();
+            const nuevoTelefono = document.getElementById("editar-telefono").value.trim();
+            const errorEditar = document.getElementById("error-editar-perfil");
+            const exitoEditar = document.getElementById("exito-editar-perfil");
+            const botonEditar = document.getElementById("boton-editar-perfil");
+            errorEditar.textContent = "";
+            exitoEditar.textContent = "";
+            alternarCargaBoton(botonEditar, true);
+
+            try {
+                // Nombre
+                if (nuevoNombre !== usuario.displayName) {
+                    await usuario.updateProfile({ displayName: nuevoNombre });
+                }
+
+                // Correo (Firebase pide que la sesión sea "reciente" para este cambio;
+                // si da error de reautenticación se lo explicamos al usuario)
+                if (nuevoCorreo !== usuario.email) {
+                    await usuario.updateEmail(nuevoCorreo);
+                }
+
+                // Teléfono y respaldo de nombre/correo en Firestore
+                await db.collection("usuarios").doc(usuario.uid).set({
+                    nombre: nuevoNombre,
+                    correo: nuevoCorreo,
+                    telefono: nuevoTelefono
+                }, { merge: true });
+
+                // Actualizamos lo que se ve en pantalla sin esperar a que Firebase recargue
+                document.getElementById("avatar-usuario").textContent = iniciales(nuevoNombre);
+                document.getElementById("nombre-usuario-perfil").textContent = nuevoNombre || "amigo/a";
+                document.getElementById("correo-usuario-perfil").textContent = nuevoCorreo;
+
+                exitoEditar.textContent = "¡Tus datos se guardaron correctamente!";
+            } catch (error) {
+                if (error.code === "auth/requires-recent-login") {
+                    errorEditar.textContent = "Por seguridad, cierra sesión y vuelve a ingresar antes de cambiar tu correo.";
+                } else {
+                    errorEditar.textContent = traducirErrorFirebase(error.code) || "No pudimos guardar los cambios. Intenta de nuevo.";
+                }
+            } finally {
+                alternarCargaBoton(botonEditar, false);
             }
         });
 

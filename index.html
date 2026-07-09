@@ -596,9 +596,11 @@
     <div id="modal-bienvenida" class="modal-fondo">
         <div class="modal-contenido modal-bienvenida-contenido">
             <span class="cerrar-modal" onclick="cerrarModalBienvenida()">&times;</span>
-            <div class="modal-bienvenida-insignia">🥐</div>
+            <div class="modal-bienvenida-insignia">
+                <img src="logo.png" alt="Chrisnut" class="modal-bienvenida-logo">
+            </div>
             <h3 class="modal-bienvenida-titulo">¡Bienvenido/a a Chrisnut!</h3>
-            <p class="modal-bienvenida-descuento"><strong>5% OFF</strong> en tu primera compra</p>
+            <p class="modal-bienvenida-descuento"><strong>10% OFF</strong> en tu primera compra</p>
             <p class="modal-bienvenida-texto">Crea tu cuenta gratis y el descuento se aplicará automáticamente al pagar tu primer pedido.</p>
             <button type="button" class="boton-enviar-modal" onclick="irARegistroDesdeBienvenida()">Crear cuenta gratis</button>
             <button type="button" class="modal-bienvenida-mas-tarde" onclick="cerrarModalBienvenida()">Ahora no, gracias</button>
@@ -1065,23 +1067,31 @@
             historialPedidosUsuarioActual = snapshot.docs.map(doc => doc.data());
             usuarioEsPrimeraCompra = false;
 
-            // Arma las opciones del filtro solo con los meses que realmente
-            // tienen pedidos (en orden del más reciente al más antiguo).
+            // Arma las opciones del filtro con TODOS los meses (enero a diciembre)
+            // de cada año en que el cliente tiene pedidos, para que pueda elegir
+            // cualquier mes -aunque no haya comprado en él- y vea "No tienes
+            // pedidos en ese mes" en vez de no poder filtrar.
             if (selectorMes) {
-                const mesesConPedidos = [];
+                const nombresMes = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+                const añosConPedidos = new Set();
                 historialPedidosUsuarioActual.forEach(pedido => {
                     const clave = claveMesPedido(pedido.fecha);
-                    if (clave && !mesesConPedidos.includes(clave)) mesesConPedidos.push(clave);
+                    if (clave) añosConPedidos.add(Number(clave.split("-")[0]));
                 });
+                const añosOrdenados = Array.from(añosConPedidos).sort((a, b) => b - a);
 
                 let opcionesHtml = `<option value="todos">Todos los meses</option>`;
-                mesesConPedidos.forEach(clave => {
-                    opcionesHtml += `<option value="${clave}">${nombreMesPedidoDesdeClave(clave)}</option>`;
+                añosOrdenados.forEach(año => {
+                    for (let mes = 12; mes >= 1; mes--) {
+                        const clave = `${año}-${String(mes).padStart(2, "0")}`;
+                        opcionesHtml += `<option value="${clave}">${nombresMes[mes - 1]} ${año}</option>`;
+                    }
                 });
                 selectorMes.innerHTML = opcionesHtml;
                 selectorMes.value = "todos";
-                // Si solo hay pedidos de un mes, no vale la pena mostrar el filtro.
-                selectorMes.style.display = mesesConPedidos.length > 1 ? "inline-block" : "none";
+                selectorMes.style.display = "inline-block";
             }
 
             renderizarHistorialPedidosFiltrado();
@@ -1248,7 +1258,7 @@
     // decide crear una cuenta; los invitados no lo obtienen).
     let usuarioEsPrimeraCompra = false;
     const CODIGO_DESCUENTO_BIENVENIDA = "BIENVENIDA5";
-    const VALOR_DESCUENTO_BIENVENIDA = 5;
+    const VALOR_DESCUENTO_BIENVENIDA = 10;
 
     function renderizarCarrito() {
         const contenedor = document.getElementById("lista-carrito");
@@ -1792,10 +1802,10 @@
     // ==========================================
 
     // Los favoritos viven en memoria mientras la página está abierta.
-    // Cada producto se guarda como: { nombre, precio }
+    // Cada producto se guarda como: { nombre, precio, imagen }
     let favoritos = [];
 
-    function alternarFavorito(nombre, precio, boton) {
+    function alternarFavorito(nombre, precio, imagen, boton) {
         const existente = favoritos.find(item => item.nombre === nombre);
 
         if (existente) {
@@ -1803,7 +1813,7 @@
             boton.textContent = "🤍";
             boton.classList.remove("favorito-activo");
         } else {
-            favoritos.push({ nombre, precio });
+            favoritos.push({ nombre, precio, imagen });
             boton.textContent = "❤️";
             boton.classList.remove("favorito-activo");
             void boton.offsetWidth; // reinicia la animación
@@ -1840,7 +1850,8 @@
         let html = "";
         favoritos.forEach(item => {
             html += `
-                <div class="item-carrito">
+                <div class="item-carrito item-favorito">
+                    <img src="${item.imagen || 'logo.png'}" alt="${item.nombre}" class="item-favorito-imagen">
                     <div class="item-carrito-info">
                         <span class="item-carrito-nombre">${item.nombre}</span>
                         <span class="item-carrito-precio">${formatearPrecio(item.precio)}</span>
@@ -2246,7 +2257,7 @@
                 ` : "";
 
                 html += `
-                    <article class="tarjeta-producto" data-nombre="${producto.nombre}" data-precio="${producto.precio}">
+                    <article class="tarjeta-producto" data-nombre="${producto.nombre}" data-precio="${producto.precio}" data-imagen="${imagenEscapada}">
                         <div class="imagen-contenedor ${window._esAdminActual ? "imagen-editable-admin" : ""}">
                             <img src="${producto.imagenURL}" alt="${producto.nombre}" class="imagen-producto">
                             ${agotado ? '<span class="etiqueta-agotado-producto">Agotado</span>' : ""}
@@ -2984,7 +2995,8 @@
                     const tarjeta = botonFavorito.closest(".tarjeta-producto");
                     const nombre = tarjeta.dataset.nombre;
                     const precio = parseInt(tarjeta.dataset.precio, 10);
-                    alternarFavorito(nombre, precio, botonFavorito);
+                    const imagen = tarjeta.dataset.imagen || "";
+                    alternarFavorito(nombre, precio, imagen, botonFavorito);
                     return;
                 }
 
@@ -3370,10 +3382,15 @@
 
                 exitoEditar.textContent = "¡Tus datos se guardaron correctamente!";
             } catch (error) {
+                console.error("Error al guardar los cambios de perfil: ", error);
                 if (error.code === "auth/requires-recent-login") {
                     errorEditar.textContent = "Por seguridad, cierra sesión y vuelve a ingresar antes de cambiar tu correo.";
+                } else if (error.code === "permission-denied") {
+                    errorEditar.textContent = "No se pudieron guardar los cambios: no tienes permiso para escribir en la base de datos (revisa las reglas de Firestore de la colección \"usuarios\").";
+                } else if (error.code) {
+                    errorEditar.textContent = traducirErrorFirebase(error.code);
                 } else {
-                    errorEditar.textContent = traducirErrorFirebase(error.code) || "No pudimos guardar los cambios. Intenta de nuevo.";
+                    errorEditar.textContent = error.message || "No pudimos guardar los cambios. Intenta de nuevo.";
                 }
             } finally {
                 alternarCargaBoton(botonEditar, false);
@@ -3483,7 +3500,7 @@
                 formulario.reset();
                 grecaptcha.reset();
                 cerrarModal();
-                mostrarAviso("¡Gracias por tu opinión! Se publicará en cuanto sea revisada.", "exito");
+                mostrarAviso("¡Gracias por tu opinión! Chrisnut te lo agradece", "exito");
             })
             .catch((error) => {
                 console.error("Error al guardar testimonio: ", error);

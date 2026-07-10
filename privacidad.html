@@ -15,6 +15,18 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <!-- Aplica el tema guardado (claro/oscuro) antes de pintar la página, para evitar el "parpadeo" -->
+    <script>
+        (function () {
+            try {
+                var temaGuardado = localStorage.getItem("chrisnut_tema");
+                if (temaGuardado === "oscuro") {
+                    document.documentElement.setAttribute("data-tema", "oscuro");
+                }
+            } catch (e) {}
+        })();
+    </script>
+
     <style>
         /* Barra de navegación simple y estática para las páginas legales:
            a propósito NO reutiliza el menú interactivo del sitio (el de
@@ -112,15 +124,17 @@
 
     <nav class="nav-legal">
         <ul>
-            <li><a href="index.html">&larr; Volver al inicio</a></li>
+            <li><a href="index.html">Inicio</a></li>
             <li><a href="index.html#vitrina">Nuestros Productos</a></li>
             <li><a href="index.html#contacto">Contacto</a></li>
+            <li><a href="index.html#como-comprar">¿Cómo Comprar?</a></li>
+            <li><a href="privacidad.html">Política de Privacidad</a></li>
         </ul>
     </nav>
 
     <main class="contenido-legal">
         <h1>Política de Privacidad</h1>
-        <p class="fecha-actualizacion">Última actualización: 09 de julio de 2026</p>
+        <p class="fecha-actualizacion">Última actualización: julio de 2026</p>
 
         <p>En Chrisnut nos tomamos en serio el cuidado de tus datos personales. Esta política explica de forma simple qué información recopilamos a través de <strong>chrisnut</strong>, para qué la usamos y qué derechos tienes sobre ella, conforme a la Ley N° 19.628 sobre Protección de la Vida Privada de Chile.</p>
 

@@ -1093,30 +1093,35 @@ main > section {
 }
 
 .pie-enlaces h3 {
-    color: white;
+    color: rgb(223, 186, 102);
+    font-family: 'Fraunces', Georgia, serif;
     font-size: 1rem;
     margin: 0 0 12px;
+    text-align: left;
 }
 
 .pie-enlaces ul {
     list-style: none;
     margin: 0;
     padding: 0;
+    text-align: left;
 }
 
 .pie-enlaces li {
     margin-bottom: 8px;
+    text-align: left;
 }
 
 .pie-enlaces a {
-    color: var(--color-texto-suave-claro);
+    color: rgb(223, 186, 102);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 0.95rem;
     transition: color 0.3s ease;
 }
 
 .pie-enlaces a:hover {
-    color: rgb(223, 186, 102);
+    color: white;
 }
 
 /* --- Redes Sociales (centradas) --- */

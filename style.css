@@ -1077,23 +1077,18 @@ main > section {
 }
 
 .pie-contenido {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px 30px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
     max-width: 1100px;
     margin: 0 auto 15px;
     padding-bottom: 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* --- Enlaces (izquierda, en una sola fila) --- */
+/* --- Enlaces (columna izquierda, vertical con viñetas) --- */
 .pie-enlaces {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 8px 18px;
+    grid-column: 1;
     text-align: left;
 }
 
@@ -1101,22 +1096,19 @@ main > section {
     color: rgb(223, 186, 102);
     font-family: 'Fraunces', Georgia, serif;
     font-size: 1rem;
-    margin: 0;
+    margin: 0 0 10px;
     text-align: left;
 }
 
 .pie-enlaces ul {
-    list-style: none;
+    list-style: disc;
     margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 18px;
+    padding-left: 20px;
     text-align: left;
 }
 
 .pie-enlaces li {
-    margin: 0;
+    margin-bottom: 6px;
     text-align: left;
 }
 
@@ -1134,6 +1126,9 @@ main > section {
 
 /* --- Redes Sociales (centradas) --- */
 .redes-sociales {
+    grid-column: 2;
+    justify-self: center;
+    align-self: center;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -1156,20 +1151,24 @@ main > section {
 
 @media (max-width: 600px) {
     .pie-contenido {
-        flex-direction: column;
-        justify-content: center;
+        grid-template-columns: 1fr;
+        justify-items: center;
         text-align: center;
-        gap: 18px;
+        gap: 20px;
     }
 
     .pie-enlaces {
-        justify-content: center;
+        grid-column: 1;
         text-align: center;
     }
 
     .pie-enlaces ul {
-        justify-content: center;
-        text-align: center;
+        display: inline-block;
+        text-align: left;
+    }
+
+    .redes-sociales {
+        grid-column: 1;
     }
 }
 

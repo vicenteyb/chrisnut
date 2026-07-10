@@ -1,0 +1,3629 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Chrisnut - Panadería y Dulzura Artesanal | Pan Amasado, Alfajores y Más</title>
+
+    <!-- SEO básico -->
+    <meta name="description" content="Chrisnut: panadería y repostería artesanal. Medialunas, rollitos de canela, berlines, alfajores y pan amasado recién horneados. Haz tu pedido y coordina la entrega por WhatsApp.">
+    <meta name="keywords" content="panadería, repostería, pan amasado, alfajores, medialunas, berlines, rollitos de canela, Chrisnut, dulces artesanales, Chile">
+    <meta name="author" content="Chrisnut">
+    <meta name="robots" content="index, follow">
+    <!-- ⚠️ Si compras un dominio propio (ej. chrisnut.cl) y apuntas el DNS a
+         esta página, reemplaza la URL de abajo por esa. Mientras tanto se usa
+         la dirección real donde vive el sitio hoy (GitHub Pages), para que
+         las vistas previas al compartir el link funcionen correctamente. -->
+    <link rel="canonical" href="https://vicenteyb.github.io/chrisnut/">
+
+    <!-- Redes sociales / Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://vicenteyb.github.io/chrisnut/">
+    <meta property="og:site_name" content="Chrisnut">
+    <meta property="og:title" content="Chrisnut - Panadería y Dulzura Artesanal">
+    <meta property="og:description" content="Medialunas, rollitos de canela, berlines, alfajores y pan amasado recién horneados. Haz tu pedido por WhatsApp.">
+    <meta property="og:image" content="https://vicenteyb.github.io/chrisnut/logo.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:locale" content="es_CL">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Chrisnut - Panadería y Dulzura Artesanal">
+    <meta name="twitter:description" content="Medialunas, rollitos de canela, berlines, alfajores y pan amasado recién horneados.">
+    <meta name="twitter:image" content="https://vicenteyb.github.io/chrisnut/logo.png">
+    <meta name="theme-color" content="#6a4833">
+
+    <!-- Favicon (usa el propio logo) -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- Datos estructurados básicos para buscadores -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Bakery",
+      "name": "Chrisnut",
+      "url": "https://vicenteyb.github.io/chrisnut/",
+      "description": "Panadería y repostería artesanal: medialunas, rollitos de canela, berlines, alfajores y pan amasado.",
+      "image": "https://vicenteyb.github.io/chrisnut/logo.png",
+      "sameAs": [
+        "https://www.instagram.com/chrisnutcl/"
+      ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Aplica el tema guardado (claro/oscuro) antes de pintar la página, para evitar el "parpadeo" -->
+    <script>
+        (function () {
+            try {
+                var temaGuardado = localStorage.getItem("chrisnut_tema");
+                if (temaGuardado === "oscuro") {
+                    document.documentElement.setAttribute("data-tema", "oscuro");
+                }
+            } catch (e) {}
+        })();
+    </script>
+</head>
+<body>
+
+    <div id="pantalla-carga">
+        <img src="logo.png" alt="" class="loader-logo">
+        <div class="loader-spinner"></div>
+        <span class="loader-texto">Horneando la página...</span>
+    </div>
+
+    <header id="inicio" class="header-principal">
+        <a href="https://www.instagram.com/chrisnutcl/" target="_blank" rel="noopener">
+            <img src="logo.png" alt="Logo Chrisnut - Panadería y dulzura" class="logo">
+        </a>
+    </header>
+
+    <nav class="menu-principal">
+        <ul id="lista-menu" class="lista-menu">
+            <li class="item-desplegable-perfil">
+                <button id="boton-perfil" class="boton-perfil" aria-label="Cuenta" aria-haspopup="true" aria-expanded="false">
+                    <svg class="icono-perfil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.42 3.58-8 8-8s8 3.58 8 8"></path></svg>
+                    <span id="texto-perfil">Hola, Inicia sesión</span>
+                    <span class="flecha-desplegable">⌄</span>
+                </button>
+                <ul id="submenu-perfil" class="submenu-perfil">
+                    <li class="solo-invitado"><a href="#" id="enlace-ir-login">Iniciar sesión</a></li>
+                    <li class="solo-invitado"><a href="#" id="enlace-ir-registro">Regístrate</a></li>
+                    <li class="solo-cuenta" style="display:none;"><a href="#" id="enlace-mi-cuenta">Mi cuenta</a></li>
+                    <li class="solo-cuenta" style="display:none;"><a href="#" id="enlace-cerrar-sesion-menu">Cerrar sesión</a></li>
+                </ul>
+            </li>
+
+            <li class="item-desplegable">
+                <ul id="submenu-atajos" class="submenu-atajos">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#" id="enlace-favoritos-menu">Mis Favoritos</a></li>
+                    <li><a href="#vitrina">Nuestros Productos</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="#como-comprar">¿Cómo Comprar?</a></li>
+                    <li><a href="#testimonios">Ustedes</a></li>
+                </ul>
+            </li>
+
+            <li class="grupo-derecha">
+                <button id="boton-modo-oscuro" class="boton-modo-oscuro" aria-label="Cambiar a modo oscuro" title="Cambiar tema">🌙</button>
+                <button id="boton-carrito" class="boton-carrito">
+                    🛒 <span id="contador-carrito" class="contador-carrito">0</span>
+                </button>
+                <button id="boton-atajos" class="boton-atajos" aria-label="Abrir menú de opciones">
+                    <span class="icono-hamburguesa">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+    <hr class="separador">
+
+    <main>
+        <section id="vitrina" class="vitrina-productos seccion-animada">
+            <h2>Nuestra Vitrina</h2>
+            <p>Descubre las delicias que preparamos con amor cada día.</p>
+
+            <div class="contenedor-vitrina-principal">
+                <aside id="panel-filtros-vitrina" class="panel-filtros-vitrina">
+                    <h3 class="titulo-panel-filtros">Filtros</h3>
+
+                    <div class="grupo-filtro">
+                        <button type="button" class="cabecera-grupo-filtro" data-grupo="disponibilidad" aria-expanded="true">
+                            <span>Disponibilidad</span>
+                            <span class="icono-colapsar-filtro">−</span>
+                        </button>
+                        <div class="contenido-grupo-filtro" id="contenido-filtro-disponibilidad">
+                            <label class="opcion-filtro">
+                                <input type="checkbox" id="filtro-en-stock" checked>
+                                En stock <span class="conteo-filtro" id="conteo-en-stock">(0)</span>
+                            </label>
+                            <label class="opcion-filtro">
+                                <input type="checkbox" id="filtro-agotado" checked>
+                                Agotado <span class="conteo-filtro" id="conteo-agotado">(0)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr class="separador-grupo-filtro">
+
+                    <div class="grupo-filtro">
+                        <button type="button" class="cabecera-grupo-filtro" data-grupo="precio" aria-expanded="true">
+                            <span>Precio</span>
+                            <span class="icono-colapsar-filtro">−</span>
+                        </button>
+                        <div class="contenido-grupo-filtro" id="contenido-filtro-precio">
+                            <div class="fila-precio-filtro">
+                                <span class="signo-peso-filtro">$</span>
+                                <input type="number" id="filtro-precio-min" placeholder="Mín" min="0" inputmode="numeric">
+                            </div>
+                            <div class="fila-precio-filtro">
+                                <span class="signo-peso-filtro">$</span>
+                                <input type="number" id="filtro-precio-max" placeholder="Máx" min="0" inputmode="numeric">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="separador-grupo-filtro">
+
+                    <button type="button" id="boton-limpiar-filtros-vitrina" class="boton-limpiar-filtros-vitrina">Limpiar filtros</button>
+                </aside>
+
+                <div class="columna-vitrina-productos">
+                    <div class="barra-herramientas-vitrina">
+                        <button type="button" id="boton-filtros-vitrina" class="boton-filtros-vitrina-movil" aria-expanded="false" aria-controls="panel-filtros-vitrina">
+                            <span class="icono-filtros-vitrina">☰</span> Filtros
+                        </button>
+
+                        <div class="control-orden-vitrina">
+                            <label for="select-orden-vitrina">Ordenar por</label>
+                            <select id="select-orden-vitrina">
+                                <option value="destacado">Destacado</option>
+                                <option value="precio-asc">Precio: menor a mayor</option>
+                                <option value="precio-desc">Precio: mayor a menor</option>
+                                <option value="nombre-asc">Nombre: A-Z</option>
+                                <option value="nombre-desc">Nombre: Z-A</option>
+                            </select>
+                        </div>
+
+                        <div class="control-vista-vitrina">
+                            <span class="etiqueta-ver-como">Ver como</span>
+                            <button type="button" id="boton-vista-grilla" class="boton-vista activo" aria-label="Ver en cuadrícula" title="Ver en cuadrícula">▦</button>
+                            <button type="button" id="boton-vista-lista" class="boton-vista" aria-label="Ver en lista" title="Ver en lista">☰</button>
+                        </div>
+                    </div>
+
+                    <div class="contenedor-productos vista-grilla" id="contenedor-productos">
+                        <p class="carrito-vacio">Cargando productos...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="separador">
+
+        <section id="contacto" class="seccion-contacto seccion-animada">
+            <h2>Contacto</h2>
+            <p>¿Tienes un pedido especial o alguna duda? ¡Escríbenos!</p>
+
+            <div class="tarjetas-info-contacto">
+                <div class="tarjeta-info-contacto">
+                    <div class="icono-info-contacto">✉️</div>
+                    <div class="texto-info-contacto">
+                        <strong>Email</strong>
+                        <a href="mailto:chrisnut@outlook.cl">chrisnut@outlook.cl</a>
+                    </div>
+                </div>
+
+                <div class="tarjeta-info-contacto">
+                    <div class="icono-info-contacto">📍</div>
+                    <div class="texto-info-contacto">
+                        <strong>Ubicación</strong>
+                        <span>Llay-llay</span>
+                    </div>
+                </div>
+
+                <div class="tarjeta-info-contacto">
+                    <div class="icono-info-contacto">📞</div>
+                    <div class="texto-info-contacto">
+                        <strong>Teléfono</strong>
+                        <a href="tel:+56955395216">+56 9 5539 5216</a>
+                    </div>
+                </div>
+            </div>
+            
+            <form id="formulario-contacto" class="formulario-contacto" action="https://formspree.io/f/mojobepa" method="POST">
+
+                <div class="grupo-formulario">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+                </div>
+                
+                <div class="grupo-formulario">
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" id="correo" name="correo" placeholder="tu@correo.com" required>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="telefono">Número de Teléfono:</label>
+                    <div class="input-telefono-contenedor">
+                        <span class="prefijo-fijo">+56 9</span>
+                        <input type="tel" id="telefono" name="telefono" placeholder="1234 5678" pattern="[0-9]{8}" maxlength="8" required>
+                    </div>
+                </div>
+                
+                <div class="grupo-formulario">
+                    <label for="mensaje">Mensaje o Pedido:</label>
+                    <textarea id="mensaje" name="mensaje" rows="5" placeholder="Cuéntanos qué necesitas..." required></textarea>
+                </div>
+                
+                <button type="submit" class="boton-enviar">Enviar Mensaje</button>
+            </form>
+        </section>
+
+        <hr class="separador">
+ 
+        <section id="como-comprar" class="seccion-pasos seccion-animada">
+            <h2>¿Cómo comprar en Chrisnut?</h2>
+            <p class="subtitulo-seccion">Disfrutar de nuestras delicias es súper simple, solo sigue estos pasos:</p>
+            
+            <div class="contenedor-pasos">
+                <div class="tarjeta-paso">
+                    <div class="icono-paso">🛒</div>
+                    <h3>1. Elige tus favoritos</h3>
+                    <p>Revisa nuestra vitrina y selecciona el pan o los dulces que más te tentaron para tu día.</p>
+                </div>
+
+                <div class="tarjeta-paso">
+                    <div class="icono-paso">💬</div>
+                    <h3>2. Escríbenos</h3>
+                    <p>Envía tu pedido a través del formulario de contacto o directamente por nuestro botón de WhatsApp.</p>
+                </div>
+
+                <div class="tarjeta-paso">
+                    <div class="icono-paso">🥖</div>
+                    <h3>3. ¡Retira o recibe!</h3>
+                    <p>Coordinamos la entrega para que disfrutes de tus productos recién horneados, crujientes y calentitos.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="separador">
+
+        <section id="testimonios" class="seccion-testimonios seccion-animada">
+            <h2>Lo que dicen nuestros clientes</h2>
+            <p class="subtitulo-seccion">La opinión de quienes disfrutan de nuestra panadería día a día.</p>
+            
+            <div class="contenedor-testimonios">
+                </div>
+
+            <button class="boton-dejar-testimonio" onclick="abrirModal()">✨ Dejar mi opinión</button>
+        </section>
+    </main>
+
+    <!-- (el antiguo div "reporte-imprimible" para window.print() ya no se usa: ahora el informe se genera directo en PDF con jsPDF) -->
+
+    <div id="modal-testimonio" class="modal-fondo">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+            <h3>Cuéntanos tu experiencia</h3>
+            <form id="formulario-nuevo-testimonio" class="formulario-modal">
+                <div class="grupo-modal">
+                    <label for="nombre-testimonio">Tu Nombre:</label>
+                    <input type="text" id="nombre-testimonio" placeholder="Ej: María José" required>
+                </div>
+                <div class="grupo-modal">
+                    <label for="puntuacion">¿Cuántas estrellas nos das?</label>
+                    <select id="puntuacion" required>
+                        <option value="5 Estrellas">⭐⭐⭐⭐⭐ (Excelente)</option>
+                        <option value="4 Estrellas">⭐⭐⭐⭐ (Muy Bueno)</option>
+                        <option value="3 Estrellas">⭐⭐⭐ (Bueno)</option>
+                    </select>
+                </div>
+                <div class="grupo-modal">
+                    <label for="mensaje-testimonio">Tu Opinión:</label>
+                    <textarea id="mensaje-testimonio" rows="4" placeholder="¿Qué tal estuvo tu pedido?" required></textarea>
+                </div>
+
+                <div class="g-recaptcha" data-sitekey="6LeSFkgtAAAAAMFw-9WvXShifIY7yolLhkbTbJEx"></div>
+
+                <button type="submit" class="boton-enviar-modal">Enviar Opinión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Input oculto: permite que el admin cambie la foto de un producto
+         presionando directamente la imagen que ya tiene en la vitrina. -->
+    <input type="file" id="input-cambiar-foto-producto" accept="image/*" style="display:none;">
+
+    <div id="modal-nuevo-producto" class="modal-fondo">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalNuevoProducto()">&times;</span>
+            <h3>🥐 Nuevo producto</h3>
+            <form id="formulario-nuevo-producto" class="formulario-modal">
+                <div class="grupo-modal">
+                    <label for="nuevo-producto-nombre">Nombre del producto:</label>
+                    <input type="text" id="nuevo-producto-nombre" placeholder="Ej: Kuchen de Manzana" required>
+                </div>
+                <div class="grupo-modal">
+                    <label for="nuevo-producto-descripcion">Descripción:</label>
+                    <textarea id="nuevo-producto-descripcion" rows="3" placeholder="Cuéntale al cliente de qué se trata" required></textarea>
+                </div>
+                <div class="grupo-modal">
+                    <label for="nuevo-producto-precio">Precio (CLP):</label>
+                    <input type="number" id="nuevo-producto-precio" placeholder="Ej: 2500" min="1" required>
+                </div>
+                <div class="grupo-modal">
+                    <label for="nuevo-producto-imagen">Foto del producto:</label>
+                    <input type="file" id="nuevo-producto-imagen" accept="image/*" required>
+                </div>
+                <p id="estado-nuevo-producto" class="texto-medidor-clave"></p>
+                <button type="submit" id="boton-agregar-producto" class="boton-enviar-modal">Agregar producto</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-carrito" class="modal-fondo">
+        <div class="modal-contenido modal-carrito-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalCarrito()">&times;</span>
+            <h3>Tu Carrito 🛒</h3>
+
+            <div id="lista-carrito" class="lista-carrito">
+                <p class="carrito-vacio">Tu carrito está vacío.</p>
+            </div>
+
+            <div id="aviso-descuento-bienvenida" class="aviso-descuento-bienvenida" style="display:none;"></div>
+
+            <div class="grupo-cupon">
+                <input type="text" id="input-cupon" placeholder="¿Tienes un código de descuento?">
+                <button type="button" id="boton-aplicar-cupon" onclick="aplicarCupon()">Aplicar</button>
+            </div>
+            <p id="mensaje-cupon" class="mensaje-cupon"></p>
+
+            <div class="grupo-modal grupo-telefono-carrito">
+                <label for="telefono-carrito">Tu número de WhatsApp (para avisarte del estado de tu pedido):</label>
+                <div class="input-telefono-contenedor">
+                    <span class="prefijo-fijo">+56 9</span>
+                    <input type="tel" id="telefono-carrito" placeholder="1234 5678" pattern="[0-9]{8}" maxlength="8">
+                </div>
+            </div>
+
+            <div class="carrito-total">
+                <span>Total:</span>
+                <span id="total-carrito">$0</span>
+            </div>
+
+            <button id="boton-finalizar-pedido" class="boton-enviar-modal" onclick="enviarPedidoWhatsapp()">
+                Finalizar pedido por WhatsApp
+            </button>
+            <button id="boton-vaciar-carrito" class="boton-secundario-modal" onclick="vaciarCarrito()">
+                🗑️ Vaciar carrito
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-perfil" class="modal-fondo">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalPerfil()">&times;</span>
+
+            <div id="vista-invitado">
+                <div class="pestanas-perfil">
+                    <button id="tab-login" class="pestana-perfil pestana-activa" onclick="mostrarPestana('login')">Iniciar Sesión</button>
+                    <button id="tab-registro" class="pestana-perfil" onclick="mostrarPestana('registro')">Crear Cuenta</button>
+                </div>
+
+                <form id="formulario-login" class="formulario-modal">
+                    <div class="grupo-modal">
+                        <label for="login-correo">Correo Electrónico:</label>
+                        <input type="email" id="login-correo" placeholder="tu@correo.com" required>
+                    </div>
+                    <div class="grupo-modal">
+                        <label for="login-clave">Contraseña:</label>
+                        <div class="input-clave-contenedor">
+                            <input type="password" id="login-clave" placeholder="Tu contraseña" required>
+                            <button type="button" class="boton-ver-clave" onclick="alternarClave('login-clave', this)">👁️</button>
+                        </div>
+                    </div>
+                    <a href="#" id="enlace-olvide-clave" class="enlace-olvide-clave">¿Olvidaste tu contraseña?</a>
+                    <p id="error-login" class="error-formulario"></p>
+                    <p id="exito-login" class="exito-formulario"></p>
+                    <button type="submit" id="boton-login" class="boton-enviar-modal">
+                        <span class="texto-boton">Ingresar</span>
+                        <span class="spinner-boton"></span>
+                    </button>
+                </form>
+
+                <form id="formulario-registro" class="formulario-modal" style="display: none;">
+                    <div class="grupo-modal">
+                        <label for="registro-nombre">Tu Nombre:</label>
+                        <input type="text" id="registro-nombre" placeholder="Ej: María José" required>
+                    </div>
+                    <div class="grupo-modal">
+                        <label for="registro-correo">Correo Electrónico:</label>
+                        <input type="email" id="registro-correo" placeholder="tu@correo.com" required>
+                    </div>
+                    <div class="grupo-modal">
+                        <label for="registro-clave">Contraseña:</label>
+                        <div class="input-clave-contenedor">
+                            <input type="password" id="registro-clave" placeholder="Mínimo 6 caracteres" required minlength="6">
+                            <button type="button" class="boton-ver-clave" onclick="alternarClave('registro-clave', this)">👁️</button>
+                        </div>
+                        <div id="medidor-clave" class="medidor-clave">
+                            <div id="barra-medidor-clave" class="barra-medidor-clave"></div>
+                        </div>
+                        <span id="texto-medidor-clave" class="texto-medidor-clave"></span>
+                    </div>
+                    <p id="error-registro" class="error-formulario"></p>
+                    <button type="submit" id="boton-registro" class="boton-enviar-modal">
+                        <span class="texto-boton">Crear Cuenta</span>
+                        <span class="spinner-boton"></span>
+                    </button>
+                </form>
+            </div>
+
+            <div id="vista-cuenta" style="display: none;">
+                <div id="avatar-usuario" class="avatar-usuario">A</div>
+                <h3>¡Hola, <span id="nombre-usuario-perfil">amigo/a</span>! 👋</h3>
+                <p id="correo-usuario-perfil" class="correo-usuario-perfil"></p>
+
+                <hr class="separador-perfil">
+
+                <div class="seccion-editar-perfil">
+                    <h3>Mis datos</h3>
+                    <form id="formulario-editar-perfil" class="formulario-modal">
+                        <div class="grupo-modal">
+                            <label for="editar-nombre">Nombre:</label>
+                            <input type="text" id="editar-nombre" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="grupo-modal">
+                            <label for="editar-correo">Correo Electrónico:</label>
+                            <input type="email" id="editar-correo" placeholder="tu@correo.com" required>
+                        </div>
+                        <div class="grupo-modal">
+                            <label for="editar-telefono">Teléfono:</label>
+                            <div class="input-telefono-contenedor">
+                                <span class="prefijo-fijo">+56 9</span>
+                                <input type="tel" id="editar-telefono" placeholder="1234 5678" pattern="[0-9]{8}" maxlength="8">
+                            </div>
+                        </div>
+                        <p id="error-editar-perfil" class="error-formulario"></p>
+                        <p id="exito-editar-perfil" class="exito-formulario"></p>
+                        <button type="submit" id="boton-editar-perfil" class="boton-enviar-modal">
+                            <span class="texto-boton">Guardar cambios</span>
+                            <span class="spinner-boton"></span>
+                        </button>
+                    </form>
+                </div>
+
+                <hr class="separador-perfil">
+
+                <div class="seccion-pedidos-perfil">
+                    <div class="encabezado-historial-pedidos">
+                        <h3>Tu historial de pedidos</h3>
+                        <select id="filtro-mes-historial-pedidos" class="filtro-mes-pedidos" style="display:none;"></select>
+                    </div>
+                    <div id="lista-pedidos-perfil" class="lista-pedidos-perfil">
+                        <p class="carrito-vacio">Cargando tus pedidos...</p>
+                    </div>
+                </div>
+
+                <div id="panel-admin-pedidos" class="panel-admin" style="display:none;">
+                    <h3>📦 Panel de administrador</h3>
+
+                    <button id="boton-activar-notificaciones" class="boton-secundario-modal" onclick="activarNotificacionesAdmin()">
+                        🔔 Activar notificaciones de pedidos nuevos
+                    </button>
+                    <p id="estado-notificaciones-admin" class="texto-medidor-clave"></p>
+
+                    <div class="panel-estadisticas-mes">
+                        <div class="panel-estadisticas-encabezado">
+                            <h4>📊 Estadísticas del mes</h4>
+                            <button type="button" class="boton-imprimir-estadisticas" onclick="guardarEstadisticasPDF()">📄 Guardar PDF</button>
+                        </div>
+                        <div id="contenido-estadisticas-mes" class="grid-estadisticas">
+                            <p class="carrito-vacio">Cargando estadísticas...</p>
+                        </div>
+                    </div>
+
+                    <p class="panel-admin-subtitulo">Pedidos activos (pendientes / confirmados)</p>
+                    <div id="lista-admin-pedidos" class="lista-admin-testimonios">
+                        <p class="carrito-vacio">Cargando...</p>
+                    </div>
+
+                    <div class="panel-cupones">
+                        <h4>🏷️ Códigos de descuento</h4>
+                        <div class="grupo-nuevo-cupon">
+                            <input type="text" id="nuevo-cupon-codigo" placeholder="Código, ej: VERANO10">
+                            <input type="number" id="nuevo-cupon-valor" placeholder="Descuento %" min="1" max="100">
+                            <button type="button" onclick="agregarCupon()">Agregar</button>
+                        </div>
+                        <div id="lista-cupones-admin" class="lista-cupones-admin">
+                            <p class="carrito-vacio">Cargando cupones...</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="panel-admin-productos" class="panel-admin" style="display:none;">
+                    <div class="panel-estadisticas-encabezado">
+                        <h3>🥐 Productos de la vitrina</h3>
+                        <button type="button" class="boton-agregar-producto-admin" onclick="abrirModalNuevoProducto()" aria-label="Agregar producto nuevo" title="Agregar producto nuevo">+</button>
+                    </div>
+                    <div id="lista-productos-admin" class="lista-cupones-admin">
+                        <p class="carrito-vacio">Cargando productos...</p>
+                    </div>
+                </div>
+
+
+                <div id="panel-admin-testimonios" class="panel-admin" style="display:none;">
+                    <h3>🛠️ Panel de administrador</h3>
+                    <p class="panel-admin-subtitulo">Opiniones pendientes por aprobar</p>
+                    <div id="lista-admin-testimonios" class="lista-admin-testimonios">
+                        <p class="carrito-vacio">Cargando...</p>
+                    </div>
+                </div>
+
+                <button id="boton-cerrar-sesion" class="boton-secundario-modal" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-favoritos" class="modal-fondo">
+        <div class="modal-contenido modal-carrito-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalFavoritos()">&times;</span>
+            <h3>Tus Favoritos ❤️</h3>
+
+            <div id="lista-favoritos" class="lista-carrito">
+                <p class="carrito-vacio">Aún no tienes favoritos guardados.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-estado-pedido" class="modal-fondo">
+        <div class="modal-contenido modal-carrito-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalEstadoPedido()">&times;</span>
+            <h3>Estado de tu pedido 📦</h3>
+
+            <div id="contenido-modal-estado-pedido">
+                <p class="carrito-vacio">Todavía no tenemos información de tu pedido.</p>
+            </div>
+
+            <button type="button" class="boton-secundario-modal" onclick="cerrarSeguimientoPedido()">
+                ✕ Dejar de ver este pedido
+            </button>
+        </div>
+    </div>
+
+    <!-- Anuncio de bienvenida: se muestra solo en la primera visita, invitando a crear una cuenta -->
+    <div id="modal-bienvenida" class="modal-fondo">
+        <div class="modal-contenido modal-bienvenida-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalBienvenida()">&times;</span>
+            <div class="modal-bienvenida-insignia">
+                <img src="logo.png" alt="Chrisnut" class="modal-bienvenida-logo">
+            </div>
+            <h3 class="modal-bienvenida-titulo">¡Bienvenido/a a Chrisnut!</h3>
+            <p class="modal-bienvenida-descuento"><strong>10% OFF</strong> en tu primera compra</p>
+            <p class="modal-bienvenida-texto">Crea tu cuenta gratis y el descuento se aplicará automáticamente al pagar tu primer pedido.</p>
+            <button type="button" class="boton-enviar-modal" onclick="irARegistroDesdeBienvenida()">Crear cuenta gratis</button>
+            <button type="button" class="modal-bienvenida-mas-tarde" onclick="cerrarModalBienvenida()">Ahora no, gracias</button>
+        </div>
+    </div>
+
+    <!-- Reemplaza los alert() nativos del navegador por un cartel lindo y acorde a la marca -->
+    <div id="modal-aviso" class="modal-fondo modal-aviso-fondo">
+        <div class="modal-contenido modal-aviso-contenido">
+            <div id="icono-aviso" class="icono-aviso icono-aviso-info">💬</div>
+            <p id="mensaje-aviso" class="mensaje-aviso"></p>
+            <button type="button" id="boton-aviso-aceptar" class="boton-enviar-modal" onclick="cerrarModalAviso()">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Reemplaza los confirm() nativos del navegador -->
+    <div id="modal-confirmacion" class="modal-fondo modal-aviso-fondo">
+        <div class="modal-contenido modal-aviso-contenido">
+            <div class="icono-aviso icono-aviso-advertencia">❓</div>
+            <p id="mensaje-confirmacion" class="mensaje-aviso"></p>
+            <div class="botones-confirmacion">
+                <button type="button" class="boton-secundario-modal" onclick="responderConfirmacion(false)">Cancelar</button>
+                <button type="button" id="boton-confirmacion-aceptar" class="boton-enviar-modal" onclick="responderConfirmacion(true)">Sí, continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="pie-pagina">
+        <div class="redes-sociales">
+            <a href="https://www.instagram.com/chrisnutcl/" target="_blank">Instagram</a>
+            <a href="https://wa.me/qr/JPOAXZ6QHLFOJ1" target="_blank">Whatsapp</a>
+            <a href="privacidad.html">Política de Privacidad</a>
+        </div>
+        <p>&copy; 2026 Chrisnut - Panadería & Dulzura. Todos los derechos reservados.</p>
+    </footer>
+
+    <div class="botones-flotantes-contenedor">
+        <button id="boton-carrito-flotante" class="boton-flotante carrito-flotante" aria-label="Ver carrito" title="Ver carrito" style="display:none;">
+            🛒 <span id="contador-carrito-flotante" class="contador-carrito-flotante">0</span>
+        </button>
+        <button id="boton-estado-pedido-flotante" class="boton-flotante estado-pedido-flotante" aria-label="Ver estado de tu pedido" title="Ver estado de tu pedido" style="display:none;">
+            <span id="icono-estado-pedido-flotante">⏳</span>
+        </button>
+        <a href="https://wa.me/qr/JPOAXZ6QHLFOJ1" class="boton-flotante whatsapp-flotante" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Chrisnut">
+        </a>
+    </div>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-check-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCZu8tSkKU86NITWs6vY52wkwd7Cn6DS78",
+      authDomain: "chisnut.firebaseapp.com",
+      projectId: "chisnut",
+      storageBucket: "chisnut.firebasestorage.app",
+      messagingSenderId: "930413004495",
+      appId: "1:930413004495:web:07ca2ed303945a378259ba",
+      measurementId: "G-F7785KGSX4"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+
+    // --- App Check: protege Firestore/Auth/Storage para que solo tu propia
+    // página pueda usarlos, no scripts ni bots externos que copien tu
+    // firebaseConfig (que igual queda visible en el código, eso es normal).
+    // ⚠️ PASOS PARA ACTIVARLO (una sola vez):
+    // 1. Firebase Console → Compilación → App Check → Apps → tu app web →
+    //    "Registrar" → elige proveedor "reCAPTCHA v3".
+    // 2. Firebase te da una clave de sitio (site key): pégala abajo donde
+    //    dice "REEMPLAZA_ESTO_CON_TU_CLAVE_RECAPTCHA_V3".
+    // 3. En Firebase Console → App Check → pestaña "APIs", activa la
+    //    aplicación (enforce) para Firestore, Authentication y Storage.
+    //    Hazlo DESPUÉS de publicar este cambio y de comprobar en la pestaña
+    //    "Monitoreo" que las solicitudes llegan verificadas; si activas el
+    //    enforcement antes de tiempo, tu propia página puede quedar bloqueada.
+    const appCheck = firebase.appCheck();
+    appCheck.activate(
+        new firebase.appCheck.ReCaptchaV3Provider('REEMPLAZA_ESTO_CON_TU_CLAVE_RECAPTCHA_V3'),
+        true // isTokenAutoRefreshEnabled: renueva el token solo, sin pedirle nada al usuario
+    );
+
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    const storage = firebase.storage();
+
+    // ⚠️ IMPORTANTE: reemplaza esto por el/los correos que deben ver el panel
+    // de administrador. También debes restringir esto en las reglas de
+    // seguridad de Firestore (ver nota al final del archivo).
+    const CORREOS_ADMIN = [
+        "vicente.s.valencia1@gmail.com",
+        "christiansot20@gmail.com",
+        "emaeichin1980@gmail.com",
+        "chrusnutcl@gmail.com"
+    ];
+
+    function esAdmin(usuario) {
+        return !!usuario && CORREOS_ADMIN.includes((usuario.email || "").toLowerCase());
+    }
+
+    // Bandera global: si el usuario logueado es admin, se muestra la "X" para
+    // borrar opiniones ya publicadas directamente desde la sección "Ustedes".
+    window._esAdminActual = false;
+
+    function abrirModal() {
+        document.getElementById('modal-testimonio').style.display = 'flex';
+    }
+    function cerrarModal() {
+        document.getElementById('modal-testimonio').style.display = 'none';
+    }
+
+    // ==========================================
+    // PERFIL / CUENTAS (Firebase Authentication)
+    // ==========================================
+    function abrirModalPerfil() {
+        document.getElementById("modal-perfil").style.display = "flex";
+        if (window.location.hash !== "#mi-cuenta") {
+            history.pushState({ modal: "mi-cuenta" }, "", "#mi-cuenta");
+        }
+    }
+    function cerrarModalPerfil() {
+        document.getElementById("modal-perfil").style.display = "none";
+        document.getElementById("error-login").textContent = "";
+        document.getElementById("error-registro").textContent = "";
+        document.getElementById("exito-login").textContent = "";
+        if (window.location.hash === "#mi-cuenta") {
+            history.pushState(null, "", window.location.pathname + window.location.search);
+        }
+    }
+
+    // --- Anuncio de bienvenida (10% de descuento por crear una cuenta) ---
+    // Se muestra siempre que alguien entra a la página y todavía no ha
+    // iniciado sesión (una vez por carga de página, no se repite en bucle
+    // gracias a "popupBienvenidaEvaluado").
+
+    function cerrarModalBienvenida() {
+        const modal = document.getElementById("modal-bienvenida");
+        if (modal) modal.style.display = "none";
+    }
+
+    function irARegistroDesdeBienvenida() {
+        cerrarModalBienvenida();
+        mostrarPestana("registro");
+        abrirModalPerfil();
+    }
+
+    function evaluarPopupBienvenida() {
+        setTimeout(() => {
+            // Revisamos de nuevo por si justo en ese momento ya inició sesión
+            if (auth.currentUser) return;
+            const modal = document.getElementById("modal-bienvenida");
+            if (modal) modal.style.display = "flex";
+        }, 1400);
+    }
+
+    function mostrarPestana(pestana) {
+        const tabLogin = document.getElementById("tab-login");
+        const tabRegistro = document.getElementById("tab-registro");
+        const formLogin = document.getElementById("formulario-login");
+        const formRegistro = document.getElementById("formulario-registro");
+
+        if (pestana === "login") {
+            tabLogin.classList.add("pestana-activa");
+            tabRegistro.classList.remove("pestana-activa");
+            formLogin.style.display = "block";
+            formRegistro.style.display = "none";
+        } else {
+            tabRegistro.classList.add("pestana-activa");
+            tabLogin.classList.remove("pestana-activa");
+            formRegistro.style.display = "block";
+            formLogin.style.display = "none";
+        }
+    }
+
+    // Muestra u oculta el texto de una contraseña al tocar el ojito 👁️
+    function alternarClave(idInput, boton) {
+        const input = document.getElementById(idInput);
+        if (input.type === "password") {
+            input.type = "text";
+            boton.textContent = "🙈";
+        } else {
+            input.type = "password";
+            boton.textContent = "👁️";
+        }
+    }
+
+    // Pone un botón en estado "cargando" (con spinner) o lo devuelve a la normalidad
+    function alternarCargaBoton(boton, cargando) {
+        boton.disabled = cargando;
+        boton.classList.toggle("boton-cargando", cargando);
+    }
+
+    // Medidor visual de qué tan fuerte es la contraseña al crear la cuenta
+    function evaluarFuerzaClave(clave) {
+        const barra = document.getElementById("barra-medidor-clave");
+        const texto = document.getElementById("texto-medidor-clave");
+
+        if (!clave) {
+            barra.style.width = "0%";
+            barra.style.backgroundColor = "transparent";
+            texto.textContent = "";
+            return;
+        }
+
+        let puntos = 0;
+        if (clave.length >= 6) puntos++;
+        if (clave.length >= 10) puntos++;
+        if (/[0-9]/.test(clave)) puntos++;
+        if (/[A-Z]/.test(clave)) puntos++;
+
+        const niveles = [
+            { ancho: "25%", color: "#dc2626", texto: "Débil" },
+            { ancho: "50%", color: "#f59e0b", texto: "Aceptable" },
+            { ancho: "75%", color: "#84cc16", texto: "Buena" },
+            { ancho: "100%", color: "#16a34a", texto: "¡Muy segura!" }
+        ];
+
+        const nivel = niveles[Math.min(puntos, 3)];
+        barra.style.width = nivel.ancho;
+        barra.style.backgroundColor = nivel.color;
+        texto.textContent = nivel.texto;
+        texto.style.color = nivel.color;
+    }
+
+    function traducirErrorFirebase(codigo) {
+        const errores = {
+            "auth/email-already-in-use": "Ese correo ya tiene una cuenta creada.",
+            "auth/invalid-email": "El correo no es válido.",
+            "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+            "auth/user-not-found": "No existe una cuenta con ese correo.",
+            "auth/wrong-password": "La contraseña es incorrecta.",
+            "auth/invalid-credential": "Correo o contraseña incorrectos.",
+            "auth/too-many-requests": "Demasiados intentos. Intenta más tarde.",
+            "auth/missing-email": "Escribe tu correo para recuperar la contraseña."
+        };
+        return errores[codigo] || "Ocurrió un error. Inténtalo de nuevo.";
+    }
+
+    function iniciales(nombre) {
+        if (!nombre) return "😊";
+        return nombre.trim().charAt(0).toUpperCase();
+    }
+
+    function cerrarSesion() {
+        auth.signOut();
+        cerrarModalPerfil();
+    }
+
+    // Cuando cambia el estado de sesión, actualizamos toda la interfaz
+    let uidCarritoActual = null;
+    let popupBienvenidaEvaluado = false;
+
+    auth.onAuthStateChanged((usuario) => {
+        const textoPerfil = document.getElementById("texto-perfil");
+        const opcionesInvitado = document.querySelectorAll("#submenu-perfil .solo-invitado");
+        const opcionesCuenta = document.querySelectorAll("#submenu-perfil .solo-cuenta");
+        const vistaInvitado = document.getElementById("vista-invitado");
+        const vistaCuenta = document.getElementById("vista-cuenta");
+
+        if (usuario) {
+            popupBienvenidaEvaluado = true;
+            cerrarModalBienvenida();
+            textoPerfil.textContent = "Mi Perfil";
+            opcionesInvitado.forEach(li => li.style.display = "none");
+            opcionesCuenta.forEach(li => li.style.display = "block");
+            vistaInvitado.style.display = "none";
+            vistaCuenta.style.display = "block";
+            document.getElementById("avatar-usuario").textContent = iniciales(usuario.displayName);
+            document.getElementById("nombre-usuario-perfil").textContent = usuario.displayName || "amigo/a";
+            document.getElementById("correo-usuario-perfil").textContent = usuario.email;
+
+            // Prellenamos el formulario de edición de datos con lo que ya tenemos
+            document.getElementById("editar-nombre").value = usuario.displayName || "";
+            document.getElementById("editar-correo").value = usuario.email || "";
+            document.getElementById("error-editar-perfil").textContent = "";
+            document.getElementById("exito-editar-perfil").textContent = "";
+            db.collection("usuarios").doc(usuario.uid).get().then((doc) => {
+                if (doc.exists && doc.data().telefono) {
+                    document.getElementById("editar-telefono").value = doc.data().telefono;
+                } else {
+                    // Si esta cuenta todavía no tiene teléfono guardado, usamos
+                    // el que el cliente ya haya escrito antes en este dispositivo.
+                    rellenarTelefonosGuardados();
+                }
+            }).catch((error) => console.error("Error al cargar el teléfono guardado: ", error));
+
+            // Si es un inicio de sesión nuevo (no solo Firebase revalidando), cargamos su carrito guardado
+            if (uidCarritoActual !== usuario.uid) {
+                uidCarritoActual = usuario.uid;
+                cargarCarritoUsuario(usuario.uid);
+            }
+            cargarHistorialPedidos(usuario.uid);
+
+            // Panel simple de administrador (solo visible para correos autorizados)
+            const panelAdmin = document.getElementById("panel-admin-testimonios");
+            const panelAdminPedidos = document.getElementById("panel-admin-pedidos");
+            const panelAdminProductos = document.getElementById("panel-admin-productos");
+            const contenidoModalPerfil = document.querySelector("#modal-perfil .modal-contenido");
+            window._esAdminActual = esAdmin(usuario);
+            renderizarVitrina();
+            if (esAdmin(usuario)) {
+                panelAdmin.style.display = "block";
+                panelAdminPedidos.style.display = "block";
+                panelAdminProductos.style.display = "block";
+                if (contenidoModalPerfil) contenidoModalPerfil.classList.add("modal-ancho-admin");
+                suscribirTestimoniosPendientesAdmin();
+                suscribirPedidosAdmin();
+                suscribirCuponesAdmin();
+                suscribirStockAdmin();
+                renderizarListaProductosAdmin();
+                cargarEstadisticasMes();
+            } else {
+                panelAdmin.style.display = "none";
+                panelAdminPedidos.style.display = "none";
+                panelAdminProductos.style.display = "none";
+                if (contenidoModalPerfil) contenidoModalPerfil.classList.remove("modal-ancho-admin");
+                desuscribirTestimoniosPendientesAdmin();
+                desuscribirPedidosAdmin();
+                desuscribirCuponesAdmin();
+                desuscribirStockAdmin();
+            }
+            if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
+        } else {
+            window._esAdminActual = false;
+            usuarioEsPrimeraCompra = false;
+            renderizarVitrina();
+            document.getElementById("panel-admin-testimonios").style.display = "none";
+            document.getElementById("panel-admin-pedidos").style.display = "none";
+            document.getElementById("panel-admin-productos").style.display = "none";
+            const contenidoModalPerfilSalida = document.querySelector("#modal-perfil .modal-contenido");
+            if (contenidoModalPerfilSalida) contenidoModalPerfilSalida.classList.remove("modal-ancho-admin");
+            desuscribirTestimoniosPendientesAdmin();
+            desuscribirPedidosAdmin();
+            desuscribirCuponesAdmin();
+            desuscribirStockAdmin();
+            if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
+            textoPerfil.textContent = "Hola, Inicia sesión";
+            opcionesInvitado.forEach(li => li.style.display = "block");
+            opcionesCuenta.forEach(li => li.style.display = "none");
+            vistaInvitado.style.display = "block";
+            vistaCuenta.style.display = "none";
+
+            // Si veníamos de una sesión iniciada, limpiamos el carrito local
+            // (sus productos ya quedaron guardados en su cuenta)
+            if (uidCarritoActual !== null) {
+                carrito = [];
+                actualizarContadorCarrito();
+                renderizarCarrito();
+                localStorage.removeItem(CLAVE_CARRITO_LOCAL);
+            }
+            uidCarritoActual = null;
+
+            if (!popupBienvenidaEvaluado) {
+                popupBienvenidaEvaluado = true;
+                evaluarPopupBienvenida();
+            }
+        }
+    });
+
+    // Trae y muestra el historial de pedidos del usuario logueado
+    function formatearFechaPedido(fecha) {
+        try {
+            const fechaJS = fecha.toDate ? fecha.toDate() : new Date(fecha);
+            return fechaJS.toLocaleDateString("es-CL", { day: "numeric", month: "short", year: "numeric" }) +
+                " · " + fechaJS.toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" });
+        } catch (error) {
+            return "";
+        }
+    }
+
+    const textoEstadoPedido = {
+        pendiente: "Pendiente",
+        confirmado: "Confirmado",
+        entregado: "Entregado",
+        cancelado: "Cancelado"
+    };
+
+    // Guarda en memoria todos los pedidos ya cargados del usuario, para poder
+    // filtrarlos por mes sin tener que volver a consultar Firestore.
+    let historialPedidosUsuarioActual = [];
+
+    // Devuelve una clave tipo "2026-07" a partir de la fecha del pedido,
+    // para poder agrupar/filtrar por mes.
+    function claveMesPedido(fecha) {
+        try {
+            const fechaJS = fecha.toDate ? fecha.toDate() : new Date(fecha);
+            const año = fechaJS.getFullYear();
+            const mes = String(fechaJS.getMonth() + 1).padStart(2, "0");
+            return `${año}-${mes}`;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    // Convierte una clave "2026-07" en un texto legible: "Julio 2026"
+    function nombreMesPedidoDesdeClave(claveMes) {
+        const [año, mes] = claveMes.split("-").map(Number);
+        const fechaReferencia = new Date(año, mes - 1, 1);
+        const texto = fechaReferencia.toLocaleDateString("es-CL", { month: "long", year: "numeric" });
+        return texto.charAt(0).toUpperCase() + texto.slice(1);
+    }
+
+    function construirTarjetaPedido(pedido, mostrarBotonRepetir) {
+        const estadoClave = pedido.estado || "pendiente";
+        const estadoTexto = textoEstadoPedido[estadoClave] || estadoClave;
+
+        let itemsHtml = "";
+        (pedido.items || []).forEach(item => {
+            itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
+        });
+
+        return `
+            <div class="pedido-tarjeta">
+                <div class="pedido-encabezado">
+                    <span class="pedido-fecha">${formatearFechaPedido(pedido.fecha)}</span>
+                    <span class="pedido-estado pedido-estado-${estadoClave}">${estadoTexto}</span>
+                </div>
+                <ul class="pedido-items">${itemsHtml}</ul>
+                <div class="pedido-total">Total: ${formatearPrecio(pedido.total || 0)}</div>
+                ${mostrarBotonRepetir ? `<button type="button" class="boton-repetir-pedido" onclick='repetirPedido(${JSON.stringify(pedido.items || [])})'>🔁 Repetir este pedido</button>` : ""}
+                ${estadoClave === "cancelado" && pedido.id ? `<button type="button" class="boton-eliminar-pedido" onclick="eliminarPedidoCancelado('${pedido.id}')">🗑️ Eliminar de mi historial</button>` : ""}
+            </div>
+        `;
+    }
+
+    // Vuelve a pintar la lista según el mes elegido en el <select> (o todos).
+    // No consulta Firestore de nuevo: filtra lo que ya está en memoria.
+    function renderizarHistorialPedidosFiltrado() {
+        const contenedor = document.getElementById("lista-pedidos-perfil");
+        const selectorMes = document.getElementById("filtro-mes-historial-pedidos");
+        if (!contenedor) return;
+
+        const mesElegido = selectorMes ? selectorMes.value : "todos";
+
+        if (mesElegido === "ninguno") {
+            contenedor.innerHTML = '<p class="carrito-vacio">No se está mostrando ningún pedido.</p>';
+            return;
+        }
+
+        const pedidosFiltrados = mesElegido === "todos"
+            ? historialPedidosUsuarioActual
+            : historialPedidosUsuarioActual.filter(pedido => claveMesPedido(pedido.fecha) === mesElegido);
+
+        if (pedidosFiltrados.length === 0) {
+            contenedor.innerHTML = '<p class="carrito-vacio">No tienes pedidos en ese mes.</p>';
+            return;
+        }
+
+        // El botón "Repetir este pedido" solo debe verse en el pedido más
+        // reciente de todo el historial (no en el primero de cada filtro).
+        const pedidoMasReciente = historialPedidosUsuarioActual[0];
+
+        let html = "";
+        pedidosFiltrados.forEach(pedido => {
+            html += construirTarjetaPedido(pedido, pedido === pedidoMasReciente);
+        });
+        contenedor.innerHTML = html;
+    }
+
+    async function cargarHistorialPedidos(uid) {
+        const contenedor = document.getElementById("lista-pedidos-perfil");
+        const selectorMes = document.getElementById("filtro-mes-historial-pedidos");
+        if (!contenedor) return;
+
+        try {
+            const snapshot = await db.collection("pedidos")
+                .where("uid", "==", uid)
+                .orderBy("fecha", "desc")
+                .get();
+
+            if (snapshot.empty) {
+                historialPedidosUsuarioActual = [];
+                usuarioEsPrimeraCompra = true;
+                if (selectorMes) selectorMes.style.display = "none";
+                contenedor.innerHTML = '<p class="carrito-vacio">Todavía no has hecho ningún pedido.</p>';
+                return;
+            }
+
+            historialPedidosUsuarioActual = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            usuarioEsPrimeraCompra = false;
+
+            // Arma las opciones del filtro con TODOS los meses (enero a diciembre)
+            // de cada año en que el cliente tiene pedidos, para que pueda elegir
+            // cualquier mes -aunque no haya comprado en él- y vea "No tienes
+            // pedidos en ese mes" en vez de no poder filtrar.
+            if (selectorMes) {
+                const nombresMes = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+                const añosConPedidos = new Set();
+                historialPedidosUsuarioActual.forEach(pedido => {
+                    const clave = claveMesPedido(pedido.fecha);
+                    if (clave) añosConPedidos.add(Number(clave.split("-")[0]));
+                });
+                const añosOrdenados = Array.from(añosConPedidos).sort((a, b) => b - a);
+
+                let opcionesHtml = `<option value="todos">Todos los meses</option>`;
+                añosOrdenados.forEach(año => {
+                    for (let mes = 12; mes >= 1; mes--) {
+                        const clave = `${año}-${String(mes).padStart(2, "0")}`;
+                        opcionesHtml += `<option value="${clave}">${nombresMes[mes - 1]} ${año}</option>`;
+                    }
+                });
+                opcionesHtml += `<option value="ninguno">Ninguno</option>`;
+                selectorMes.innerHTML = opcionesHtml;
+                selectorMes.value = "todos";
+                selectorMes.style.display = "inline-block";
+            }
+
+            renderizarHistorialPedidosFiltrado();
+        } catch (error) {
+            console.error("Error al cargar el historial de pedidos: ", error);
+            contenedor.innerHTML = '<p class="carrito-vacio">No pudimos cargar tus pedidos. Intenta de nuevo más tarde.</p>';
+        }
+    }
+
+    // Permite que el usuario borre de su historial un pedido que ya está
+    // cancelado (no se puede borrar un pedido pendiente/confirmado/entregado,
+    // solo limpiar los cancelados que ya no le sirven de nada).
+    async function eliminarPedidoCancelado(idPedido) {
+        const usuario = auth.currentUser;
+        if (!usuario) return;
+
+        const confirmado = await mostrarConfirmacion(
+            "¿Eliminar este pedido cancelado de tu historial? Esta acción no se puede deshacer.",
+            "Sí, eliminar"
+        );
+        if (!confirmado) return;
+
+        try {
+            await db.collection("pedidos").doc(idPedido).delete();
+            historialPedidosUsuarioActual = historialPedidosUsuarioActual.filter(p => p.id !== idPedido);
+            renderizarHistorialPedidosFiltrado();
+            mostrarAviso("Pedido eliminado de tu historial.", "exito");
+        } catch (error) {
+            console.error("Error al eliminar el pedido: ", error);
+            mostrarAviso("No pudimos eliminar el pedido. Intenta de nuevo más tarde.", "error");
+        }
+    }
+
+    // ==========================================
+    // CARRITO DE COMPRAS
+    // ==========================================
+
+    // El carrito vive en memoria mientras la página está abierta,
+    // y además se guarda en LocalStorage para que un cliente invitado
+    // no pierda su pedido si recarga la página o cierra la pestaña.
+    // Cada producto se guarda como: { nombre, precio, cantidad }
+    const CLAVE_CARRITO_LOCAL = "chrisnut_carrito";
+
+    function guardarCarritoLocal() {
+        try {
+            localStorage.setItem(CLAVE_CARRITO_LOCAL, JSON.stringify(carrito));
+        } catch (error) {
+            console.error("Error al guardar el carrito en este dispositivo: ", error);
+        }
+    }
+
+    function cargarCarritoLocalInicial() {
+        try {
+            const guardado = localStorage.getItem(CLAVE_CARRITO_LOCAL);
+            const items = guardado ? JSON.parse(guardado) : [];
+            return Array.isArray(items) ? items : [];
+        } catch (error) {
+            console.error("Error al leer el carrito guardado en este dispositivo: ", error);
+            return [];
+        }
+    }
+
+    let carrito = cargarCarritoLocalInicial();
+
+    function formatearPrecio(numero) {
+        return "$" + numero.toLocaleString("es-CL");
+    }
+
+    // Guarda el carrito actual en Firestore, solo si hay una sesión activa
+    function guardarCarritoEnFirestore() {
+        const usuario = auth.currentUser;
+        if (!usuario) return;
+        db.collection("carritos").doc(usuario.uid).set({
+            items: carrito,
+            actualizado: new Date()
+        }).catch((error) => {
+            console.error("Error al guardar el carrito: ", error);
+        });
+    }
+
+    // Al iniciar sesión, trae el carrito guardado y lo fusiona con lo que
+    // el usuario ya tenía agregado en esta misma sesión como invitado
+    async function cargarCarritoUsuario(uid) {
+        try {
+            const doc = await db.collection("carritos").doc(uid).get();
+            const carritoGuardado = (doc.exists && Array.isArray(doc.data().items)) ? doc.data().items : [];
+
+            carritoGuardado.forEach((itemGuardado) => {
+                const existente = carrito.find(item => item.nombre === itemGuardado.nombre);
+                if (existente) {
+                    existente.cantidad += itemGuardado.cantidad;
+                } else {
+                    carrito.push({ ...itemGuardado });
+                }
+            });
+
+            actualizarContadorCarrito();
+            renderizarCarrito();
+            guardarCarritoLocal();
+            guardarCarritoEnFirestore();
+        } catch (error) {
+            console.error("Error al cargar el carrito guardado: ", error);
+        }
+    }
+
+    // Vuelve a agregar al carrito todos los productos de un pedido anterior
+    function repetirPedido(itemsPedido) {
+        (itemsPedido || []).forEach(item => {
+            const existente = carrito.find(i => i.nombre === item.nombre);
+            if (existente) {
+                existente.cantidad += item.cantidad;
+            } else {
+                carrito.push({ nombre: item.nombre, precio: item.precio, cantidad: item.cantidad });
+            }
+        });
+        actualizarContadorCarrito();
+        renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
+        cerrarModalPerfil();
+        abrirModalCarrito();
+    }
+
+    function agregarAlCarrito(nombre, precio) {
+        const existente = carrito.find(item => item.nombre === nombre);
+        if (existente) {
+            existente.cantidad += 1;
+        } else {
+            carrito.push({ nombre, precio, cantidad: 1 });
+        }
+        actualizarContadorCarrito();
+        renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
+    }
+
+    function cambiarCantidad(nombre, delta) {
+        const item = carrito.find(item => item.nombre === nombre);
+        if (!item) return;
+
+        item.cantidad += delta;
+
+        if (item.cantidad <= 0) {
+            carrito = carrito.filter(i => i.nombre !== nombre);
+        }
+
+        actualizarContadorCarrito();
+        renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
+    }
+
+    function eliminarDelCarrito(nombre) {
+        carrito = carrito.filter(item => item.nombre !== nombre);
+        actualizarContadorCarrito();
+        renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
+    }
+
+    async function vaciarCarrito() {
+        if (carrito.length === 0) return;
+        const confirmado = await mostrarConfirmacion("¿Seguro que quieres vaciar el carrito?", "Sí, vaciar");
+        if (confirmado) {
+            carrito = [];
+            actualizarContadorCarrito();
+            renderizarCarrito();
+            guardarCarritoLocal();
+            guardarCarritoEnFirestore();
+        }
+    }
+
+    function actualizarContadorCarrito() {
+        const totalItems = carrito.reduce((suma, item) => suma + item.cantidad, 0);
+        document.getElementById("contador-carrito").textContent = totalItems;
+
+        // Botón flotante: solo se muestra si hay algo en el carrito
+        const botonFlotante = document.getElementById("boton-carrito-flotante");
+        document.getElementById("contador-carrito-flotante").textContent = totalItems;
+        botonFlotante.style.display = totalItems > 0 ? "flex" : "none";
+    }
+
+    // Cupón de descuento aplicado en la sesión actual del carrito (o null si no hay ninguno)
+    let cuponAplicado = null;
+
+    // true si el usuario logueado todavía no tiene ningún pedido registrado
+    // (se usa para ofrecerle el 5% de descuento de bienvenida, solo a quien
+    // decide crear una cuenta; los invitados no lo obtienen).
+    let usuarioEsPrimeraCompra = false;
+    const CODIGO_DESCUENTO_BIENVENIDA = "BIENVENIDA5";
+    const VALOR_DESCUENTO_BIENVENIDA = 10;
+
+    function renderizarCarrito() {
+        const contenedor = document.getElementById("lista-carrito");
+        const totalSpan = document.getElementById("total-carrito");
+
+        if (carrito.length === 0) {
+            contenedor.innerHTML = '<p class="carrito-vacio">Tu carrito está vacío.</p>';
+            totalSpan.textContent = formatearPrecio(0);
+            return;
+        }
+
+        let html = "";
+        let total = 0;
+
+        carrito.forEach(item => {
+            const subtotal = item.precio * item.cantidad;
+            total += subtotal;
+
+            html += `
+                <div class="item-carrito">
+                    <div class="item-carrito-info">
+                        <span class="item-carrito-nombre">${item.nombre}</span>
+                        <span class="item-carrito-precio">${formatearPrecio(item.precio)} c/u</span>
+                    </div>
+                    <div class="item-carrito-controles">
+                        <button class="boton-cantidad" onclick="cambiarCantidad('${item.nombre}', -1)">-</button>
+                        <span class="item-carrito-cantidad">${item.cantidad}</span>
+                        <button class="boton-cantidad" onclick="cambiarCantidad('${item.nombre}', 1)">+</button>
+                    </div>
+                    <div class="item-carrito-subtotal">${formatearPrecio(subtotal)}</div>
+                    <button class="boton-eliminar-item" onclick="eliminarDelCarrito('${item.nombre}')" title="Quitar">&times;</button>
+                </div>
+            `;
+        });
+
+        contenedor.innerHTML = html;
+
+        const { totalFinal, montoDescuento } = calcularTotalConDescuento(total);
+        if (cuponAplicado && montoDescuento > 0) {
+            totalSpan.innerHTML = `<span class="subtotal-tachado">${formatearPrecio(total)}</span> ${formatearPrecio(totalFinal)} <span class="etiqueta-descuento-total">(-${formatearPrecio(montoDescuento)})</span>`;
+        } else {
+            totalSpan.textContent = formatearPrecio(total);
+        }
+    }
+
+    // Calcula el total ya aplicando el cupón vigente, sin dejar que el total baje de 0
+    function calcularTotalConDescuento(totalBruto) {
+        if (!cuponAplicado) return { totalFinal: totalBruto, montoDescuento: 0 };
+        let montoDescuento = cuponAplicado.tipo === "porcentaje"
+            ? Math.round(totalBruto * (cuponAplicado.valor / 100))
+            : cuponAplicado.valor;
+        montoDescuento = Math.min(montoDescuento, totalBruto);
+        return { totalFinal: totalBruto - montoDescuento, montoDescuento };
+    }
+
+    // Busca el código ingresado en Firestore y lo aplica si existe y está activo
+    async function aplicarCupon() {
+        const input = document.getElementById("input-cupon");
+        const mensaje = document.getElementById("mensaje-cupon");
+        const codigo = (input.value || "").trim().toUpperCase();
+
+        if (!codigo) {
+            mensaje.textContent = "Escribe un código para aplicarlo.";
+            mensaje.className = "mensaje-cupon mensaje-cupon-error";
+            return;
+        }
+
+        try {
+            const doc = await db.collection("cupones").doc(codigo).get();
+            if (!doc.exists || doc.data().activo === false) {
+                cuponAplicado = null;
+                mensaje.textContent = "Ese código no existe o ya no está disponible.";
+                mensaje.className = "mensaje-cupon mensaje-cupon-error";
+                renderizarCarrito();
+                return;
+            }
+
+            const datos = doc.data();
+            cuponAplicado = { codigo, tipo: datos.tipo, valor: datos.valor };
+            const textoValor = datos.tipo === "porcentaje" ? `${datos.valor}%` : formatearPrecio(datos.valor);
+            mensaje.textContent = `¡Código aplicado! Descuento de ${textoValor}.`;
+            mensaje.className = "mensaje-cupon mensaje-cupon-exito";
+            const avisoBienvenida = document.getElementById("aviso-descuento-bienvenida");
+            if (avisoBienvenida && codigo !== CODIGO_DESCUENTO_BIENVENIDA) avisoBienvenida.style.display = "none";
+            renderizarCarrito();
+        } catch (error) {
+            console.error("Error al aplicar el cupón: ", error);
+            mensaje.textContent = "No se pudo validar el código. Intenta de nuevo.";
+            mensaje.className = "mensaje-cupon mensaje-cupon-error";
+        }
+    }
+
+    // --- Teléfono recordado: si el cliente lo escribe en cualquier campo
+    // (contacto, carrito o su perfil), se guarda en este dispositivo y se
+    // autocompleta en los demás campos que también piden su número. ---
+    const CLAVE_TELEFONO_GUARDADO = "chrisnut_telefono_guardado";
+    const IDS_CAMPOS_TELEFONO = ["telefono", "telefono-carrito", "editar-telefono"];
+
+    function guardarTelefonoGuardado(valor) {
+        if (!/^\d{8}$/.test(valor)) return;
+        try {
+            localStorage.setItem(CLAVE_TELEFONO_GUARDADO, valor);
+        } catch (e) {}
+        IDS_CAMPOS_TELEFONO.forEach((id) => {
+            const campo = document.getElementById(id);
+            if (campo && campo.value.trim() === "") campo.value = valor;
+        });
+    }
+
+    function rellenarTelefonosGuardados() {
+        let telefonoGuardado = "";
+        try {
+            telefonoGuardado = localStorage.getItem(CLAVE_TELEFONO_GUARDADO) || "";
+        } catch (e) {}
+        if (!telefonoGuardado) return;
+        IDS_CAMPOS_TELEFONO.forEach((id) => {
+            const campo = document.getElementById(id);
+            if (campo && campo.value.trim() === "") campo.value = telefonoGuardado;
+        });
+    }
+
+    function inicializarCamposTelefono() {
+        rellenarTelefonosGuardados();
+        IDS_CAMPOS_TELEFONO.forEach((id) => {
+            const campo = document.getElementById(id);
+            if (!campo) return;
+            campo.addEventListener("blur", () => guardarTelefonoGuardado(campo.value.trim()));
+        });
+    }
+
+    function abrirModalCarrito() {
+        document.getElementById("modal-carrito").style.display = "flex";
+        if (window.location.hash !== "#carrito") {
+            history.pushState({ modal: "carrito" }, "", "#carrito");
+        }
+        mostrarAvisoDescuentoBienvenida();
+        rellenarTelefonosGuardados();
+    }
+    function cerrarModalCarrito() {
+        document.getElementById("modal-carrito").style.display = "none";
+        if (window.location.hash === "#carrito") {
+            history.pushState(null, "", window.location.pathname + window.location.search);
+        }
+    }
+
+    // Muestra (o no) el aviso del 5% de descuento de bienvenida al abrir el
+    // carrito. Es completamente opcional: a un invitado solo se le invita a
+    // crear una cuenta, nunca se le obliga. Si ya inició sesión y es su
+    // primera compra, el descuento se aplica solo.
+    function mostrarAvisoDescuentoBienvenida() {
+        const aviso = document.getElementById("aviso-descuento-bienvenida");
+        if (!aviso) return;
+        const usuario = auth.currentUser;
+
+        if (usuario && usuarioEsPrimeraCompra) {
+            // Solo lo aplicamos si no hay ya otro cupón puesto a mano
+            if (!cuponAplicado) {
+                cuponAplicado = { codigo: CODIGO_DESCUENTO_BIENVENIDA, tipo: "porcentaje", valor: VALOR_DESCUENTO_BIENVENIDA };
+                renderizarCarrito();
+            }
+            aviso.style.display = "block";
+            aviso.className = "aviso-descuento-bienvenida aviso-descuento-activo";
+            aviso.innerHTML = `🎉 ¡Tienes ${VALOR_DESCUENTO_BIENVENIDA}% de descuento por tu primera compra!`;
+        } else if (!usuario) {
+            aviso.style.display = "block";
+            aviso.className = "aviso-descuento-bienvenida";
+            aviso.innerHTML = `¿Sabías que si creas una cuenta obtienes <strong>${VALOR_DESCUENTO_BIENVENIDA}% de descuento</strong> en tu primera compra? <a href="#" id="enlace-crear-cuenta-descuento">Crear cuenta</a>`;
+            const enlace = document.getElementById("enlace-crear-cuenta-descuento");
+            if (enlace) {
+                enlace.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    cerrarModalCarrito();
+                    mostrarPestana("registro");
+                    abrirModalPerfil();
+                });
+            }
+        } else {
+            aviso.style.display = "none";
+        }
+    }
+
+    // Emoji representativo para cada producto (si no está en la lista, usa uno genérico)
+    const emojiProducto = {
+        "Medialunas": "🥐",
+        "Rollitos de Canela": "🍥",
+        "Berlín": "🍩",
+        "Alfajores Simples": "🍪",
+        "Pan Amasado": "🍞"
+    };
+
+    // ⚠️ IMPORTANTE: reemplaza este número por el de WhatsApp de Chrisnut,
+    // en formato internacional y SIN espacios, +, guiones ni paréntesis.
+    // Ejemplo Chile: 56912345678
+    const NUMERO_WHATSAPP_CHRISNUT = "56955395216";
+
+    // Guarda una copia del pedido en Firestore para tener historial,
+    // aunque el cliente no termine de enviarlo por WhatsApp
+    async function registrarPedidoFirestore(itemsPedido, total, telefonoCliente, descuentoInfo) {
+        const usuario = auth.currentUser;
+        try {
+            const referenciaPedido = await db.collection("pedidos").add({
+                uid: usuario ? usuario.uid : null,
+                nombreCliente: usuario ? (usuario.displayName || "Sin nombre") : "Invitado",
+                correoCliente: usuario ? usuario.email : null,
+                telefonoCliente: telefonoCliente || null,
+                items: itemsPedido,
+                total: total,
+                codigoDescuento: descuentoInfo ? descuentoInfo.codigo : null,
+                montoDescuento: descuentoInfo ? descuentoInfo.montoDescuento : 0,
+                estado: "pendiente",
+                fecha: new Date()
+            });
+            descontarStockPedido(itemsPedido);
+            return referenciaPedido.id;
+        } catch (error) {
+            console.error("Error al registrar el pedido: ", error);
+            return null;
+        }
+    }
+
+    async function enviarPedidoWhatsapp() {
+        if (carrito.length === 0) {
+            mostrarAviso("Tu carrito está vacío. Agrega algún producto antes de enviar tu pedido.", "advertencia");
+            return;
+        }
+
+        const inputTelefono = document.getElementById("telefono-carrito");
+        const telefonoDigitado = (inputTelefono.value || "").trim();
+        if (!/^[0-9]{8}$/.test(telefonoDigitado)) {
+            mostrarAviso("Ingresa tu número de WhatsApp (8 dígitos, sin el +56 9) para poder avisarte del estado de tu pedido.", "advertencia");
+            inputTelefono.focus();
+            return;
+        }
+        const telefonoCliente = "569" + telefonoDigitado;
+
+        let lineas = "¡Hola Chrisnut! 👋 Quiero hacer el siguiente pedido:\n\n";
+        let totalBruto = 0;
+
+        carrito.forEach(item => {
+            const subtotal = item.precio * item.cantidad;
+            totalBruto += subtotal;
+            const emoji = emojiProducto[item.nombre] || "🛍️";
+            lineas += `${emoji} ${item.cantidad} ${item.nombre} = ${formatearPrecio(subtotal)}\n`;
+        });
+
+        const { totalFinal, montoDescuento } = calcularTotalConDescuento(totalBruto);
+        if (cuponAplicado && montoDescuento > 0) {
+            lineas += `\nSubtotal: ${formatearPrecio(totalBruto)}`;
+            lineas += `\nDescuento (${cuponAplicado.codigo}): -${formatearPrecio(montoDescuento)}`;
+        }
+        lineas += `\n\n💰 *Total: ${formatearPrecio(totalFinal)}*\n\n¡Muchas gracias!`;
+
+        const descuentoInfo = (cuponAplicado && montoDescuento > 0)
+            ? { codigo: cuponAplicado.codigo, montoDescuento }
+            : null;
+
+        // Guardamos el pedido antes de abrir WhatsApp (copiamos el arreglo tal cual está,
+        // ANTES de vaciar el carrito, para poder mostrar el logo de estado al instante)
+        const itemsPedidoEnviado = carrito.map(item => ({ ...item }));
+        const idPedidoRegistrado = await registrarPedidoFirestore(itemsPedidoEnviado, totalFinal, telefonoCliente, descuentoInfo);
+
+        const mensajeCodificado = encodeURIComponent(lineas);
+        const urlWhatsapp = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP_CHRISNUT}&text=${mensajeCodificado}`;
+        window.open(urlWhatsapp, "_blank");
+
+        // El pedido ya quedó registrado y enviado, así que vaciamos el carrito
+        cuponAplicado = null;
+        usuarioEsPrimeraCompra = false;
+        document.getElementById("input-cupon").value = "";
+        document.getElementById("mensaje-cupon").textContent = "";
+        document.getElementById("aviso-descuento-bienvenida").style.display = "none";
+        inputTelefono.value = "";
+        carrito = [];
+        actualizarContadorCarrito();
+        renderizarCarrito();
+        guardarCarritoLocal();
+        guardarCarritoEnFirestore();
+        cerrarModalCarrito();
+
+        // Justo cuando el carrito flotante desaparece (carrito vacío), activamos
+        // el logo flotante de "estado del pedido" para poder seguirlo en vivo.
+        // Le pasamos los datos que ya tenemos a mano para que el logo aparezca
+        // de inmediato, sin depender de poder releer el pedido desde Firestore.
+        if (idPedidoRegistrado) {
+            iniciarSeguimientoPedido(idPedidoRegistrado, {
+                items: itemsPedidoEnviado,
+                total: totalFinal,
+                estado: "pendiente",
+                fecha: new Date()
+            });
+        }
+    }
+
+    // ==========================================
+    // LOGO FLOTANTE DE ESTADO DEL PEDIDO
+    // ==========================================
+    // Apenas el cliente envía su pedido (y el carrito flotante se vacía y
+    // desaparece), este logo flotante toma su lugar arriba del botón de
+    // WhatsApp. Muestra en vivo el estado del pedido (pendiente, confirmado,
+    // entregado o cancelado) escuchando el documento en Firestore, y al
+    // hacer clic abre un detalle con los productos, el total y el estado.
+    // Además se guarda en localStorage para seguir mostrándose aunque el
+    // cliente recargue o cierre y vuelva a abrir la página.
+    const CLAVE_SEGUIMIENTO_PEDIDO = "chrisnut_pedido_seguimiento";
+    let cancelarSeguimientoPedido = null;
+
+    const iconoEstadoPedido = {
+        pendiente: "⏳",
+        confirmado: "👍",
+        entregado: "✅",
+        cancelado: "❌"
+    };
+
+    const mensajeAmigableEstadoPedido = {
+        pendiente: "Recibimos tu pedido y muy pronto lo confirmaremos. 🥐",
+        confirmado: "¡Tu pedido fue confirmado y ya lo estamos preparando! 🍞",
+        entregado: "¡Tu pedido ya fue entregado, que lo disfrutes! 💛",
+        cancelado: "Este pedido fue cancelado. Cualquier duda, escríbenos por WhatsApp."
+    };
+
+    // Guarda el pedido en seguimiento junto con los últimos datos conocidos
+    // (items, total, estado, fecha), para poder pintar el logo al instante
+    // -incluso recién cargada la página- sin depender de una lectura a
+    // Firestore que quizás las reglas de seguridad no permitan para un
+    // invitado (sin sesión iniciada).
+    function guardarSeguimientoPedidoLocal(idPedido, datos) {
+        try {
+            const registro = { id: idPedido };
+            if (datos) {
+                let fechaISO;
+                try {
+                    fechaISO = (datos.fecha && datos.fecha.toDate ? datos.fecha.toDate() : new Date(datos.fecha)).toISOString();
+                } catch (error) {
+                    fechaISO = new Date().toISOString();
+                }
+                registro.datos = {
+                    items: datos.items || [],
+                    total: datos.total || 0,
+                    estado: datos.estado || "pendiente",
+                    fecha: fechaISO
+                };
+            }
+            localStorage.setItem(CLAVE_SEGUIMIENTO_PEDIDO, JSON.stringify(registro));
+        } catch (error) {}
+    }
+
+    function borrarSeguimientoPedidoLocal() {
+        try {
+            localStorage.removeItem(CLAVE_SEGUIMIENTO_PEDIDO);
+        } catch (error) {}
+    }
+
+    // Deja de escuchar cambios y oculta el logo, pero sin borrar el registro
+    // local (se usa, por ejemplo, antes de empezar a seguir un pedido nuevo).
+    function detenerSeguimientoPedido() {
+        if (cancelarSeguimientoPedido) {
+            cancelarSeguimientoPedido();
+            cancelarSeguimientoPedido = null;
+        }
+        const botonFlotante = document.getElementById("boton-estado-pedido-flotante");
+        if (botonFlotante) botonFlotante.style.display = "none";
+    }
+
+    // La usa el botón "Dejar de ver este pedido" dentro del modal: el cliente
+    // decide ocultar el seguimiento definitivamente.
+    function cerrarSeguimientoPedido() {
+        detenerSeguimientoPedido();
+        borrarSeguimientoPedidoLocal();
+        cerrarModalEstadoPedido();
+    }
+
+    // Pinta el logo flotante y el contenido del modal con los datos que sea
+    // (locales o recién llegados de Firestore) y actualiza la caché local.
+    function aplicarEstadoPedidoAlFlotante(idPedido, datos) {
+        const botonFlotante = document.getElementById("boton-estado-pedido-flotante");
+        const iconoFlotante = document.getElementById("icono-estado-pedido-flotante");
+        if (!botonFlotante || !iconoFlotante) return;
+
+        const estado = datos.estado || "pendiente";
+
+        botonFlotante.className = "boton-flotante estado-pedido-flotante estado-pedido-flotante-" + estado;
+        botonFlotante.style.display = "flex";
+        iconoFlotante.textContent = iconoEstadoPedido[estado] || "📦";
+
+        renderizarContenidoEstadoPedido(datos);
+        guardarSeguimientoPedidoLocal(idPedido, datos);
+    }
+
+    // datosIniciales (opcional): lo que ya sabemos apenas se hace el pedido
+    // (items, total, estado "pendiente", fecha), para mostrar el logo de
+    // inmediato sin esperar ninguna respuesta del servidor. Si después se
+    // puede escuchar el documento en vivo, se va actualizando solo; si no se
+    // puede (por permisos), el logo igual queda visible con esos datos.
+    function iniciarSeguimientoPedido(idPedido, datosIniciales) {
+        detenerSeguimientoPedido(); // por si ya había un pedido anterior en seguimiento
+
+        if (datosIniciales) {
+            aplicarEstadoPedidoAlFlotante(idPedido, datosIniciales);
+        } else {
+            guardarSeguimientoPedidoLocal(idPedido);
+        }
+
+        cancelarSeguimientoPedido = db.collection("pedidos").doc(idPedido)
+            .onSnapshot((doc) => {
+                if (!doc.exists) {
+                    detenerSeguimientoPedido();
+                    borrarSeguimientoPedidoLocal();
+                    return;
+                }
+                aplicarEstadoPedidoAlFlotante(idPedido, doc.data());
+            }, (error) => {
+                // No se pudo escuchar en vivo (por ejemplo, por permisos de
+                // Firestore para invitados). El logo ya quedó visible con los
+                // datos iniciales, así que no lo ocultamos por este error.
+                console.error("Error al seguir el estado del pedido en vivo: ", error);
+            });
+    }
+
+    function renderizarContenidoEstadoPedido(datos) {
+        const contenedor = document.getElementById("contenido-modal-estado-pedido");
+        if (!contenedor) return;
+
+        const estado = datos.estado || "pendiente";
+        const estadoTexto = textoEstadoPedido[estado] || estado;
+
+        let itemsHtml = "";
+        (datos.items || []).forEach(item => {
+            itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
+        });
+
+        contenedor.innerHTML = `
+            <div class="pedido-tarjeta">
+                <div class="pedido-encabezado">
+                    <span class="pedido-fecha">${formatearFechaPedido(datos.fecha)}</span>
+                    <span class="pedido-estado pedido-estado-${estado}">${estadoTexto}</span>
+                </div>
+                <ul class="pedido-items">${itemsHtml}</ul>
+                <div class="pedido-total">Total: ${formatearPrecio(datos.total || 0)}</div>
+                <p class="mensaje-seguimiento-pedido">${mensajeAmigableEstadoPedido[estado] || ""}</p>
+            </div>
+        `;
+    }
+
+    function abrirModalEstadoPedido() {
+        document.getElementById("modal-estado-pedido").style.display = "flex";
+    }
+    function cerrarModalEstadoPedido() {
+        document.getElementById("modal-estado-pedido").style.display = "none";
+    }
+
+    // Si el cliente ya tenía un pedido en seguimiento (por ejemplo, recargó la
+    // página o volvió más tarde), lo restauramos automáticamente.
+    function restaurarSeguimientoPedidoGuardado() {
+        try {
+            const guardado = JSON.parse(localStorage.getItem(CLAVE_SEGUIMIENTO_PEDIDO) || "null");
+            if (guardado && guardado.id) {
+                const datosIniciales = guardado.datos
+                    ? { ...guardado.datos, fecha: new Date(guardado.datos.fecha) }
+                    : null;
+                iniciarSeguimientoPedido(guardado.id, datosIniciales);
+            }
+        } catch (error) {}
+    }
+
+    // ==========================================
+    // CARTELES DE AVISO Y CONFIRMACIÓN (reemplazan alert() y confirm())
+    // ==========================================
+    const ICONOS_AVISO = {
+        info: "💬",
+        exito: "🎉",
+        error: "😔",
+        advertencia: "⚠️"
+    };
+
+    // Muestra un cartel bonito en vez del alert() nativo del navegador.
+    // tipo: "info" (por defecto), "exito", "error" o "advertencia".
+    function mostrarAviso(mensaje, tipo) {
+        const tipoFinal = tipo || "info";
+        const modal = document.getElementById("modal-aviso");
+        const icono = document.getElementById("icono-aviso");
+        const texto = document.getElementById("mensaje-aviso");
+
+        if (!modal || !icono || !texto) {
+            alert(mensaje); // resguardo por si el modal no llegó a existir en el DOM
+            return;
+        }
+
+        texto.textContent = mensaje;
+        icono.textContent = ICONOS_AVISO[tipoFinal] || ICONOS_AVISO.info;
+        icono.className = "icono-aviso icono-aviso-" + tipoFinal;
+        // Reinicia la animación del ícono cada vez que se muestra
+        icono.style.animation = "none";
+        void icono.offsetWidth;
+        icono.style.animation = "";
+        modal.style.display = "flex";
+    }
+
+    function cerrarModalAviso() {
+        document.getElementById("modal-aviso").style.display = "none";
+    }
+
+    // Muestra un cartel de confirmación bonito en vez del confirm() nativo.
+    // Devuelve una Promise<boolean>: true si el usuario confirma, false si cancela.
+    // Uso: const confirmado = await mostrarConfirmacion("¿Seguro?", "Sí, eliminar");
+    let resolverConfirmacionPendiente = null;
+
+    function mostrarConfirmacion(mensaje, textoBotonAceptar) {
+        return new Promise((resolve) => {
+            const modal = document.getElementById("modal-confirmacion");
+            const texto = document.getElementById("mensaje-confirmacion");
+            const botonAceptar = document.getElementById("boton-confirmacion-aceptar");
+
+            if (!modal || !texto || !botonAceptar) {
+                resolve(confirm(mensaje)); // resguardo por si el modal no llegó a existir en el DOM
+                return;
+            }
+
+            // Si ya había una confirmación pendiente sin responder, la damos
+            // por cancelada antes de abrir la nueva.
+            if (resolverConfirmacionPendiente) {
+                resolverConfirmacionPendiente(false);
+            }
+
+            texto.textContent = mensaje;
+            botonAceptar.textContent = textoBotonAceptar || "Sí, continuar";
+            resolverConfirmacionPendiente = resolve;
+            modal.style.display = "flex";
+        });
+    }
+
+    function responderConfirmacion(respuesta) {
+        document.getElementById("modal-confirmacion").style.display = "none";
+        if (resolverConfirmacionPendiente) {
+            resolverConfirmacionPendiente(respuesta);
+            resolverConfirmacionPendiente = null;
+        }
+    }
+
+    // ==========================================
+    // FAVORITOS
+    // ==========================================
+
+    // Los favoritos viven en memoria mientras la página está abierta.
+    // Cada producto se guarda como: { nombre, precio, imagen }
+    let favoritos = [];
+
+    function alternarFavorito(nombre, precio, imagen, boton) {
+        const existente = favoritos.find(item => item.nombre === nombre);
+
+        if (existente) {
+            favoritos = favoritos.filter(item => item.nombre !== nombre);
+            boton.textContent = "🤍";
+            boton.classList.remove("favorito-activo");
+        } else {
+            favoritos.push({ nombre, precio, imagen });
+            boton.textContent = "❤️";
+            boton.classList.remove("favorito-activo");
+            void boton.offsetWidth; // reinicia la animación
+            boton.classList.add("favorito-activo");
+        }
+
+        renderizarFavoritos();
+    }
+
+    function quitarFavorito(nombre) {
+        favoritos = favoritos.filter(item => item.nombre !== nombre);
+        renderizarFavoritos();
+
+        // Sincroniza el corazón de la tarjeta del producto en la vitrina
+        const tarjeta = document.querySelector(`.tarjeta-producto[data-nombre="${nombre}"]`);
+        if (tarjeta) {
+            const botonCorazon = tarjeta.querySelector(".boton-favorito");
+            if (botonCorazon) botonCorazon.textContent = "🤍";
+        }
+    }
+
+    function agregarAlCarritoDesdeFavoritos(nombre, precio) {
+        agregarAlCarrito(nombre, precio);
+    }
+
+    function renderizarFavoritos() {
+        const contenedor = document.getElementById("lista-favoritos");
+
+        if (favoritos.length === 0) {
+            contenedor.innerHTML = '<p class="carrito-vacio">Aún no tienes favoritos guardados.</p>';
+            return;
+        }
+
+        let html = "";
+        favoritos.forEach(item => {
+            html += `
+                <div class="item-carrito item-favorito">
+                    <img src="${item.imagen || 'logo.png'}" alt="${item.nombre}" class="item-favorito-imagen">
+                    <div class="item-carrito-info">
+                        <span class="item-carrito-nombre">${item.nombre}</span>
+                        <span class="item-carrito-precio">${formatearPrecio(item.precio)}</span>
+                    </div>
+                    <button class="boton-agregar-desde-favoritos" onclick="agregarAlCarritoDesdeFavoritos('${item.nombre}', ${item.precio})" title="Agregar al carrito">🛒</button>
+                    <button class="boton-eliminar-item" onclick="quitarFavorito('${item.nombre}')" title="Quitar de favoritos">&times;</button>
+                </div>
+            `;
+        });
+
+        contenedor.innerHTML = html;
+    }
+
+    function abrirModalFavoritos() {
+        document.getElementById("modal-favoritos").style.display = "flex";
+        if (window.location.hash !== "#favoritos") {
+            history.pushState({ modal: "favoritos" }, "", "#favoritos");
+        }
+    }
+    function cerrarModalFavoritos() {
+        document.getElementById("modal-favoritos").style.display = "none";
+        if (window.location.hash === "#favoritos") {
+            history.pushState(null, "", window.location.pathname + window.location.search);
+        }
+    }
+
+    // ==========================================
+    // PANEL DE ADMINISTRADOR (aprobar testimonios)
+    // ==========================================
+    let cancelarSuscripcionAdmin = null;
+
+    function suscribirTestimoniosPendientesAdmin() {
+        if (cancelarSuscripcionAdmin) return; // ya está escuchando
+
+        const contenedor = document.getElementById("lista-admin-testimonios");
+
+        cancelarSuscripcionAdmin = db.collection("testimonios")
+            .where("aprobado", "==", false)
+            .orderBy("fecha", "desc")
+            .onSnapshot((snapshot) => {
+                if (snapshot.empty) {
+                    contenedor.innerHTML = '<p class="carrito-vacio">No hay opiniones pendientes por ahora. ✅</p>';
+                    return;
+                }
+
+                let html = "";
+                snapshot.forEach((doc) => {
+                    const datos = doc.data();
+                    let estrellasIcono = "⭐⭐⭐⭐⭐";
+                    if (datos.estrellas === "4 Estrellas") estrellasIcono = "⭐⭐⭐⭐";
+                    if (datos.estrellas === "3 Estrellas") estrellasIcono = "⭐⭐⭐";
+
+                    html += `
+                        <div class="tarjeta-admin-testimonio">
+                            <div class="estrellas">${estrellasIcono}</div>
+                            <p class="comentario">"${datos.comentario}"</p>
+                            <h4 class="cliente">- ${datos.nombre}</h4>
+                            <div class="acciones-admin-testimonio">
+                                <button class="boton-aprobar-testimonio" onclick="aprobarTestimonioAdmin('${doc.id}')">✅ Aprobar</button>
+                                <button class="boton-rechazar-testimonio" onclick="rechazarTestimonioAdmin('${doc.id}')">🗑️ Eliminar</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                contenedor.innerHTML = html;
+            }, (error) => {
+                console.error("Error al cargar testimonios pendientes: ", error);
+                contenedor.innerHTML = '<p class="carrito-vacio">No se pudieron cargar las opiniones pendientes.</p>';
+            });
+    }
+
+    function desuscribirTestimoniosPendientesAdmin() {
+        if (cancelarSuscripcionAdmin) {
+            cancelarSuscripcionAdmin();
+            cancelarSuscripcionAdmin = null;
+        }
+    }
+
+    // ==========================================
+    // PANEL DE ADMINISTRADOR (cambiar estado de pedidos)
+    // ==========================================
+    let cancelarSuscripcionPedidosAdmin = null;
+
+    const OPCIONES_ESTADO_PEDIDO = [
+        { valor: "pendiente", texto: "Pendiente" },
+        { valor: "confirmado", texto: "Confirmado" },
+        { valor: "entregado", texto: "Entregado" },
+        { valor: "cancelado", texto: "Cancelado" }
+    ];
+
+    // Orden en el que avanza un pedido al hacer clic en su insignia de estado.
+    // Al llegar a "entregado" ya no avanza más (y además sale de este listado).
+    const ORDEN_AVANCE_ESTADO = ["pendiente", "confirmado", "entregado"];
+
+    function suscribirPedidosAdmin() {
+        if (cancelarSuscripcionPedidosAdmin) return; // ya está escuchando
+
+        const contenedor = document.getElementById("lista-admin-pedidos");
+        let esLaPrimeraCarga = true;
+
+        // Traemos los pedidos más recientes y mostramos solo los activos
+        // (pendiente/confirmado); los ya entregados o cancelados quedan
+        // fuera de esta lista para no saturarla.
+        cancelarSuscripcionPedidosAdmin = db.collection("pedidos")
+            .orderBy("fecha", "desc")
+            .limit(50)
+            .onSnapshot((snapshot) => {
+                // Avisamos (notificación + sonido) cuando llega un pedido pendiente
+                // nuevo, salvo en la primera carga de la página.
+                if (!esLaPrimeraCarga) {
+                    snapshot.docChanges().forEach((cambio) => {
+                        if (cambio.type === "added") {
+                            const datos = cambio.doc.data();
+                            if ((datos.estado || "pendiente") === "pendiente") {
+                                notificarPedidoNuevoAdmin(datos);
+                            }
+                        }
+                    });
+                }
+                esLaPrimeraCarga = false;
+
+                const pedidosActivos = [];
+                snapshot.forEach((doc) => {
+                    const datos = doc.data();
+                    const estado = datos.estado || "pendiente";
+                    if (estado === "pendiente" || estado === "confirmado") {
+                        pedidosActivos.push({ id: doc.id, datos });
+                    }
+                });
+
+                if (pedidosActivos.length === 0) {
+                    contenedor.innerHTML = '<p class="carrito-vacio">No hay pedidos activos por ahora. ✅</p>';
+                    return;
+                }
+
+                let html = "";
+                pedidosActivos.forEach(({ id, datos }) => {
+                    const estadoActual = datos.estado || "pendiente";
+
+                    let itemsHtml = "";
+                    (datos.items || []).forEach(item => {
+                        itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
+                    });
+
+                    let opcionesHtml = "";
+                    OPCIONES_ESTADO_PEDIDO.forEach(opcion => {
+                        opcionesHtml += `<option value="${opcion.valor}" ${opcion.valor === estadoActual ? "selected" : ""}>${opcion.texto}</option>`;
+                    });
+
+                    html += `
+                        <div class="tarjeta-admin-testimonio">
+                            <div class="pedido-encabezado">
+                                <span class="pedido-fecha">${formatearFechaPedido(datos.fecha)}</span>
+                                <div class="selector-estado-envoltura selector-estado-${estadoActual}">
+                                    <select class="selector-estado-pedido"
+                                            onchange="cambiarEstadoPedidoDesdeSelector(this, '${id}', '${datos.telefonoCliente || ""}')"
+                                            title="Cambiar estado del pedido">
+                                        ${opcionesHtml}
+                                    </select>
+                                </div>
+                            </div>
+                            <p class="comentario">${datos.nombreCliente || "Cliente"}${datos.correoCliente ? " · " + datos.correoCliente : ""}${datos.telefonoCliente ? " · +" + datos.telefonoCliente : ""}</p>
+                            <ul class="pedido-items">${itemsHtml}</ul>
+                            <div class="pedido-total">Total: ${formatearPrecio(datos.total || 0)}</div>
+                        </div>
+                    `;
+                });
+                contenedor.innerHTML = html;
+            }, (error) => {
+                console.error("Error al cargar pedidos: ", error);
+                contenedor.innerHTML = '<p class="carrito-vacio">No se pudieron cargar los pedidos.</p>';
+            });
+    }
+
+    function desuscribirPedidosAdmin() {
+        if (cancelarSuscripcionPedidosAdmin) {
+            cancelarSuscripcionPedidosAdmin();
+            cancelarSuscripcionPedidosAdmin = null;
+        }
+    }
+
+    function cambiarEstadoPedidoAdmin(idPedido, nuevoEstado) {
+        db.collection("pedidos").doc(idPedido).update({ estado: nuevoEstado })
+            .catch((error) => {
+                console.error("Error al cambiar el estado del pedido: ", error);
+                mostrarAviso("No se pudo cambiar el estado del pedido. Intenta de nuevo.", "error");
+            });
+    }
+
+    // Se llama al elegir una opción en el <select> de estado de un pedido.
+    // Actualiza al instante el color del selector (para dar feedback visual
+    // inmediato), guarda el cambio en Firebase y abre WhatsApp con un mensaje
+    // ya redactado para avisarle al cliente (el admin solo debe presionar enviar,
+    // ya que un envío 100% automático requeriría la API paga de WhatsApp Business).
+    function cambiarEstadoPedidoDesdeSelector(selectElemento, idPedido, telefonoCliente) {
+        const nuevoEstado = selectElemento.value;
+        const envoltura = selectElemento.closest(".selector-estado-envoltura");
+        if (envoltura) {
+            envoltura.className = "selector-estado-envoltura selector-estado-" + nuevoEstado;
+            // Reinicia la animación de "rebote" para dar feedback visual del cambio
+            envoltura.classList.remove("animar-cambio");
+            void envoltura.offsetWidth;
+            envoltura.classList.add("animar-cambio");
+        }
+        cambiarEstadoPedidoAdmin(idPedido, nuevoEstado);
+
+        if (telefonoCliente) {
+            const mensajesEstado = {
+                confirmado: "¡Hola! 👋 Te escribimos de Chrisnut para contarte que tu pedido fue *confirmado* y ya lo estamos preparando. 🥐",
+                entregado: "¡Hola! 👋 Tu pedido de Chrisnut ya fue *entregado*. ¡Que lo disfrutes mucho! 🍞💛",
+                cancelado: "Hola, te escribimos de Chrisnut para avisarte que tu pedido fue *cancelado*. Cualquier duda, escríbenos por este mismo medio."
+            };
+            const mensaje = mensajesEstado[nuevoEstado];
+            if (mensaje) {
+                const url = `https://api.whatsapp.com/send?phone=${telefonoCliente}&text=${encodeURIComponent(mensaje)}`;
+                window.open(url, "_blank");
+            }
+        }
+    }
+
+    // ==========================================
+    // NOTIFICACIONES EN EL CELULAR/NAVEGADOR AL RECIBIR UN PEDIDO NUEVO
+    // ==========================================
+    // Nota: esto avisa al instante mientras el panel de administrador esté
+    // abierto en el navegador (computador o celular). Para recibir avisos con
+    // el celular bloqueado o la app cerrada se necesita además una notificación
+    // push real (Firebase Cloud Messaging + una función en el servidor), que
+    // por seguridad no se puede activar sola: hay que desplegarla desde la
+    // consola de Firebase de este proyecto.
+    function notificarPedidoNuevoAdmin(datosPedido) {
+        try {
+            const ContextoAudio = window.AudioContext || window.webkitAudioContext;
+            const contexto = new ContextoAudio();
+            const oscilador = contexto.createOscillator();
+            const ganancia = contexto.createGain();
+            oscilador.type = "sine";
+            oscilador.frequency.value = 880;
+            ganancia.gain.value = 0.15;
+            oscilador.connect(ganancia);
+            ganancia.connect(contexto.destination);
+            oscilador.start();
+            oscilador.stop(contexto.currentTime + 0.25);
+        } catch (error) {}
+
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("🥐 ¡Pedido nuevo en Chrisnut!", {
+                body: `${datosPedido.nombreCliente || "Un cliente"} · Total: ${formatearPrecio(datosPedido.total || 0)}`
+            });
+        }
+    }
+
+    function activarNotificacionesAdmin() {
+        const estadoTexto = document.getElementById("estado-notificaciones-admin");
+        if (!("Notification" in window)) {
+            estadoTexto.textContent = "Tu navegador no soporta notificaciones.";
+            return;
+        }
+        Notification.requestPermission().then((permiso) => {
+            if (permiso === "granted") {
+                estadoTexto.textContent = "✅ Notificaciones activadas. Deja esta pestaña abierta para recibir avisos.";
+                new Notification("Chrisnut", { body: "¡Listo! Te avisaremos cuando llegue un pedido nuevo. 🥐" });
+            } else {
+                estadoTexto.textContent = "No se activaron las notificaciones. Puedes habilitarlas desde los ajustes del navegador.";
+            }
+        });
+    }
+
+    function aprobarTestimonioAdmin(idTestimonio) {
+        db.collection("testimonios").doc(idTestimonio).update({ aprobado: true })
+            .catch((error) => {
+                console.error("Error al aprobar el testimonio: ", error);
+                mostrarAviso("No se pudo aprobar la opinión. Intenta de nuevo.", "error");
+            });
+    }
+
+    // ==========================================
+    // PRODUCTOS DE LA VITRINA (catálogo dinámico desde Firestore)
+    // ==========================================
+    // Guarda en memoria la última lista de productos que llegó desde
+    // Firestore, para no tener que volver a pedirla cada vez que se
+    // necesita (por ejemplo, para pintar el panel de stock del admin).
+    let productosCache = [];
+
+    // Se llama una sola vez al cargar la página. Deja la vitrina escuchando
+    // los cambios en la colección "productos" en tiempo real: si el admin
+    // agrega o elimina un producto, todos los que tengan la página abierta
+    // lo ven al instante, sin recargar.
+    function iniciarEscuchaProductos() {
+        db.collection("productos").orderBy("creado").onSnapshot((snapshot) => {
+            productosCache = snapshot.docs.map(doc => doc.data());
+            renderizarVitrina();
+            renderizarListaProductosAdmin();
+            renderizarListaStockAdmin();
+        }, (error) => {
+            console.error("Error al cargar los productos: ", error);
+            const contenedor = document.getElementById("contenedor-productos");
+            if (contenedor) contenedor.innerHTML = '<p class="carrito-vacio">No se pudieron cargar los productos.</p>';
+        });
+    }
+
+    // ==========================================
+    // ORDENAR, FILTRAR Y CAMBIAR VISTA DE LA VITRINA
+    // ==========================================
+    // Estado actual de los controles de la vitrina (se mantiene en memoria
+    // mientras la persona navega la página).
+    let vitrinaOrden = "destacado";
+    let vitrinaVista = "grilla"; // "grilla" o "lista"
+    let vitrinaMostrarEnStock = true;
+    let vitrinaMostrarAgotado = true;
+    let vitrinaPrecioMin = null;
+    let vitrinaPrecioMax = null;
+
+    // Un producto se considera "agotado" solo si el admin definió stock
+    // para HOY y quedó en 0. Si no hay stock definido para hoy, se asume
+    // disponible (así el conteo de stock sigue siendo opcional).
+    function estaProductoAgotado(nombreProducto) {
+        const datos = cacheStockHoy[nombreProducto];
+        if (datos && datos.fecha === obtenerFechaHoy()) {
+            return datos.cantidad <= 0;
+        }
+        return false;
+    }
+
+    // Actualiza los números "(40)" / "(12)" que aparecen junto a cada
+    // casilla de disponibilidad, según el total real de productos.
+    function actualizarConteosFiltroVitrina() {
+        const conteoEnStock = document.getElementById("conteo-en-stock");
+        const conteoAgotado = document.getElementById("conteo-agotado");
+        if (!conteoEnStock || !conteoAgotado) return;
+
+        let enStock = 0;
+        let agotados = 0;
+        productosCache.forEach((producto) => {
+            if (estaProductoAgotado(producto.nombre)) agotados++;
+            else enStock++;
+        });
+
+        conteoEnStock.textContent = `(${enStock})`;
+        conteoAgotado.textContent = `(${agotados})`;
+    }
+
+    // Devuelve la lista de productos ya filtrada (disponibilidad y precio)
+    // y ordenada, lista para pintar en la vitrina.
+    function obtenerProductosFiltradosYOrdenados() {
+        let lista = productosCache.filter((producto) => {
+            const agotado = estaProductoAgotado(producto.nombre);
+            if (agotado && !vitrinaMostrarAgotado) return false;
+            if (!agotado && !vitrinaMostrarEnStock) return false;
+
+            if (vitrinaPrecioMin !== null && producto.precio < vitrinaPrecioMin) return false;
+            if (vitrinaPrecioMax !== null && producto.precio > vitrinaPrecioMax) return false;
+
+            return true;
+        });
+
+        switch (vitrinaOrden) {
+            case "precio-asc":
+                lista = lista.slice().sort((a, b) => a.precio - b.precio);
+                break;
+            case "precio-desc":
+                lista = lista.slice().sort((a, b) => b.precio - a.precio);
+                break;
+            case "nombre-asc":
+                lista = lista.slice().sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+                break;
+            case "nombre-desc":
+                lista = lista.slice().sort((a, b) => b.nombre.localeCompare(a.nombre, "es"));
+                break;
+            // "destacado" deja el orden original (por fecha de creación)
+        }
+
+        return lista;
+    }
+
+    function renderizarVitrina() {
+        const contenedor = document.getElementById("contenedor-productos");
+        if (!contenedor) return;
+
+        actualizarConteosFiltroVitrina();
+        contenedor.classList.toggle("vista-grilla", vitrinaVista === "grilla");
+        contenedor.classList.toggle("vista-lista", vitrinaVista === "lista");
+
+        let html = "";
+        const productosAMostrar = obtenerProductosFiltradosYOrdenados();
+
+        if (productosCache.length === 0) {
+            html = '<p class="carrito-vacio">Todavía no hay productos cargados.</p>';
+        } else if (productosAMostrar.length === 0) {
+            html = '<p class="carrito-vacio">Ningún producto coincide con los filtros elegidos.</p>';
+        } else {
+            productosAMostrar.forEach((producto) => {
+                const agotado = estaProductoAgotado(producto.nombre);
+                const nombreEscapado = producto.nombre.replace(/'/g, "\\'");
+                const imagenEscapada = (producto.imagenURL || "").replace(/'/g, "\\'");
+
+                // En modo administrador, la propia foto del producto se puede
+                // presionar para cambiarla al instante (sin pasar por el
+                // modal de "Nuevo producto").
+                const overlayCambiarFoto = window._esAdminActual ? `
+                    <button type="button" class="boton-cambiar-foto-producto" title="Cambiar foto de ${producto.nombre}" onclick="abrirSelectorFotoProducto('${nombreEscapado}', '${imagenEscapada}')">
+                        📷 Cambiar foto
+                    </button>
+                ` : "";
+
+                html += `
+                    <article class="tarjeta-producto" data-nombre="${producto.nombre}" data-precio="${producto.precio}" data-imagen="${imagenEscapada}">
+                        <div class="imagen-contenedor ${window._esAdminActual ? "imagen-editable-admin" : ""}">
+                            <img src="${producto.imagenURL}" alt="${producto.nombre}" class="imagen-producto">
+                            ${agotado ? '<span class="etiqueta-agotado-producto">Agotado</span>' : ""}
+                            <button class="boton-favorito" aria-label="Agregar a favoritos">🤍</button>
+                            ${overlayCambiarFoto}
+                        </div>
+                        <h3>${producto.nombre}</h3>
+                        <p class="descripcion">${producto.descripcion}</p>
+                        <span class="precio">${formatearPrecio(producto.precio)}</span>
+                        <button class="boton-agregar-carrito"${agotado ? " disabled" : ""}>${agotado ? "Agotado" : "Agregar al carrito"}</button>
+                    </article>
+                `;
+            });
+        }
+
+        // El cuadro con "+" para agregar un producto solo se ve si la
+        // persona con sesión iniciada es administradora.
+        if (window._esAdminActual) {
+            html += `
+                <button type="button" class="tarjeta-agregar-producto" onclick="abrirModalNuevoProducto()" aria-label="Agregar producto nuevo">
+                    <span class="icono-agregar-producto">+</span>
+                </button>
+            `;
+        }
+
+        contenedor.innerHTML = html;
+    }
+
+    // ------------------------------------------
+    // Cambiar la foto de un producto ya existente
+    // presionando directamente su imagen (solo admin)
+    // ------------------------------------------
+    let _productoFotoPendiente = null;
+
+    function abrirSelectorFotoProducto(nombreProducto, imagenActual) {
+        if (!window._esAdminActual) return;
+        _productoFotoPendiente = { nombre: nombreProducto, imagenActual: imagenActual };
+        const input = document.getElementById("input-cambiar-foto-producto");
+        input.value = ""; // permite elegir el mismo archivo dos veces seguidas
+        input.click();
+    }
+
+    async function manejarCambioFotoProducto() {
+        const input = document.getElementById("input-cambiar-foto-producto");
+        const archivo = input.files[0];
+        if (!archivo || !_productoFotoPendiente) return;
+
+        const { nombre, imagenActual } = _productoFotoPendiente;
+        const tarjeta = document.querySelector(`.tarjeta-producto[data-nombre="${nombre.replace(/"/g, '\\"')}"]`);
+        const botonCambiar = tarjeta ? tarjeta.querySelector(".boton-cambiar-foto-producto") : null;
+
+        if (botonCambiar) {
+            botonCambiar.textContent = "Subiendo...";
+            botonCambiar.disabled = true;
+        }
+
+        try {
+            const referenciaImagen = storage.ref(`productos/${Date.now()}-${archivo.name}`);
+            await referenciaImagen.put(archivo);
+            const nuevaURL = await referenciaImagen.getDownloadURL();
+
+            await db.collection("productos").doc(nombre).update({
+                imagenURL: nuevaURL
+            });
+
+            // Si la foto anterior estaba en Firebase Storage, la borramos
+            // para no dejar archivos huérfanos ocupando espacio.
+            if (imagenActual && imagenActual.includes("firebasestorage")) {
+                storage.refFromURL(imagenActual).delete().catch(() => {});
+            }
+
+            mostrarAviso("¡Foto actualizada con éxito!", "exito");
+        } catch (error) {
+            console.error("Error al cambiar la foto del producto: ", error);
+            mostrarAviso("No se pudo cambiar la foto. Intenta de nuevo.", "error");
+        } finally {
+            _productoFotoPendiente = null;
+            // renderizarVitrina() se vuelve a llamar solo al recibir el
+            // snapshot actualizado de Firestore, así que no hace falta
+            // restaurar el botón manualmente aquí.
+        }
+    }
+
+    function abrirModalNuevoProducto() {
+        document.getElementById("modal-nuevo-producto").style.display = "flex";
+    }
+
+    function cerrarModalNuevoProducto() {
+        document.getElementById("modal-nuevo-producto").style.display = "none";
+        document.getElementById("estado-nuevo-producto").textContent = "";
+    }
+
+    // Lista de productos con botón de eliminar, dentro del panel admin.
+    function renderizarListaProductosAdmin() {
+        const contenedor = document.getElementById("lista-productos-admin");
+        if (!contenedor) return;
+
+        if (productosCache.length === 0) {
+            contenedor.innerHTML = '<p class="carrito-vacio">Todavía no hay productos.</p>';
+            return;
+        }
+
+        let html = "";
+        productosCache.forEach((producto) => {
+            const nombreEscapado = producto.nombre.replace(/'/g, "\\'");
+            const imagenEscapada = (producto.imagenURL || "").replace(/'/g, "\\'");
+            html += `
+                <div class="fila-cupon-admin">
+                    <span class="codigo-cupon-admin">${producto.nombre}</span>
+                    <span class="valor-cupon-admin">${formatearPrecio(producto.precio)}</span>
+                    <button type="button" onclick="eliminarProducto('${nombreEscapado}', '${imagenEscapada}')">🗑️</button>
+                </div>
+            `;
+        });
+        contenedor.innerHTML = html;
+    }
+
+    async function eliminarProducto(nombre, imagenURL) {
+        const confirmado = await mostrarConfirmacion(`¿Eliminar "${nombre}" de la vitrina? Esto no se puede deshacer.`, "Sí, eliminar");
+        if (!confirmado) return;
+
+        try {
+            await db.collection("productos").doc(nombre).delete();
+            // Si la imagen está guardada en Firebase Storage, intentamos borrarla
+            // también. Si falla (por ejemplo, es una imagen local antigua), no pasa nada.
+            if (imagenURL && imagenURL.includes("firebasestorage")) {
+                storage.refFromURL(imagenURL).delete().catch(() => {});
+            }
+        } catch (error) {
+            console.error("Error al eliminar el producto: ", error);
+            mostrarAviso("No se pudo eliminar el producto. Intenta de nuevo.", "error");
+        }
+    }
+
+    // Sube la foto elegida a Firebase Storage y crea el producto en Firestore.
+    // El id del documento es el nombre del producto, para que coincida con
+    // lo que ya usan el carrito, los pedidos y el stock diario.
+    async function agregarProductoNuevo(evento) {
+        evento.preventDefault();
+
+        const nombre = document.getElementById("nuevo-producto-nombre").value.trim();
+        const descripcion = document.getElementById("nuevo-producto-descripcion").value.trim();
+        const precio = parseInt(document.getElementById("nuevo-producto-precio").value, 10);
+        const archivoInput = document.getElementById("nuevo-producto-imagen");
+        const archivo = archivoInput.files[0];
+        const estado = document.getElementById("estado-nuevo-producto");
+        const boton = document.getElementById("boton-agregar-producto");
+
+        if (!nombre || !descripcion || !precio || precio <= 0 || !archivo) {
+            mostrarAviso("Completa el nombre, la descripción, el precio y elige una foto.", "advertencia");
+            return;
+        }
+
+        alternarCargaBoton(boton, true);
+        estado.textContent = "Subiendo foto...";
+
+        try {
+            const referenciaImagen = storage.ref(`productos/${Date.now()}-${archivo.name}`);
+            await referenciaImagen.put(archivo);
+            const urlImagen = await referenciaImagen.getDownloadURL();
+
+            estado.textContent = "Guardando producto...";
+            await db.collection("productos").doc(nombre).set({
+                nombre,
+                descripcion,
+                precio,
+                imagenURL: urlImagen,
+                creado: new Date()
+            });
+
+            document.getElementById("formulario-nuevo-producto").reset();
+            estado.textContent = "";
+            cerrarModalNuevoProducto();
+            mostrarAviso("¡Producto agregado con éxito!", "exito");
+        } catch (error) {
+            console.error("Error al agregar el producto: ", error);
+            estado.textContent = "";
+            mostrarAviso("No se pudo agregar el producto. Intenta de nuevo.", "error");
+        } finally {
+            alternarCargaBoton(boton, false);
+        }
+    }
+
+    // ⚠️ Función de uso único: crea en Firestore los 5 productos que ya
+    // existían antes de tener el catálogo dinámico, usando sus fotos que ya
+    // están en la carpeta del sitio. Ejecútala UNA sola vez desde la consola
+    // del navegador (F12 → pestaña "Console" → escribe migrarProductosIniciales()
+    // y presiona Enter) después de publicar estos cambios. Si la vuelves a
+    // ejecutar por error no genera duplicados, solo sobrescribe los mismos 5.
+    async function migrarProductosIniciales() {
+        const productosOriginales = [
+            { nombre: "Medialunas", descripcion: "Medialunas bañadas en almibar perfectas para acompañarlas con café.dulces y saladas.", precio: 1000, imagenURL: "medialuna.jpeg" },
+            { nombre: "Rollitos de Canela", descripcion: "El toque dulce ideal para tus celebraciones y cumpleaños.", precio: 500, imagenURL: "rollito-canela.jpeg" },
+            { nombre: "Berlín", descripcion: "Deliciosos berlines tradicionales, rellenos con crema pastelera o manjar, perfectos para disfrutar con quienes mas quieres.", precio: 1000, imagenURL: "berlin.jpeg" },
+            { nombre: "Alfajores Simples", descripcion: "Ricos alfajores artesanales rellenos con manjar preparados con muchos cariño.", precio: 500, imagenURL: "alfajor.jpeg" },
+            { nombre: "Pan Amasado", descripcion: "Horneado cada mañana, crujiente y calientito.", precio: 300, imagenURL: "pan-amasado.jpeg" }
+        ];
+
+        for (let i = 0; i < productosOriginales.length; i++) {
+            const producto = productosOriginales[i];
+            await db.collection("productos").doc(producto.nombre).set({
+                ...producto,
+                // Fechas antiguas y en orden, para que aparezcan primero y en
+                // el mismo orden en que ya estaban en la vitrina.
+                creado: new Date(2024, 0, i + 1)
+            });
+        }
+        console.log("Productos migrados con éxito ✅");
+    }
+
+    // ==========================================
+    // STOCK DIARIO (gestión desde el panel admin)
+    // ==========================================
+    // Fecha de hoy en formato YYYY-MM-DD (hora local), para saber si el
+    // stock guardado en Firestore corresponde al día de hoy o quedó viejo.
+    function obtenerFechaHoy() {
+        const hoy = new Date();
+        const año = hoy.getFullYear();
+        const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+        const dia = String(hoy.getDate()).padStart(2, "0");
+        return `${año}-${mes}-${dia}`;
+    }
+
+    function formatearFechaLegible(fechaTexto) {
+        const [año, mes, dia] = fechaTexto.split("-");
+        return `${dia}/${mes}/${año}`;
+    }
+
+    // Genera un id de HTML válido a partir del nombre del producto
+    // (sin tildes ni espacios), para usar en los inputs de cada fila.
+    function idStockSeguro(nombre) {
+        return nombre
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-zA-Z0-9]/g, "-")
+            .toLowerCase();
+    }
+
+    // Última copia del stock de hoy que llegó desde Firestore (doc.id -> datos).
+    let cacheStockHoy = {};
+    let cancelarSuscripcionStockAdmin = null;
+
+    function suscribirStockAdmin() {
+        if (cancelarSuscripcionStockAdmin) return;
+
+        const etiquetaFecha = document.getElementById("fecha-stock-admin");
+        const fechaHoy = obtenerFechaHoy();
+        if (etiquetaFecha) etiquetaFecha.textContent = `Cantidades para hoy (${formatearFechaLegible(fechaHoy)})`;
+
+        cancelarSuscripcionStockAdmin = db.collection("stock")
+            .onSnapshot((snapshot) => {
+                cacheStockHoy = {};
+                snapshot.forEach((doc) => { cacheStockHoy[doc.id] = doc.data(); });
+                renderizarListaStockAdmin();
+                // También refrescamos la vitrina pública: el filtro de
+                // "Disponibilidad" y la etiqueta "Agotado" dependen de esto.
+                renderizarVitrina();
+            }, (error) => {
+                console.error("Error al cargar el stock: ", error);
+                const contenedor = document.getElementById("lista-stock-admin");
+                if (contenedor) contenedor.innerHTML = '<p class="carrito-vacio">No se pudo cargar el stock.</p>';
+            });
+    }
+
+    function desuscribirStockAdmin() {
+        if (cancelarSuscripcionStockAdmin) {
+            cancelarSuscripcionStockAdmin();
+            cancelarSuscripcionStockAdmin = null;
+        }
+    }
+
+    // Pinta una fila de stock por cada producto que exista hoy en la vitrina.
+    // Se llama cada vez que cambia el stock guardado O la lista de productos.
+    function renderizarListaStockAdmin() {
+        const contenedor = document.getElementById("lista-stock-admin");
+        if (!contenedor) return;
+
+        if (productosCache.length === 0) {
+            contenedor.innerHTML = '<p class="carrito-vacio">Agrega productos a la vitrina primero.</p>';
+            return;
+        }
+
+        const fechaHoy = obtenerFechaHoy();
+        let html = "";
+        productosCache.forEach((producto) => {
+            const nombre = producto.nombre;
+            const idSeguro = idStockSeguro(nombre);
+            const datos = cacheStockHoy[nombre];
+            const esDeHoy = datos && datos.fecha === fechaHoy;
+            const restante = esDeHoy ? datos.cantidad : null;
+
+            let textoEstado;
+            let claseEstado = "";
+            if (restante === null) {
+                textoEstado = "Sin definir hoy";
+            } else if (restante > 0) {
+                textoEstado = `Quedan ${restante}`;
+            } else {
+                textoEstado = "Agotado";
+                claseEstado = "fila-cupon-inactivo";
+            }
+
+            html += `
+                <div class="fila-cupon-admin ${claseEstado}">
+                    <span class="codigo-cupon-admin">${nombre}</span>
+                    <span class="valor-cupon-admin">${textoEstado}</span>
+                    <input type="number" id="input-stock-${idSeguro}" class="input-stock-admin" placeholder="Cant." min="0">
+                    <button type="button" onclick="guardarStockProducto('${nombre.replace(/'/g, "\\'")}')">Guardar</button>
+                </div>
+            `;
+        });
+        contenedor.innerHTML = html;
+    }
+
+    // El admin escribe una cantidad y la guarda como el stock de HOY para
+    // ese producto (reemplaza lo que hubiera, por eso "agrega" el stock del día).
+    async function guardarStockProducto(nombre) {
+        const idSeguro = idStockSeguro(nombre);
+        const input = document.getElementById(`input-stock-${idSeguro}`);
+        const cantidad = parseInt(input.value, 10);
+
+        if (isNaN(cantidad) || cantidad < 0) {
+            mostrarAviso("Ingresa una cantidad válida (0 o más).", "advertencia");
+            return;
+        }
+
+        try {
+            await db.collection("stock").doc(nombre).set({
+                cantidad,
+                fecha: obtenerFechaHoy(),
+                actualizado: new Date()
+            });
+            input.value = "";
+        } catch (error) {
+            console.error("Error al guardar el stock: ", error);
+            mostrarAviso("No se pudo guardar el stock. Intenta de nuevo.", "error");
+        }
+    }
+
+    // Descuenta del stock de hoy las cantidades de un pedido recién realizado.
+    // Si el producto no tiene stock definido para hoy, simplemente no se toca
+    // (así el conteo es opcional: solo se activa para lo que el admin define).
+    async function descontarStockPedido(itemsPedido) {
+        const fechaHoy = obtenerFechaHoy();
+        for (const item of itemsPedido) {
+            const referenciaStock = db.collection("stock").doc(item.nombre);
+            try {
+                await db.runTransaction(async (transaccion) => {
+                    const doc = await transaccion.get(referenciaStock);
+                    if (!doc.exists) return;
+                    const datos = doc.data();
+                    if (datos.fecha !== fechaHoy) return;
+                    const nuevaCantidad = Math.max(0, (datos.cantidad || 0) - item.cantidad);
+                    transaccion.update(referenciaStock, { cantidad: nuevaCantidad });
+                });
+            } catch (error) {
+                console.error(`Error al descontar stock de ${item.nombre}: `, error);
+            }
+        }
+    }
+
+    // ==========================================
+    // CUPONES DE DESCUENTO (gestión desde el panel admin)
+    // ==========================================
+    let cancelarSuscripcionCuponesAdmin = null;
+
+    function suscribirCuponesAdmin() {
+        if (cancelarSuscripcionCuponesAdmin) return;
+
+        const contenedor = document.getElementById("lista-cupones-admin");
+        cancelarSuscripcionCuponesAdmin = db.collection("cupones")
+            .onSnapshot((snapshot) => {
+                if (snapshot.empty) {
+                    contenedor.innerHTML = '<p class="carrito-vacio">Todavía no has creado ningún código.</p>';
+                    return;
+                }
+                let html = "";
+                snapshot.forEach((doc) => {
+                    const datos = doc.data();
+                    const textoValor = datos.tipo === "porcentaje" ? `${datos.valor}%` : formatearPrecio(datos.valor);
+                    html += `
+                        <div class="fila-cupon-admin ${datos.activo === false ? "fila-cupon-inactivo" : ""}">
+                            <span class="codigo-cupon-admin">${doc.id}</span>
+                            <span class="valor-cupon-admin">${textoValor}</span>
+                            <button type="button" onclick="alternarCupon('${doc.id}', ${datos.activo === false})">${datos.activo === false ? "Activar" : "Desactivar"}</button>
+                            <button type="button" onclick="eliminarCupon('${doc.id}')">🗑️</button>
+                        </div>
+                    `;
+                });
+                contenedor.innerHTML = html;
+            }, (error) => {
+                console.error("Error al cargar cupones: ", error);
+                contenedor.innerHTML = '<p class="carrito-vacio">No se pudieron cargar los cupones.</p>';
+            });
+    }
+
+    function desuscribirCuponesAdmin() {
+        if (cancelarSuscripcionCuponesAdmin) {
+            cancelarSuscripcionCuponesAdmin();
+            cancelarSuscripcionCuponesAdmin = null;
+        }
+    }
+
+    async function agregarCupon() {
+        const codigoInput = document.getElementById("nuevo-cupon-codigo");
+        const valorInput = document.getElementById("nuevo-cupon-valor");
+
+        const codigo = (codigoInput.value || "").trim().toUpperCase();
+        const valor = parseFloat(valorInput.value);
+
+        if (!codigo || !valor || valor <= 0 || valor > 100) {
+            mostrarAviso("Escribe un código y un porcentaje de descuento válido (entre 1 y 100).", "advertencia");
+            return;
+        }
+
+        try {
+            await db.collection("cupones").doc(codigo).set({
+                tipo: "porcentaje",
+                valor,
+                activo: true,
+                creado: new Date()
+            });
+            codigoInput.value = "";
+            valorInput.value = "";
+        } catch (error) {
+            console.error("Error al crear el cupón: ", error);
+            mostrarAviso("No se pudo crear el código. Intenta de nuevo.", "error");
+        }
+    }
+
+    function alternarCupon(codigo, nuevoValorActivo) {
+        db.collection("cupones").doc(codigo).update({ activo: nuevoValorActivo })
+            .catch((error) => console.error("Error al actualizar el cupón: ", error));
+    }
+
+    async function eliminarCupon(codigo) {
+        const confirmado = await mostrarConfirmacion(`¿Eliminar el código "${codigo}"?`, "Sí, eliminar");
+        if (!confirmado) return;
+        db.collection("cupones").doc(codigo).delete()
+            .catch((error) => console.error("Error al eliminar el cupón: ", error));
+    }
+
+    // ==========================================
+    // ESTADÍSTICAS DEL MES + INFORME IMPRIMIBLE
+    // ==========================================
+    let ultimasEstadisticasMes = null;
+
+    async function cargarEstadisticasMes() {
+        const contenedor = document.getElementById("contenido-estadisticas-mes");
+        if (!contenedor) return;
+
+        const ahora = new Date();
+        const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
+
+        try {
+            const snapshot = await db.collection("pedidos")
+                .where("fecha", ">=", inicioMes)
+                .get();
+
+            let totalVendido = 0;
+            let cantidadPedidos = 0;
+            const conteoProductos = {};
+
+            snapshot.forEach((doc) => {
+                const datos = doc.data();
+                if ((datos.estado || "pendiente") === "cancelado") return;
+                totalVendido += datos.total || 0;
+                cantidadPedidos += 1;
+                (datos.items || []).forEach(item => {
+                    conteoProductos[item.nombre] = (conteoProductos[item.nombre] || 0) + item.cantidad;
+                });
+            });
+
+            let productoTop = "—";
+            let maxCantidad = 0;
+            Object.entries(conteoProductos).forEach(([nombre, cantidad]) => {
+                if (cantidad > maxCantidad) {
+                    maxCantidad = cantidad;
+                    productoTop = nombre;
+                }
+            });
+
+            const ticketPromedio = cantidadPedidos > 0 ? Math.round(totalVendido / cantidadPedidos) : 0;
+            const nombreMes = ahora.toLocaleDateString("es-CL", { month: "long", year: "numeric" });
+
+            ultimasEstadisticasMes = { totalVendido, cantidadPedidos, productoTop, ticketPromedio, nombreMes, conteoProductos };
+
+            contenedor.innerHTML = `
+                <div class="tarjeta-metrica"><span class="etiqueta-metrica">Vendido en ${nombreMes}</span><span class="valor-metrica">${formatearPrecio(totalVendido)}</span></div>
+                <div class="tarjeta-metrica"><span class="etiqueta-metrica">Pedidos</span><span class="valor-metrica">${cantidadPedidos}</span></div>
+                <div class="tarjeta-metrica"><span class="etiqueta-metrica">Ticket promedio</span><span class="valor-metrica">${formatearPrecio(ticketPromedio)}</span></div>
+                <div class="tarjeta-metrica"><span class="etiqueta-metrica">Producto más pedido</span><span class="valor-metrica">${productoTop}</span></div>
+            `;
+        } catch (error) {
+            console.error("Error al cargar estadísticas del mes: ", error);
+            contenedor.innerHTML = '<p class="carrito-vacio">No se pudieron cargar las estadísticas.</p>';
+        }
+    }
+
+    // Genera un informe en PDF (encabezado con marca, tabla de métricas y
+    // detalle de productos vendidos) y lo descarga directo, sin pasar por
+    // el diálogo de impresión del navegador.
+    function guardarEstadisticasPDF() {
+        if (!ultimasEstadisticasMes) {
+            mostrarAviso("Espera a que carguen las estadísticas antes de guardar el PDF.", "advertencia");
+            return;
+        }
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+            mostrarAviso("No se pudo cargar el generador de PDF. Revisa tu conexión e intenta de nuevo.", "error");
+            return;
+        }
+
+        const { totalVendido, cantidadPedidos, productoTop, ticketPromedio, nombreMes, conteoProductos } = ultimasEstadisticasMes;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: "pt", format: "a4" });
+        const anchoPagina = doc.internal.pageSize.getWidth();
+        const colorAcento = [180, 83, 9]; // tono cálido, coherente con la marca Chrisnut
+
+        // --- Encabezado con marca ---
+        doc.setFillColor(colorAcento[0], colorAcento[1], colorAcento[2]);
+        doc.rect(0, 0, anchoPagina, 90, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.text("Chrisnut", 40, 45);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.text("Panadería y Dulzura Artesanal", 40, 65);
+
+        doc.setFontSize(11);
+        const nombreMesCapitalizado = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
+        doc.text(`Informe de estadísticas · ${nombreMesCapitalizado}`, anchoPagina - 40, 45, { align: "right" });
+        doc.text(`Generado el ${new Date().toLocaleDateString("es-CL")}`, anchoPagina - 40, 65, { align: "right" });
+
+        // --- Tabla de métricas principales ---
+        doc.autoTable({
+            startY: 120,
+            head: [["Métrica", "Valor"]],
+            body: [
+                ["Total vendido", formatearPrecio(totalVendido)],
+                ["Cantidad de pedidos", String(cantidadPedidos)],
+                ["Ticket promedio", formatearPrecio(ticketPromedio)],
+                ["Producto más pedido", productoTop]
+            ],
+            theme: "striped",
+            headStyles: { fillColor: colorAcento, textColor: 255, fontStyle: "bold" },
+            styles: { fontSize: 11, cellPadding: 8 },
+            margin: { left: 40, right: 40 }
+        });
+
+        // --- Detalle de productos vendidos en el mes ---
+        const filasProductos = Object.entries(conteoProductos || {})
+            .sort((a, b) => b[1] - a[1])
+            .map(([nombre, cantidad]) => [nombre, String(cantidad)]);
+
+        if (filasProductos.length > 0) {
+            const siguienteY = doc.lastAutoTable.finalY + 30;
+            doc.setTextColor(40, 40, 40);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(13);
+            doc.text("Detalle de productos vendidos", 40, siguienteY);
+
+            doc.autoTable({
+                startY: siguienteY + 12,
+                head: [["Producto", "Unidades vendidas"]],
+                body: filasProductos,
+                theme: "grid",
+                headStyles: { fillColor: colorAcento, textColor: 255, fontStyle: "bold" },
+                styles: { fontSize: 10.5, cellPadding: 7 },
+                margin: { left: 40, right: 40 }
+            });
+        }
+
+        // --- Pie de página ---
+        const totalPaginas = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPaginas; i++) {
+            doc.setPage(i);
+            const alturaPagina = doc.internal.pageSize.getHeight();
+            doc.setDrawColor(220, 220, 220);
+            doc.line(40, alturaPagina - 50, anchoPagina - 40, alturaPagina - 50);
+            doc.setFontSize(9);
+            doc.setTextColor(120, 120, 120);
+            doc.setFont("helvetica", "normal");
+            doc.text("Chrisnut · Panadería y Dulzura Artesanal", 40, alturaPagina - 32);
+            doc.text(`Página ${i} de ${totalPaginas}`, anchoPagina - 40, alturaPagina - 32, { align: "right" });
+        }
+
+        const nombreArchivo = `Chrisnut-informe-${nombreMes.replace(/\s+/g, "-").toLowerCase()}.pdf`;
+        doc.save(nombreArchivo);
+    }
+
+    async function rechazarTestimonioAdmin(idTestimonio) {
+        const confirmado = await mostrarConfirmacion("¿Eliminar esta opinión pendiente? Esta acción no se puede deshacer.", "Sí, eliminar");
+        if (!confirmado) return;
+        db.collection("testimonios").doc(idTestimonio).delete()
+            .catch((error) => {
+                console.error("Error al eliminar el testimonio: ", error);
+                mostrarAviso("No se pudo eliminar la opinión. Intenta de nuevo.", "error");
+            });
+    }
+
+    // Permite al admin borrar, desde la sección pública "Ustedes", una opinión
+    // que ya estaba publicada (no solo las pendientes por aprobar).
+    async function eliminarTestimonioPublicoAdmin(idTestimonio) {
+        const confirmado = await mostrarConfirmacion("¿Eliminar esta opinión ya publicada? Esta acción no se puede deshacer.", "Sí, eliminar");
+        if (!confirmado) return;
+        db.collection("testimonios").doc(idTestimonio).delete()
+            .catch((error) => {
+                console.error("Error al eliminar el testimonio publicado: ", error);
+                mostrarAviso("No se pudo eliminar la opinión. Intenta de nuevo.", "error");
+            });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const contenedor = document.querySelector(".contenedor-testimonios");
+        const formulario = document.getElementById("formulario-nuevo-testimonio");
+        const formularioContacto = document.getElementById("formulario-contacto");
+
+        // --- Modo oscuro ---
+        const botonModoOscuro = document.getElementById("boton-modo-oscuro");
+        const CLAVE_TEMA = "chrisnut_tema";
+
+        function actualizarIconoTema() {
+            const esOscuro = document.documentElement.getAttribute("data-tema") === "oscuro";
+            botonModoOscuro.textContent = esOscuro ? "☀️" : "🌙";
+            botonModoOscuro.setAttribute("aria-label", esOscuro ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
+        }
+        actualizarIconoTema();
+
+        // Sincroniza el contador/botón flotante del carrito con lo que ya
+        // estaba guardado en este dispositivo, apenas carga la página.
+        actualizarContadorCarrito();
+
+        // Autocompleta y empieza a recordar el número de teléfono en los
+        // distintos formularios del sitio (contacto, carrito, mi perfil).
+        inicializarCamposTelefono();
+
+        // Carga la vitrina de productos desde Firestore y la deja escuchando
+        // cambios en tiempo real (nuevos productos, eliminados, etc.)
+        iniciarEscuchaProductos();
+
+        // Escuchamos el stock del día para toda visita (no solo el admin),
+        // así el filtro "Disponibilidad" y la etiqueta "Agotado" funcionan
+        // también para quien no tiene sesión iniciada.
+        // Nota: si no aparecen datos de disponibilidad para clientes sin
+        // sesión, revisa que las reglas de seguridad de Firestore permitan
+        // LECTURA pública de la colección "stock" (la escritura puede
+        // seguir restringida solo al admin).
+        suscribirStockAdmin();
+
+        // Formulario del panel admin para agregar un producto nuevo
+        const formularioNuevoProducto = document.getElementById("formulario-nuevo-producto");
+        if (formularioNuevoProducto) {
+            formularioNuevoProducto.addEventListener("submit", agregarProductoNuevo);
+        }
+
+        // Si había un pedido en seguimiento (logo flotante de estado), lo
+        // restauramos para que el cliente lo siga viendo aunque recargue.
+        restaurarSeguimientoPedidoGuardado();
+
+        botonModoOscuro.addEventListener("click", () => {
+            const esOscuroActual = document.documentElement.getAttribute("data-tema") === "oscuro";
+            if (esOscuroActual) {
+                document.documentElement.removeAttribute("data-tema");
+                localStorage.setItem(CLAVE_TEMA, "claro");
+            } else {
+                document.documentElement.setAttribute("data-tema", "oscuro");
+                localStorage.setItem(CLAVE_TEMA, "oscuro");
+            }
+            actualizarIconoTema();
+        });
+
+        // --- Animación de secciones al hacer scroll ---
+        const seccionesAnimadas = document.querySelectorAll(".seccion-animada");
+        if ("IntersectionObserver" in window && seccionesAnimadas.length) {
+            const observador = new IntersectionObserver((entradas) => {
+                entradas.forEach((entrada) => {
+                    if (entrada.isIntersecting) {
+                        entrada.target.classList.add("visible");
+                        observador.unobserve(entrada.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+            seccionesAnimadas.forEach((seccion) => observador.observe(seccion));
+        } else {
+            seccionesAnimadas.forEach((seccion) => seccion.classList.add("visible"));
+        }
+
+        // Botón flotante del carrito (en el menú)
+        document.getElementById("boton-carrito").addEventListener("click", abrirModalCarrito);
+
+        // Botón flotante del carrito (arriba de WhatsApp, solo visible con items)
+        document.getElementById("boton-carrito-flotante").addEventListener("click", abrirModalCarrito);
+
+        // Si la URL trae #carrito, #mi-cuenta o #favoritos al cargar (ej: alguien
+        // entra directo a ese link o lo recarga), abrimos el modal correspondiente.
+        if (window.location.hash === "#carrito") {
+            abrirModalCarrito();
+        } else if (window.location.hash === "#mi-cuenta") {
+            abrirModalPerfil();
+        } else if (window.location.hash === "#favoritos") {
+            abrirModalFavoritos();
+        }
+
+        // Si el usuario usa el botón "atrás/adelante" del navegador,
+        // sincronizamos los modales con la URL.
+        window.addEventListener("popstate", () => {
+            document.getElementById("modal-carrito").style.display = (window.location.hash === "#carrito") ? "flex" : "none";
+            document.getElementById("modal-perfil").style.display = (window.location.hash === "#mi-cuenta") ? "flex" : "none";
+            document.getElementById("modal-favoritos").style.display = (window.location.hash === "#favoritos") ? "flex" : "none";
+        });
+
+        // Logo flotante de estado del pedido (aparece al enviar un pedido)
+        document.getElementById("boton-estado-pedido-flotante").addEventListener("click", abrirModalEstadoPedido);
+
+        // Filtro por mes del historial de pedidos del cliente
+        document.getElementById("filtro-mes-historial-pedidos").addEventListener("change", renderizarHistorialPedidosFiltrado);
+
+        // Enlace "Mis Favoritos" dentro del desplegable de atajos
+        document.getElementById("enlace-favoritos-menu").addEventListener("click", (e) => {
+            e.preventDefault();
+            abrirModalFavoritos();
+        });
+
+        // Corazón de favorito y "Agregar al carrito": como las tarjetas de
+        // producto ahora se generan dinámicamente (vienen de Firestore), en
+        // vez de agregar un listener a cada botón (que no existiría todavía
+        // al cargar la página), escuchamos los clics en el contenedor que
+        // los envuelve a todos. Así funciona sin importar cuándo se creen.
+        const contenedorProductos = document.getElementById("contenedor-productos");
+        if (contenedorProductos) {
+            contenedorProductos.addEventListener("click", (e) => {
+                const botonFavorito = e.target.closest(".boton-favorito");
+                if (botonFavorito) {
+                    const tarjeta = botonFavorito.closest(".tarjeta-producto");
+                    const nombre = tarjeta.dataset.nombre;
+                    const precio = parseInt(tarjeta.dataset.precio, 10);
+                    const imagen = tarjeta.dataset.imagen || "";
+                    alternarFavorito(nombre, precio, imagen, botonFavorito);
+                    return;
+                }
+
+                const botonCarrito = e.target.closest(".boton-agregar-carrito");
+                if (botonCarrito) {
+                    const tarjeta = botonCarrito.closest(".tarjeta-producto");
+                    const nombre = tarjeta.dataset.nombre;
+                    const precio = parseInt(tarjeta.dataset.precio, 10);
+                    agregarAlCarrito(nombre, precio);
+
+                    // Pequeño efecto visual de confirmación
+                    const textoOriginal = botonCarrito.dataset.textoOriginal || botonCarrito.textContent;
+                    botonCarrito.dataset.textoOriginal = textoOriginal;
+                    botonCarrito.classList.remove("animar-agregado");
+                    void botonCarrito.offsetWidth; // fuerza el reinicio de la animación
+                    botonCarrito.classList.add("animar-agregado");
+                    botonCarrito.textContent = "¡Agregado! ✅";
+                    clearTimeout(botonCarrito._timeoutTexto);
+                    botonCarrito._timeoutTexto = setTimeout(() => {
+                        botonCarrito.textContent = textoOriginal;
+                    }, 900);
+                }
+            });
+        }
+
+        // --- Input oculto para cambiar la foto de un producto ya existente ---
+        const inputCambiarFotoProducto = document.getElementById("input-cambiar-foto-producto");
+        if (inputCambiarFotoProducto) {
+            inputCambiarFotoProducto.addEventListener("change", manejarCambioFotoProducto);
+        }
+
+        // --- Barra de herramientas de la vitrina: ordenar, ver como, filtros ---
+        const selectOrdenVitrina = document.getElementById("select-orden-vitrina");
+        if (selectOrdenVitrina) {
+            selectOrdenVitrina.addEventListener("change", () => {
+                vitrinaOrden = selectOrdenVitrina.value;
+                renderizarVitrina();
+            });
+        }
+
+        const botonVistaGrilla = document.getElementById("boton-vista-grilla");
+        const botonVistaLista = document.getElementById("boton-vista-lista");
+        if (botonVistaGrilla && botonVistaLista) {
+            botonVistaGrilla.addEventListener("click", () => {
+                vitrinaVista = "grilla";
+                botonVistaGrilla.classList.add("activo");
+                botonVistaLista.classList.remove("activo");
+                renderizarVitrina();
+            });
+            botonVistaLista.addEventListener("click", () => {
+                vitrinaVista = "lista";
+                botonVistaLista.classList.add("activo");
+                botonVistaGrilla.classList.remove("activo");
+                renderizarVitrina();
+            });
+        }
+
+        const botonFiltrosVitrina = document.getElementById("boton-filtros-vitrina");
+        const panelFiltrosVitrina = document.getElementById("panel-filtros-vitrina");
+        if (botonFiltrosVitrina && panelFiltrosVitrina) {
+            botonFiltrosVitrina.addEventListener("click", () => {
+                const abierto = panelFiltrosVitrina.classList.toggle("abierto");
+                botonFiltrosVitrina.setAttribute("aria-expanded", abierto ? "true" : "false");
+                if (abierto) {
+                    panelFiltrosVitrina.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
+            });
+        }
+
+        // Encabezados "Disponibilidad" / "Precio" dentro del panel de
+        // filtros: se pueden colapsar tocando el título, igual que en el
+        // ejemplo de referencia.
+        document.querySelectorAll(".cabecera-grupo-filtro").forEach((cabecera) => {
+            cabecera.addEventListener("click", () => {
+                const grupo = cabecera.closest(".grupo-filtro");
+                const abierto = !grupo.classList.toggle("colapsado");
+                cabecera.setAttribute("aria-expanded", abierto ? "true" : "false");
+                const icono = cabecera.querySelector(".icono-colapsar-filtro");
+                if (icono) icono.textContent = abierto ? "−" : "+";
+            });
+        });
+
+        const filtroEnStock = document.getElementById("filtro-en-stock");
+        const filtroAgotado = document.getElementById("filtro-agotado");
+        if (filtroEnStock && filtroAgotado) {
+            filtroEnStock.addEventListener("change", () => {
+                vitrinaMostrarEnStock = filtroEnStock.checked;
+                renderizarVitrina();
+            });
+            filtroAgotado.addEventListener("change", () => {
+                vitrinaMostrarAgotado = filtroAgotado.checked;
+                renderizarVitrina();
+            });
+        }
+
+        const filtroPrecioMin = document.getElementById("filtro-precio-min");
+        const filtroPrecioMax = document.getElementById("filtro-precio-max");
+        if (filtroPrecioMin && filtroPrecioMax) {
+            filtroPrecioMin.addEventListener("input", () => {
+                vitrinaPrecioMin = filtroPrecioMin.value === "" ? null : parseInt(filtroPrecioMin.value, 10);
+                renderizarVitrina();
+            });
+            filtroPrecioMax.addEventListener("input", () => {
+                vitrinaPrecioMax = filtroPrecioMax.value === "" ? null : parseInt(filtroPrecioMax.value, 10);
+                renderizarVitrina();
+            });
+        }
+
+        const botonLimpiarFiltrosVitrina = document.getElementById("boton-limpiar-filtros-vitrina");
+        if (botonLimpiarFiltrosVitrina) {
+            botonLimpiarFiltrosVitrina.addEventListener("click", () => {
+                vitrinaMostrarEnStock = true;
+                vitrinaMostrarAgotado = true;
+                vitrinaPrecioMin = null;
+                vitrinaPrecioMax = null;
+                filtroEnStock.checked = true;
+                filtroAgotado.checked = true;
+                filtroPrecioMin.value = "";
+                filtroPrecioMax.value = "";
+                renderizarVitrina();
+            });
+        }
+
+        // Menú desplegable de atajos (solo aparece como tal en celular)
+        const botonAtajos = document.getElementById("boton-atajos");
+        const submenuAtajos = document.getElementById("submenu-atajos");
+
+        // Calcula dónde debe caer el submenú (usa position:fixed para no quedar
+        // recortado por el overflow-x:auto de la barra de menú en celular)
+        function posicionarSubmenuAtajos() {
+            const rect = botonAtajos.getBoundingClientRect();
+            submenuAtajos.style.top = `${rect.bottom}px`;
+            submenuAtajos.style.left = "auto";
+            submenuAtajos.style.right = `${window.innerWidth - rect.right}px`;
+        }
+
+        function cerrarSubmenuAtajos() {
+            submenuAtajos.classList.remove("mostrar-submenu");
+            botonAtajos.classList.remove("atajos-activo");
+        }
+
+        cerrarSubmenuAtajos();
+        window.addEventListener("pageshow", cerrarSubmenuAtajos);
+
+        botonAtajos.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const estabaAbierto = submenuAtajos.classList.contains("mostrar-submenu");
+            cerrarSubmenuPerfil();
+            if (estabaAbierto) {
+                cerrarSubmenuAtajos();
+            } else {
+                posicionarSubmenuAtajos();
+                submenuAtajos.classList.add("mostrar-submenu");
+                botonAtajos.classList.add("atajos-activo");
+            }
+        });
+
+        // Se cierra al elegir una opción o al tocar fuera de él
+        submenuAtajos.querySelectorAll("a").forEach(enlace => {
+            enlace.addEventListener("click", cerrarSubmenuAtajos);
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!submenuAtajos.contains(e.target) && e.target !== botonAtajos) {
+                cerrarSubmenuAtajos();
+            }
+        });
+
+        // Si el usuario sigue haciendo scroll o gira el celular, se cierra
+        // para que no quede "flotando" en un lugar incorrecto
+        window.addEventListener("scroll", cerrarSubmenuAtajos, { passive: true });
+        window.addEventListener("resize", cerrarSubmenuAtajos);
+
+        // Menú desplegable de perfil ("Hola, Inicia sesión" / "Hola, Nombre")
+        const botonPerfil = document.getElementById("boton-perfil");
+        const submenuPerfil = document.getElementById("submenu-perfil");
+        let menuPerfilAbierto = false;
+
+        function posicionarSubmenuPerfil() {
+            const rect = botonPerfil.getBoundingClientRect();
+            submenuPerfil.style.top = `${rect.bottom}px`;
+            submenuPerfil.style.left = `${rect.left}px`;
+        }
+
+        function abrirSubmenuPerfil() {
+            posicionarSubmenuPerfil();
+            submenuPerfil.style.display = "flex";
+            botonPerfil.classList.add("atajos-activo");
+            botonPerfil.setAttribute("aria-expanded", "true");
+            menuPerfilAbierto = true;
+        }
+
+        function cerrarSubmenuPerfil() {
+            submenuPerfil.style.display = "none";
+            botonPerfil.classList.remove("atajos-activo");
+            botonPerfil.setAttribute("aria-expanded", "false");
+            menuPerfilAbierto = false;
+        }
+
+        // Nos aseguramos de que arranque cerrado. Esto también corrige el caso
+        // en que el celular restaura la página desde su caché (bfcache) al
+        // volver atrás, y por defecto la dejaba con el menú abierto tal como
+        // había quedado antes de salir.
+        cerrarSubmenuPerfil();
+        window.addEventListener("pageshow", cerrarSubmenuPerfil);
+
+        botonPerfil.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            cerrarSubmenuAtajos();
+            if (menuPerfilAbierto) {
+                cerrarSubmenuPerfil();
+            } else {
+                abrirSubmenuPerfil();
+            }
+        });
+
+        document.addEventListener("click", (e) => {
+            if (menuPerfilAbierto && !submenuPerfil.contains(e.target) && !botonPerfil.contains(e.target)) {
+                cerrarSubmenuPerfil();
+            }
+        });
+
+        window.addEventListener("scroll", () => {
+            if (menuPerfilAbierto) cerrarSubmenuPerfil();
+        }, { passive: true });
+        window.addEventListener("resize", () => {
+            if (menuPerfilAbierto) cerrarSubmenuPerfil();
+        });
+
+        // Opciones del desplegable (invitado)
+        document.getElementById("enlace-ir-login").addEventListener("click", (e) => {
+            e.preventDefault();
+            cerrarSubmenuPerfil();
+            abrirModalPerfil();
+            mostrarPestana("login");
+        });
+
+        document.getElementById("enlace-ir-registro").addEventListener("click", (e) => {
+            e.preventDefault();
+            cerrarSubmenuPerfil();
+            abrirModalPerfil();
+            mostrarPestana("registro");
+        });
+
+        // Opciones del desplegable (con sesión iniciada)
+        document.getElementById("enlace-mi-cuenta").addEventListener("click", (e) => {
+            e.preventDefault();
+            cerrarSubmenuPerfil();
+            abrirModalPerfil();
+            if (auth.currentUser) {
+                cargarHistorialPedidos(auth.currentUser.uid);
+            }
+        });
+
+        document.getElementById("enlace-cerrar-sesion-menu").addEventListener("click", (e) => {
+            e.preventDefault();
+            cerrarSubmenuPerfil();
+            cerrarSesion();
+        });
+
+        // Medidor de fuerza de contraseña en tiempo real
+        document.getElementById("registro-clave").addEventListener("input", (e) => {
+            evaluarFuerzaClave(e.target.value);
+        });
+
+        // Recuperar contraseña
+        document.getElementById("enlace-olvide-clave").addEventListener("click", async (e) => {
+            e.preventDefault();
+            const correo = document.getElementById("login-correo").value;
+            const errorLogin = document.getElementById("error-login");
+            const exitoLogin = document.getElementById("exito-login");
+            errorLogin.textContent = "";
+            exitoLogin.textContent = "";
+
+            if (!correo) {
+                errorLogin.textContent = "Escribe tu correo arriba y luego toca este enlace.";
+                return;
+            }
+
+            try {
+                await auth.sendPasswordResetEmail(correo);
+                exitoLogin.textContent = "¡Listo! Revisa tu correo para recuperar tu contraseña.";
+            } catch (error) {
+                errorLogin.textContent = traducirErrorFirebase(error.code);
+            }
+        });
+
+        // Formulario de inicio de sesión
+        document.getElementById("formulario-login").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const correo = document.getElementById("login-correo").value;
+            const clave = document.getElementById("login-clave").value;
+            const errorLogin = document.getElementById("error-login");
+            const exitoLogin = document.getElementById("exito-login");
+            const botonLogin = document.getElementById("boton-login");
+            errorLogin.textContent = "";
+            exitoLogin.textContent = "";
+            alternarCargaBoton(botonLogin, true);
+
+            try {
+                await auth.signInWithEmailAndPassword(correo, clave);
+                document.getElementById("formulario-login").reset();
+                cerrarModalPerfil();
+            } catch (error) {
+                errorLogin.textContent = traducirErrorFirebase(error.code);
+            } finally {
+                alternarCargaBoton(botonLogin, false);
+            }
+        });
+
+        // Formulario de creación de cuenta
+        document.getElementById("formulario-registro").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById("registro-nombre").value;
+            const correo = document.getElementById("registro-correo").value;
+            const clave = document.getElementById("registro-clave").value;
+            const errorRegistro = document.getElementById("error-registro");
+            const botonRegistro = document.getElementById("boton-registro");
+            errorRegistro.textContent = "";
+            alternarCargaBoton(botonRegistro, true);
+
+            try {
+                const credencial = await auth.createUserWithEmailAndPassword(correo, clave);
+                await credencial.user.updateProfile({ displayName: nombre });
+
+                // Guardamos también una copia en Firestore por si se necesita más adelante
+                await db.collection("usuarios").doc(credencial.user.uid).set({
+                    nombre: nombre,
+                    correo: correo,
+                    fecha: new Date()
+                });
+
+                // El listener onAuthStateChanged ya se disparó al crear la cuenta,
+                // ANTES de que termináramos de guardar el nombre (updateProfile es
+                // asíncrono), así que la pantalla se había quedado con el nombre
+                // vacío. Lo actualizamos a mano para que se vea de inmediato.
+                document.getElementById("avatar-usuario").textContent = iniciales(nombre);
+                document.getElementById("nombre-usuario-perfil").textContent = nombre || "amigo/a";
+                document.getElementById("correo-usuario-perfil").textContent = correo;
+                document.getElementById("editar-nombre").value = nombre;
+
+                document.getElementById("formulario-registro").reset();
+                evaluarFuerzaClave("");
+                cerrarModalPerfil();
+            } catch (error) {
+                errorRegistro.textContent = traducirErrorFirebase(error.code);
+            } finally {
+                alternarCargaBoton(botonRegistro, false);
+            }
+        });
+
+        // Formulario para que el usuario edite su nombre, correo y teléfono
+        document.getElementById("formulario-editar-perfil").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const usuario = auth.currentUser;
+            if (!usuario) return;
+
+            const nuevoNombre = document.getElementById("editar-nombre").value.trim();
+            const nuevoCorreo = document.getElementById("editar-correo").value.trim();
+            const nuevoTelefono = document.getElementById("editar-telefono").value.trim();
+            const errorEditar = document.getElementById("error-editar-perfil");
+            const exitoEditar = document.getElementById("exito-editar-perfil");
+            const botonEditar = document.getElementById("boton-editar-perfil");
+            errorEditar.textContent = "";
+            exitoEditar.textContent = "";
+            alternarCargaBoton(botonEditar, true);
+
+            try {
+                // Nombre
+                if (nuevoNombre !== usuario.displayName) {
+                    await usuario.updateProfile({ displayName: nuevoNombre });
+                }
+
+                // Correo (Firebase pide que la sesión sea "reciente" para este cambio;
+                // si da error de reautenticación se lo explicamos al usuario)
+                if (nuevoCorreo !== usuario.email) {
+                    await usuario.updateEmail(nuevoCorreo);
+                }
+
+                // Teléfono y respaldo de nombre/correo en Firestore
+                await db.collection("usuarios").doc(usuario.uid).set({
+                    nombre: nuevoNombre,
+                    correo: nuevoCorreo,
+                    telefono: nuevoTelefono
+                }, { merge: true });
+
+                // Actualizamos lo que se ve en pantalla sin esperar a que Firebase recargue
+                document.getElementById("avatar-usuario").textContent = iniciales(nuevoNombre);
+                document.getElementById("nombre-usuario-perfil").textContent = nuevoNombre || "amigo/a";
+                document.getElementById("correo-usuario-perfil").textContent = nuevoCorreo;
+
+                exitoEditar.textContent = "¡Tus datos se guardaron correctamente!";
+            } catch (error) {
+                console.error("Error al guardar los cambios de perfil: ", error);
+                if (error.code === "auth/requires-recent-login") {
+                    errorEditar.textContent = "Por seguridad, cierra sesión y vuelve a ingresar antes de cambiar tu correo.";
+                } else if (error.code === "permission-denied") {
+                    errorEditar.textContent = "No se pudieron guardar los cambios: no tienes permiso para escribir en la base de datos (revisa las reglas de Firestore de la colección \"usuarios\").";
+                } else if (error.code) {
+                    errorEditar.textContent = traducirErrorFirebase(error.code);
+                } else {
+                    errorEditar.textContent = error.message || "No pudimos guardar los cambios. Intenta de nuevo.";
+                }
+            } finally {
+                alternarCargaBoton(botonEditar, false);
+            }
+        });
+
+        formularioContacto.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const nombreContacto = document.getElementById("nombre").value;
+            const correoContacto = document.getElementById("correo").value;
+            const telefonoContacto = document.getElementById("telefono").value;
+            const mensajeContacto = document.getElementById("mensaje").value;
+
+            try {
+                // 1. Guardar una copia en Firebase (respaldo/historial)
+                await db.collection("contactos").add({
+                    nombre: nombreContacto,
+                    correo: correoContacto,
+                    telefono: telefonoContacto,
+                    mensaje: mensajeContacto,
+                    fecha: new Date()
+                });
+
+                // 2. Enviar también a Formspree (para el aviso automático por correo)
+                await fetch(formularioContacto.action, {
+                    method: "POST",
+                    body: new FormData(formularioContacto),
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                mostrarAviso("¡Gracias! Tu mensaje fue enviado con éxito. Te contactaremos pronto.", "exito");
+                formularioContacto.reset();
+
+            } catch (error) {
+                console.error("Error al enviar el formulario de contacto: ", error);
+                mostrarAviso("Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo.", "error");
+            }
+        });
+
+        // Solo mostramos los testimonios que ya fueron aprobados por el administrador.
+        // Guardamos el último snapshot para poder re-dibujar la lista cuando cambia
+        // el estado de sesión (ej: al iniciar sesión como admin aparece la "X").
+        window._ultimoSnapshotTestimonios = null;
+
+        window.renderizarTestimoniosPublicos = function () {
+            const snapshot = window._ultimoSnapshotTestimonios;
+            if (!snapshot) return;
+
+            // Se calcula directamente desde auth.currentUser (en vez de depender
+            // de una bandera guardada aparte) para evitar que quede desincronizada
+            // si esta función se llama antes de que la sesión termine de resolverse.
+            const esAdminAhora = esAdmin(auth.currentUser);
+
+            const tarjetasDinamicas = document.querySelectorAll(".tarjeta-dinamica");
+            tarjetasDinamicas.forEach(tarjeta => tarjeta.remove());
+
+            snapshot.forEach((doc) => {
+                const datos = doc.data();
+
+                let estrellasIcono = "⭐⭐⭐⭐⭐";
+                if (datos.estrellas === "4 Estrellas") estrellasIcono = "⭐⭐⭐⭐";
+                if (datos.estrellas === "3 Estrellas") estrellasIcono = "⭐⭐⭐";
+
+                const nuevaTarjeta = document.createElement("div");
+                nuevaTarjeta.className = "tarjeta-testimonio tarjeta-dinamica";
+                nuevaTarjeta.innerHTML = `
+                    ${esAdminAhora ? `<button class="boton-borrar-testimonio-publico" title="Eliminar esta opinión" onclick="eliminarTestimonioPublicoAdmin('${doc.id}')">✕</button>` : ""}
+                    <div class="estrellas">${estrellasIcono}</div>
+                    <p class="comentario">"${datos.comentario}"</p>
+                    <h4 class="cliente">- ${datos.nombre}</h4>
+                `;
+                contenedor.appendChild(nuevaTarjeta);
+            });
+        }
+
+        db.collection("testimonios")
+            .where("aprobado", "==", true)
+            .orderBy("fecha", "desc")
+            .onSnapshot((snapshot) => {
+                window._ultimoSnapshotTestimonios = snapshot;
+                renderizarTestimoniosPublicos();
+            });
+
+        formulario.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const captchaRespuesta = grecaptcha.getResponse();
+
+            if (captchaRespuesta.length === 0) {
+                mostrarAviso("Por favor, marca la casilla 'No soy un robot' antes de enviar tu opinión.", "advertencia");
+                return;
+            }
+
+            const nombreInput = document.getElementById("nombre-testimonio").value;
+            const puntuacionInput = document.getElementById("puntuacion").value;
+            const comentarioInput = document.getElementById("mensaje-testimonio").value;
+
+            db.collection("testimonios").add({
+                nombre: nombreInput,
+                estrellas: puntuacionInput,
+                comentario: comentarioInput,
+                aprobado: false,
+                fecha: new Date()
+            })
+            .then(() => {
+                formulario.reset();
+                grecaptcha.reset();
+                cerrarModal();
+                mostrarAviso("¡Gracias por tu opinión! Chrisnut te lo agradece", "exito");
+            })
+            .catch((error) => {
+                console.error("Error al guardar testimonio: ", error);
+                mostrarAviso("Hubo un problema al enviar tu comentario. Inténtalo de nuevo.", "error");
+            });
+        });
+    });
+
+    // Oculta la pantalla de carga cuando todo (incluidas las imágenes) ya cargó.
+    // El pequeño "setTimeout" evita que el loader parpadee si la carga es instantánea.
+    window.addEventListener("load", () => {
+        const pantallaCarga = document.getElementById("pantalla-carga");
+        setTimeout(() => {
+            pantallaCarga.classList.add("oculto");
+        }, 300);
+    });
+
+    // Si por algún motivo "load" tarda demasiado (ej. una imagen rota),
+    // ocultamos el loader de todas formas a los 6 segundos.
+    setTimeout(() => {
+        document.getElementById("pantalla-carga").classList.add("oculto");
+    }, 6000);
+
+    window.onclick = function(event) {
+        const modalTestimonio = document.getElementById('modal-testimonio');
+        const modalNuevoProducto = document.getElementById('modal-nuevo-producto');
+        const modalCarrito = document.getElementById('modal-carrito');
+        const modalPerfil = document.getElementById('modal-perfil');
+        const modalFavoritos = document.getElementById('modal-favoritos');
+        const modalEstadoPedido = document.getElementById('modal-estado-pedido');
+        const modalAviso = document.getElementById('modal-aviso');
+        const modalConfirmacion = document.getElementById('modal-confirmacion');
+        if (event.target == modalTestimonio) {
+            modalTestimonio.style.display = 'none';
+        }
+        if (event.target == modalNuevoProducto) {
+            cerrarModalNuevoProducto();
+        }
+        if (event.target == modalCarrito) {
+            modalCarrito.style.display = 'none';
+        }
+        if (event.target == modalPerfil) {
+            modalPerfil.style.display = 'none';
+        }
+        if (event.target == modalFavoritos) {
+            modalFavoritos.style.display = 'none';
+        }
+        if (event.target == modalEstadoPedido) {
+            modalEstadoPedido.style.display = 'none';
+        }
+        if (event.target == modalAviso) {
+            cerrarModalAviso();
+        }
+        if (event.target == modalConfirmacion) {
+            responderConfirmacion(false);
+        }
+    }
+    </script>
+</body>
+</html>

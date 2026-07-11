@@ -505,6 +505,45 @@
 
                 <hr class="separador-perfil">
 
+                <div class="seccion-cambiar-clave">
+                    <h3>Cambiar contraseña</h3>
+                    <form id="formulario-cambiar-clave" class="formulario-modal">
+                        <div class="grupo-modal">
+                            <label for="clave-actual">Contraseña actual:</label>
+                            <div class="input-clave-contenedor">
+                                <input type="password" id="clave-actual" placeholder="Tu contraseña actual" required autocomplete="current-password">
+                                <button type="button" class="boton-ver-clave" onclick="alternarClave('clave-actual', this)">👁️</button>
+                            </div>
+                        </div>
+                        <div class="grupo-modal">
+                            <label for="clave-nueva">Contraseña nueva:</label>
+                            <div class="input-clave-contenedor">
+                                <input type="password" id="clave-nueva" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
+                                <button type="button" class="boton-ver-clave" onclick="alternarClave('clave-nueva', this)">👁️</button>
+                            </div>
+                            <div id="medidor-clave-nueva" class="medidor-clave">
+                                <div id="barra-medidor-clave-nueva" class="barra-medidor-clave"></div>
+                            </div>
+                            <span id="texto-medidor-clave-nueva" class="texto-medidor-clave"></span>
+                        </div>
+                        <div class="grupo-modal">
+                            <label for="clave-nueva-confirmar">Confirmar contraseña nueva:</label>
+                            <div class="input-clave-contenedor">
+                                <input type="password" id="clave-nueva-confirmar" placeholder="Repite tu contraseña nueva" required minlength="6" autocomplete="new-password">
+                                <button type="button" class="boton-ver-clave" onclick="alternarClave('clave-nueva-confirmar', this)">👁️</button>
+                            </div>
+                        </div>
+                        <p id="error-cambiar-clave" class="error-formulario"></p>
+                        <p id="exito-cambiar-clave" class="exito-formulario"></p>
+                        <button type="submit" id="boton-cambiar-clave" class="boton-enviar-modal">
+                            <span class="texto-boton">Cambiar contraseña</span>
+                            <span class="spinner-boton"></span>
+                        </button>
+                    </form>
+                </div>
+
+                <hr class="separador-perfil">
+
                 <div class="seccion-pedidos-perfil">
                     <div class="encabezado-historial-pedidos">
                         <h3>Tu historial de pedidos</h3>
@@ -754,6 +793,15 @@
         document.getElementById("error-login").textContent = "";
         document.getElementById("error-registro").textContent = "";
         document.getElementById("exito-login").textContent = "";
+        // Por seguridad, no dejamos contraseñas escritas en el formulario
+        // de "Cambiar contraseña" cuando se cierra el modal.
+        const formCambiarClave = document.getElementById("formulario-cambiar-clave");
+        if (formCambiarClave) {
+            formCambiarClave.reset();
+            document.getElementById("error-cambiar-clave").textContent = "";
+            document.getElementById("exito-cambiar-clave").textContent = "";
+            evaluarFuerzaClave("", "barra-medidor-clave-nueva", "texto-medidor-clave-nueva");
+        }
         if (window.location.hash === "#mi-cuenta") {
             history.pushState(null, "", window.location.pathname + window.location.search);
         }
@@ -821,10 +869,11 @@
         boton.classList.toggle("boton-cargando", cargando);
     }
 
-    // Medidor visual de qué tan fuerte es la contraseña al crear la cuenta
-    function evaluarFuerzaClave(clave) {
-        const barra = document.getElementById("barra-medidor-clave");
-        const texto = document.getElementById("texto-medidor-clave");
+    // Medidor visual de qué tan fuerte es la contraseña (se usa al crear la
+    // cuenta y también al cambiar la contraseña desde "Mi Perfil")
+    function evaluarFuerzaClave(clave, idBarra = "barra-medidor-clave", idTexto = "texto-medidor-clave") {
+        const barra = document.getElementById(idBarra);
+        const texto = document.getElementById(idTexto);
 
         if (!clave) {
             barra.style.width = "0%";
@@ -3330,6 +3379,9 @@
         document.getElementById("registro-clave").addEventListener("input", (e) => {
             evaluarFuerzaClave(e.target.value);
         });
+        document.getElementById("clave-nueva").addEventListener("input", (e) => {
+            evaluarFuerzaClave(e.target.value, "barra-medidor-clave-nueva", "texto-medidor-clave-nueva");
+        });
 
         // Recuperar contraseña
         document.getElementById("enlace-olvide-clave").addEventListener("click", async (e) => {
@@ -3471,6 +3523,64 @@
                 }
             } finally {
                 alternarCargaBoton(botonEditar, false);
+            }
+        });
+
+        // Formulario para que el usuario cambie su contraseña desde "Mi Perfil".
+        // Firebase exige una sesión "reciente" para esto, así que primero
+        // reautenticamos con la contraseña actual antes de guardar la nueva.
+        document.getElementById("formulario-cambiar-clave").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const usuario = auth.currentUser;
+            if (!usuario) return;
+
+            const claveActual = document.getElementById("clave-actual").value;
+            const claveNueva = document.getElementById("clave-nueva").value;
+            const claveNuevaConfirmar = document.getElementById("clave-nueva-confirmar").value;
+            const errorClave = document.getElementById("error-cambiar-clave");
+            const exitoClave = document.getElementById("exito-cambiar-clave");
+            const botonClave = document.getElementById("boton-cambiar-clave");
+            errorClave.textContent = "";
+            exitoClave.textContent = "";
+
+            if (claveNueva !== claveNuevaConfirmar) {
+                errorClave.textContent = "Las contraseñas nuevas no coinciden.";
+                return;
+            }
+            if (claveNueva.length < 6) {
+                errorClave.textContent = "La nueva contraseña debe tener al menos 6 caracteres.";
+                return;
+            }
+            if (claveNueva === claveActual) {
+                errorClave.textContent = "La contraseña nueva debe ser distinta a la actual.";
+                return;
+            }
+
+            alternarCargaBoton(botonClave, true);
+
+            try {
+                const credencial = firebase.auth.EmailAuthProvider.credential(usuario.email, claveActual);
+                await usuario.reauthenticateWithCredential(credencial);
+                await usuario.updatePassword(claveNueva);
+
+                exitoClave.textContent = "¡Tu contraseña se cambió correctamente!";
+                document.getElementById("formulario-cambiar-clave").reset();
+                evaluarFuerzaClave("", "barra-medidor-clave-nueva", "texto-medidor-clave-nueva");
+            } catch (error) {
+                console.error("Error al cambiar la contraseña: ", error);
+                if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+                    errorClave.textContent = "Tu contraseña actual no es correcta.";
+                } else if (error.code === "auth/too-many-requests") {
+                    errorClave.textContent = "Demasiados intentos. Intenta más tarde.";
+                } else if (error.code === "auth/requires-recent-login") {
+                    errorClave.textContent = "Por seguridad, cierra sesión y vuelve a ingresar antes de cambiar tu contraseña.";
+                } else if (error.code) {
+                    errorClave.textContent = traducirErrorFirebase(error.code);
+                } else {
+                    errorClave.textContent = error.message || "No pudimos cambiar tu contraseña. Intenta de nuevo.";
+                }
+            } finally {
+                alternarCargaBoton(botonClave, false);
             }
         });
 

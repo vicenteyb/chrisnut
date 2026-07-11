@@ -740,6 +740,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <script>
     const firebaseConfig = {
@@ -784,11 +785,56 @@
         "vicente.s.valencia1@gmail.com",
         "christiansot20@gmail.com",
         "emaeichin1980@gmail.com",
-        "chrusnutcl@gmail.com"
+        "chrisnutcl@gmail.com"
     ];
 
     function esAdmin(usuario) {
         return !!usuario && CORREOS_ADMIN.includes((usuario.email || "").toLowerCase());
+    }
+
+    // ==========================================
+    // NOTIFICACIONES POR CORREO (EmailJS)
+    // ==========================================
+    // Envía correos de confirmación al cliente cuando edita su perfil o
+    // hace un pedido. No requiere backend: usa el servicio EmailJS con las
+    // plantillas configuradas en https://dashboard.emailjs.com
+    const EMAILJS_SERVICE_ID = "service_cth2waf";
+    const EMAILJS_TEMPLATE_PERFIL = "template_egns4ig";
+    const EMAILJS_TEMPLATE_PEDIDO = "template_8v6bmkw";
+    const EMAILJS_PUBLIC_KEY = "Qm8pxveCoxS27xU9v";
+
+    if (window.emailjs) {
+        emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    }
+
+    // Envía el correo de "tus datos se actualizaron" al cliente.
+    function enviarCorreoPerfilActualizado(nombre, correo, telefono) {
+        if (!window.emailjs || !correo) return;
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_PERFIL, {
+            to_email: correo,
+            to_name: nombre || "cliente",
+            nombre: nombre || "-",
+            telefono: telefono || "-"
+        }).catch((error) => {
+            console.error("No se pudo enviar el correo de perfil actualizado: ", error);
+        });
+    }
+
+    // Envía el correo de "confirmamos tu pedido" al cliente.
+    function enviarCorreoConfirmacionPedido(correo, nombre, itemsPedido, total, estado) {
+        if (!window.emailjs || !correo) return;
+        const detalle = itemsPedido
+            .map((item) => `${item.cantidad} x ${item.nombre} - ${formatearPrecio(item.precio * item.cantidad)}`)
+            .join("\n");
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_PEDIDO, {
+            to_email: correo,
+            to_name: nombre || "cliente",
+            detalle_pedido: detalle,
+            total: formatearPrecio(total),
+            estado: estado || "pendiente"
+        }).catch((error) => {
+            console.error("No se pudo enviar el correo de confirmación de pedido: ", error);
+        });
     }
 
     // Bandera global: si el usuario logueado es admin, se muestra la "X" para
@@ -1662,6 +1708,13 @@
         const itemsPedidoEnviado = carrito.map(item => ({ ...item }));
         const idPedidoRegistrado = await registrarPedidoFirestore(itemsPedidoEnviado, totalFinal, telefonoCliente, descuentoInfo);
 
+        // Si el cliente tiene sesión iniciada (tenemos su correo), le mandamos
+        // un correo de confirmación de su pedido.
+        const usuarioActual = auth.currentUser;
+        if (usuarioActual && usuarioActual.email) {
+            enviarCorreoConfirmacionPedido(usuarioActual.email, usuarioActual.displayName, itemsPedidoEnviado, totalFinal, "pendiente");
+        }
+
         const mensajeCodificado = encodeURIComponent(lineas);
         const urlWhatsapp = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP_CHRISNUT}&text=${mensajeCodificado}`;
         window.open(urlWhatsapp, "_blank");
@@ -2176,7 +2229,20 @@
     }
 
     function cambiarEstadoPedidoAdmin(idPedido, nuevoEstado) {
-        db.collection("pedidos").doc(idPedido).update({ estado: nuevoEstado })
+        const refPedido = db.collection("pedidos").doc(idPedido);
+        refPedido.update({ estado: nuevoEstado })
+            .then(() => {
+                // Le avisamos al cliente por correo que su pedido cambió de estado
+                // (solo si dejó su correo, o sea si tenía sesión iniciada al pedir).
+                return refPedido.get();
+            })
+            .then((doc) => {
+                if (!doc.exists) return;
+                const datos = doc.data();
+                if (datos.correoCliente) {
+                    enviarCorreoConfirmacionPedido(datos.correoCliente, datos.nombreCliente, datos.items || [], datos.total || 0, nuevoEstado);
+                }
+            })
             .catch((error) => {
                 console.error("Error al cambiar el estado del pedido: ", error);
                 mostrarAviso("No se pudo cambiar el estado del pedido. Intenta de nuevo.", "error");
@@ -3544,6 +3610,7 @@
                 document.getElementById("correo-usuario-perfil").textContent = nuevoCorreo;
 
                 exitoEditar.textContent = "¡Tus datos se guardaron correctamente!";
+                enviarCorreoPerfilActualizado(nuevoNombre, nuevoCorreo, nuevoTelefono);
             } catch (error) {
                 console.error("Error al guardar los cambios de perfil: ", error);
                 if (error.code === "auth/requires-recent-login") {

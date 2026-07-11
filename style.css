@@ -3152,6 +3152,10 @@ html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(
     font-family: inherit;
 }
 
+.input-precio-admin {
+    width: 90px;
+}
+
 /* ==========================================
    ETIQUETAS INTERNAS DE PRODUCTOS (solo admin)
    Un producto puede tener varias a la vez (ej: dulce Y salado). Los

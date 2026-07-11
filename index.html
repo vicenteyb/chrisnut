@@ -2507,6 +2507,7 @@
     let etiquetasPersonalizadas = []; // se llena desde la colección "etiquetasProductos"
     let cancelarSuscripcionEtiquetasAdmin = null;
     let filaEtiquetasAbierta = null; // nombre del producto cuyo panel de etiquetas está abierto
+    let filaPrecioEditando = null; // nombre del producto cuyo precio se está editando
 
     function obtenerEtiquetasDisponibles() {
         return [...ETIQUETAS_BASE, ...etiquetasPersonalizadas];
@@ -2936,11 +2937,23 @@
                 </div>
             ` : "";
 
+            const editandoPrecio = filaPrecioEditando === producto.nombre;
+            const valorPrecioHtml = editandoPrecio
+                ? `
+                    <input type="number" id="input-precio-${idSeguro}" class="input-stock-admin input-precio-admin" min="1" value="${producto.precio}">
+                    <button type="button" onclick="guardarPrecioProducto('${nombreEscapado}', '${idSeguro}')">✅</button>
+                    <button type="button" onclick="alternarEdicionPrecioProducto('${nombreEscapado}')">✕</button>
+                `
+                : `
+                    <span class="valor-cupon-admin">${formatearPrecio(producto.precio)}</span>
+                    <button type="button" title="Editar precio" onclick="alternarEdicionPrecioProducto('${nombreEscapado}')">✏️</button>
+                `;
+
             html += `
                 <div class="fila-producto-admin">
                     <div class="fila-cupon-admin">
                         <span class="codigo-cupon-admin">${producto.nombre}</span>
-                        <span class="valor-cupon-admin">${formatearPrecio(producto.precio)}</span>
+                        ${valorPrecioHtml}
                         <button type="button" onclick="eliminarProducto('${nombreEscapado}', '${imagenEscapada}')">🗑️</button>
                     </div>
                     <div class="fila-producto-admin-etiquetas">
@@ -2960,6 +2973,36 @@
     function alternarPanelEtiquetas(nombreProducto) {
         filaEtiquetasAbierta = filaEtiquetasAbierta === nombreProducto ? null : nombreProducto;
         renderizarListaProductosAdmin();
+    }
+
+    // Muestra u oculta el campo para editar el precio de un producto
+    // (uno a la vez, igual que el panel de etiquetas).
+    function alternarEdicionPrecioProducto(nombreProducto) {
+        filaPrecioEditando = filaPrecioEditando === nombreProducto ? null : nombreProducto;
+        renderizarListaProductosAdmin();
+    }
+
+    // Guarda el nuevo precio del producto en Firestore. Este precio se usa
+    // tanto en la vitrina como en el carrito y los pedidos nuevos; los
+    // pedidos ya realizados no se ven afectados, porque guardan su propio
+    // precio congelado al momento de la compra.
+    async function guardarPrecioProducto(nombreProducto, idSeguro) {
+        const input = document.getElementById(`input-precio-${idSeguro}`);
+        const nuevoPrecio = parseInt(input.value, 10);
+
+        if (!nuevoPrecio || nuevoPrecio <= 0) {
+            mostrarAviso("Ingresa un precio válido (mayor a 0).", "advertencia");
+            return;
+        }
+
+        try {
+            await db.collection("productos").doc(nombreProducto).update({ precio: nuevoPrecio });
+            filaPrecioEditando = null;
+            mostrarAviso("Precio actualizado. ✅", "exito");
+        } catch (error) {
+            console.error("Error al actualizar el precio del producto: ", error);
+            mostrarAviso("No se pudo actualizar el precio. Intenta de nuevo.", "error");
+        }
     }
 
     // Agrega o quita al instante una etiqueta de un producto. Es un dato de

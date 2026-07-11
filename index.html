@@ -140,6 +140,25 @@
                     </div>
 
                     <div class="grupo-filtro">
+                        <button type="button" class="cabecera-grupo-filtro" data-grupo="tipo" aria-expanded="true">
+                            <span>Tipo</span>
+                            <span class="icono-colapsar-filtro">−</span>
+                        </button>
+                        <div class="contenido-grupo-filtro" id="contenido-filtro-tipo">
+                            <label class="opcion-filtro">
+                                <input type="checkbox" id="filtro-dulce" checked>
+                                Dulce
+                            </label>
+                            <label class="opcion-filtro">
+                                <input type="checkbox" id="filtro-salado" checked>
+                                Salado
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr class="separador-grupo-filtro">
+
+                    <div class="grupo-filtro">
                         <button type="button" class="cabecera-grupo-filtro" data-grupo="precio" aria-expanded="true">
                             <span>Precio</span>
                             <span class="icono-colapsar-filtro">−</span>
@@ -344,6 +363,13 @@
                 <div class="grupo-modal">
                     <label for="nuevo-producto-precio">Precio (CLP):</label>
                     <input type="number" id="nuevo-producto-precio" placeholder="Ej: 2500" min="1" required>
+                </div>
+                <div class="grupo-modal">
+                    <label for="nuevo-producto-categoria">Tipo:</label>
+                    <select id="nuevo-producto-categoria" required>
+                        <option value="dulce">Dulce</option>
+                        <option value="salado">Salado</option>
+                    </select>
                 </div>
                 <div class="grupo-modal">
                     <label for="nuevo-producto-imagen">Foto del producto:</label>
@@ -2641,6 +2667,7 @@
         const nombre = document.getElementById("nuevo-producto-nombre").value.trim();
         const descripcion = document.getElementById("nuevo-producto-descripcion").value.trim();
         const precio = parseInt(document.getElementById("nuevo-producto-precio").value, 10);
+        const categoria = document.getElementById("nuevo-producto-categoria").value;
         const archivoInput = document.getElementById("nuevo-producto-imagen");
         const archivo = archivoInput.files[0];
         const estado = document.getElementById("estado-nuevo-producto");
@@ -2665,6 +2692,7 @@
                 nombre,
                 descripcion,
                 precio,
+                categoria,
                 imagenURL: urlImagen,
                 creado: new Date()
             });

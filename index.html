@@ -673,6 +673,19 @@
         </div>
     </div>
 
+    <!-- Cartel de "gracias por tu compra": aparece justo después de enviar el
+         pedido por WhatsApp, con fondo difuminado, para confirmar que quedó
+         todo registrado (y que se envió un correo, si corresponde). -->
+    <div id="modal-gracias-pedido" class="modal-fondo modal-fondo-difuminado">
+        <div class="modal-contenido modal-gracias-pedido-contenido">
+            <span class="cerrar-modal" onclick="cerrarModalGraciasPedido()">&times;</span>
+            <div class="modal-gracias-pedido-insignia">✅</div>
+            <h3 class="modal-gracias-pedido-titulo">¡Gracias por tu compra!</h3>
+            <p id="modal-gracias-pedido-texto" class="modal-gracias-pedido-texto">Tu pedido quedó registrado.</p>
+            <button type="button" class="boton-enviar-modal" onclick="cerrarModalGraciasPedido()">Entendido</button>
+        </div>
+    </div>
+
     <!-- Anuncio de bienvenida: se muestra solo en la primera visita, invitando a crear una cuenta -->
     <div id="modal-bienvenida" class="modal-fondo">
         <div class="modal-contenido modal-bienvenida-contenido">
@@ -1734,6 +1747,26 @@
         }
     }
 
+    // Muestra el cartel de "gracias por tu compra" con fondo difuminado.
+    // El texto cambia según si el cliente tiene sesión iniciada (y por lo
+    // tanto le mandamos correo de confirmación) o hizo el pedido como invitado.
+    function mostrarModalGraciasPedido(seEnvioCorreo) {
+        const modal = document.getElementById("modal-gracias-pedido");
+        const texto = document.getElementById("modal-gracias-pedido-texto");
+        if (!modal || !texto) return;
+
+        texto.textContent = seEnvioCorreo
+            ? "Tu pedido quedó registrado y te enviamos un correo con los detalles de tu compra."
+            : "Tu pedido quedó registrado. Te avisaremos por WhatsApp sobre su estado.";
+
+        modal.style.display = "flex";
+    }
+
+    function cerrarModalGraciasPedido() {
+        const modal = document.getElementById("modal-gracias-pedido");
+        if (modal) modal.style.display = "none";
+    }
+
     async function enviarPedidoWhatsapp() {
         if (carrito.length === 0) {
             mostrarAviso("Tu carrito está vacío. Agrega algún producto antes de enviar tu pedido.", "advertencia");
@@ -1799,6 +1832,7 @@
         guardarCarritoLocal();
         guardarCarritoEnFirestore();
         cerrarModalCarrito();
+        mostrarModalGraciasPedido(!!(usuarioActual && usuarioActual.email));
 
         // Justo cuando el carrito flotante desaparece (carrito vacío), activamos
         // el logo flotante de "estado del pedido" para poder seguirlo en vivo.

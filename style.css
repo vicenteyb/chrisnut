@@ -1268,6 +1268,24 @@ main > section {
     margin: 0;
 }
 
+.pie-creador {
+    text-align: center;
+    color: var(--color-texto-suave-claro);
+    opacity: 0.55;
+    font-size: 0.78rem;
+    margin: 6px 0 0;
+}
+
+.pie-creador a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.pie-creador a:hover {
+    opacity: 0.85;
+}
+
 @media (max-width: 640px) {
     .pie-contenido {
         text-align: center;

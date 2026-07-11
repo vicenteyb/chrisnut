@@ -78,9 +78,12 @@
     </div>
 
     <header id="inicio" class="header-principal">
-        <a href="https://www.instagram.com/chrisnutcl/" target="_blank" rel="noopener">
-            <img src="logo.png" alt="Logo Chrisnut - Panadería y dulzura" class="logo">
-        </a>
+        <div class="contenedor-marca-header">
+            <a href="https://www.instagram.com/chrisnutcl/" target="_blank" rel="noopener">
+                <img src="logo.png" alt="Logo Chrisnut - Panadería y dulzura" class="logo">
+            </a>
+            <p class="eslogan">Horneado a diario en Llay-Llay, Chile</p>
+        </div>
     </header>
 
     <nav class="menu-principal">
@@ -365,11 +368,14 @@
                     <input type="number" id="nuevo-producto-precio" placeholder="Ej: 2500" min="1" required>
                 </div>
                 <div class="grupo-modal">
-                    <label for="nuevo-producto-categoria">Tipo:</label>
-                    <select id="nuevo-producto-categoria" required>
-                        <option value="dulce">Dulce</option>
-                        <option value="salado">Salado</option>
-                    </select>
+                    <label>Categorías internas (solo las ven los admins):</label>
+                    <div id="checklist-etiquetas-nuevo-producto" class="checklist-etiquetas-modal">
+                        <!-- Se llena dinámicamente con las etiquetas disponibles -->
+                    </div>
+                    <div class="fila-nueva-etiqueta-admin">
+                        <input type="text" id="input-nueva-etiqueta-modal" placeholder="Nueva etiqueta (ej: Vegano, Sin gluten)">
+                        <button type="button" onclick="crearEtiquetaDesdeModal()">Agregar</button>
+                    </div>
                 </div>
                 <div class="grupo-modal">
                     <label for="nuevo-producto-imagen">Foto del producto:</label>
@@ -1074,6 +1080,7 @@
                 suscribirPedidosAdmin();
                 suscribirCuponesAdmin();
                 suscribirStockAdmin();
+                suscribirEtiquetasProductos();
                 renderizarListaProductosAdmin();
                 cargarEstadisticasMes();
             } else {
@@ -1085,6 +1092,7 @@
                 desuscribirPedidosAdmin();
                 desuscribirCuponesAdmin();
                 desuscribirStockAdmin();
+                desuscribirEtiquetasProductos();
             }
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
         } else {
@@ -1100,6 +1108,7 @@
             desuscribirPedidosAdmin();
             desuscribirCuponesAdmin();
             desuscribirStockAdmin();
+            desuscribirEtiquetasProductos();
             if (typeof window.renderizarTestimoniosPublicos === "function") window.renderizarTestimoniosPublicos();
             textoPerfil.textContent = "Hola, Inicia sesión";
             opcionesInvitado.forEach(li => li.style.display = "block");
@@ -2359,6 +2368,88 @@
     // necesita (por ejemplo, para pintar el panel de stock del admin).
     let productosCache = [];
 
+    // ==========================================
+    // ETIQUETAS INTERNAS DE PRODUCTOS (solo admin)
+    // ==========================================
+    // "Dulce" y "Salado" siempre están disponibles. Además, cualquier admin
+    // puede crear etiquetas propias (ej: "Vegano", "Sin gluten", "Navidad"),
+    // que quedan guardadas en Firestore y disponibles para todos los admins,
+    // en todos los productos futuros. Un mismo producto puede tener varias
+    // etiquetas a la vez (por ejemplo, un pan que es dulce y salado).
+    const ETIQUETAS_BASE = [
+        { id: "dulce", nombre: "🍰 Dulce" },
+        { id: "salado", nombre: "🥐 Salado" }
+    ];
+    let etiquetasPersonalizadas = []; // se llena desde la colección "etiquetasProductos"
+    let cancelarSuscripcionEtiquetasAdmin = null;
+    let filaEtiquetasAbierta = null; // nombre del producto cuyo panel de etiquetas está abierto
+
+    function obtenerEtiquetasDisponibles() {
+        return [...ETIQUETAS_BASE, ...etiquetasPersonalizadas];
+    }
+
+    // Genera un id de etiqueta a partir de su nombre (sin tildes ni
+    // espacios), igual que se hace con los nombres de producto para el stock.
+    function idEtiquetaSegura(nombre) {
+        return nombre
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-zA-Z0-9]/g, "-")
+            .toLowerCase();
+    }
+
+    // Devuelve las etiquetas de un producto. Contempla los productos
+    // creados antes de que existieran las etiquetas múltiples, que solo
+    // tienen el campo antiguo "categoria" (un solo valor).
+    function obtenerCategoriasProducto(producto) {
+        if (Array.isArray(producto.categorias)) return producto.categorias;
+        if (producto.categoria) return [producto.categoria];
+        return [];
+    }
+
+    function suscribirEtiquetasProductos() {
+        if (cancelarSuscripcionEtiquetasAdmin) return;
+        cancelarSuscripcionEtiquetasAdmin = db.collection("etiquetasProductos")
+            .orderBy("creado")
+            .onSnapshot((snapshot) => {
+                etiquetasPersonalizadas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderizarListaProductosAdmin();
+                renderizarChecklistEtiquetasModal();
+            }, (error) => {
+                console.error("Error al cargar las etiquetas de productos: ", error);
+            });
+    }
+
+    function desuscribirEtiquetasProductos() {
+        if (cancelarSuscripcionEtiquetasAdmin) {
+            cancelarSuscripcionEtiquetasAdmin();
+            cancelarSuscripcionEtiquetasAdmin = null;
+        }
+    }
+
+    // Crea (si no existe todavía) una etiqueta nueva en Firestore para que
+    // quede disponible para todos los productos y admins de ahora en más.
+    // Actualiza también el estado local al instante, sin esperar a que
+    // vuelva el snapshot, para que se sienta inmediato.
+    async function crearEtiquetaSiNoExiste(nombreEtiqueta) {
+        const etiquetaId = idEtiquetaSegura(nombreEtiqueta);
+        if (!etiquetaId || obtenerEtiquetasDisponibles().some(e => e.id === etiquetaId)) {
+            return etiquetaId;
+        }
+
+        etiquetasPersonalizadas.push({ id: etiquetaId, nombre: nombreEtiqueta });
+        try {
+            await db.collection("etiquetasProductos").doc(etiquetaId).set({
+                nombre: nombreEtiqueta,
+                creado: new Date()
+            });
+        } catch (error) {
+            console.error("Error al crear la etiqueta: ", error);
+            mostrarAviso("No se pudo guardar la nueva etiqueta. Intenta de nuevo.", "error");
+        }
+        return etiquetaId;
+    }
+
     // Se llama una sola vez al cargar la página. Deja la vitrina escuchando
     // los cambios en la colección "productos" en tiempo real: si el admin
     // agrega o elimina un producto, todos los que tengan la página abierta
@@ -2608,7 +2699,39 @@
     }
 
     function abrirModalNuevoProducto() {
+        renderizarChecklistEtiquetasModal();
         document.getElementById("modal-nuevo-producto").style.display = "flex";
+    }
+
+    // Pinta las casillas de etiquetas disponibles dentro del modal de
+    // "Nuevo producto". Se llama al abrir el modal y también cada vez que
+    // se crea una etiqueta nueva, para que aparezca al instante.
+    function renderizarChecklistEtiquetasModal() {
+        const contenedor = document.getElementById("checklist-etiquetas-nuevo-producto");
+        if (!contenedor) return;
+
+        contenedor.innerHTML = obtenerEtiquetasDisponibles().map((etiqueta) => `
+            <label class="opcion-etiqueta-admin">
+                <input type="checkbox" value="${etiqueta.id}" class="checkbox-etiqueta-nuevo-producto">
+                ${etiqueta.nombre}
+            </label>
+        `).join("");
+    }
+
+    // Crea (si hace falta) una etiqueta nueva desde el modal de "Nuevo
+    // producto" y la deja tildada de una vez, lista para guardarse junto
+    // con el producto.
+    async function crearEtiquetaDesdeModal() {
+        const input = document.getElementById("input-nueva-etiqueta-modal");
+        const nombreEtiqueta = input.value.trim();
+        if (!nombreEtiqueta) return;
+
+        const etiquetaId = await crearEtiquetaSiNoExiste(nombreEtiqueta);
+        renderizarChecklistEtiquetasModal();
+        input.value = "";
+
+        const checkbox = document.querySelector(`.checkbox-etiqueta-nuevo-producto[value="${etiquetaId}"]`);
+        if (checkbox) checkbox.checked = true;
     }
 
     function cerrarModalNuevoProducto() {
@@ -2617,6 +2740,9 @@
     }
 
     // Lista de productos con botón de eliminar, dentro del panel admin.
+    // Cada producto muestra sus etiquetas internas (dulce/salado/otras) como
+    // pastillas, y un botón "+ etiqueta" que abre un panel para tildarlas
+    // o crear una nueva. Nada de esto se muestra en la vitrina pública.
     function renderizarListaProductosAdmin() {
         const contenedor = document.getElementById("lista-productos-admin");
         if (!contenedor) return;
@@ -2626,61 +2752,108 @@
             return;
         }
 
+        const claseParaEtiqueta = (etiquetaId) => {
+            if (etiquetaId === "dulce") return "etiqueta-pill-dulce";
+            if (etiquetaId === "salado") return "etiqueta-pill-salado";
+            return "etiqueta-pill-personalizada";
+        };
+
         let html = "";
         productosCache.forEach((producto) => {
             const nombreEscapado = producto.nombre.replace(/'/g, "\\'");
             const imagenEscapada = (producto.imagenURL || "").replace(/'/g, "\\'");
             const idSeguro = idStockSeguro(producto.nombre);
+            const categoriasActuales = obtenerCategoriasProducto(producto);
+            const panelAbierto = filaEtiquetasAbierta === producto.nombre;
 
-            // Categoría interna (dulce/salado): es un dato de uso solo
-            // administrativo, nunca se muestra al cliente. Los productos
-            // migrados antes de existir este campo no tienen "categoria"
-            // guardada todavía, por eso se contempla el caso "sin definir".
-            const categoriaActual = producto.categoria || "";
-            const claseCategoria = categoriaActual === "dulce"
-                ? "select-categoria-admin-dulce"
-                : categoriaActual === "salado"
-                    ? "select-categoria-admin-salado"
-                    : "select-categoria-admin-vacia";
+            const pillsHtml = categoriasActuales.length > 0
+                ? categoriasActuales.map((etiquetaId) => {
+                    const etiqueta = obtenerEtiquetasDisponibles().find(e => e.id === etiquetaId);
+                    const nombreEtiqueta = etiqueta ? etiqueta.nombre : etiquetaId;
+                    return `
+                        <span class="etiqueta-pill ${claseParaEtiqueta(etiquetaId)}">
+                            ${nombreEtiqueta}
+                            <button type="button" class="boton-quitar-etiqueta" title="Quitar etiqueta" onclick="alternarEtiquetaEnProducto('${nombreEscapado}', '${etiquetaId}')">✕</button>
+                        </span>
+                    `;
+                }).join("")
+                : '<span class="etiqueta-pill etiqueta-pill-vacia">Sin etiquetas</span>';
+
+            const panelHtml = panelAbierto ? `
+                <div class="panel-etiquetas-admin">
+                    ${obtenerEtiquetasDisponibles().map((etiqueta) => `
+                        <label class="opcion-etiqueta-admin">
+                            <input
+                                type="checkbox"
+                                ${categoriasActuales.includes(etiqueta.id) ? "checked" : ""}
+                                onchange="alternarEtiquetaEnProducto('${nombreEscapado}', '${etiqueta.id}')"
+                            >
+                            ${etiqueta.nombre}
+                        </label>
+                    `).join("")}
+                    <div class="fila-nueva-etiqueta-admin">
+                        <input type="text" id="input-nueva-etiqueta-${idSeguro}" placeholder="Nueva etiqueta (ej: Vegano)">
+                        <button type="button" onclick="crearYAsignarEtiqueta('${nombreEscapado}', '${idSeguro}')">Agregar</button>
+                    </div>
+                </div>
+            ` : "";
 
             html += `
-                <div class="fila-cupon-admin">
-                    <span class="codigo-cupon-admin">${producto.nombre}</span>
-                    <span class="valor-cupon-admin">${formatearPrecio(producto.precio)}</span>
-                    <select
-                        id="select-categoria-${idSeguro}"
-                        class="select-categoria-admin ${claseCategoria}"
-                        title="Categoría interna (solo la ven los admins)"
-                        onchange="cambiarCategoriaProductoAdmin('${nombreEscapado}', this)"
-                    >
-                        <option value="" ${categoriaActual === "" ? "selected" : ""} disabled>Sin definir</option>
-                        <option value="dulce" ${categoriaActual === "dulce" ? "selected" : ""}>🍰 Dulce</option>
-                        <option value="salado" ${categoriaActual === "salado" ? "selected" : ""}>🥐 Salado</option>
-                    </select>
-                    <button type="button" onclick="eliminarProducto('${nombreEscapado}', '${imagenEscapada}')">🗑️</button>
+                <div class="fila-producto-admin">
+                    <div class="fila-cupon-admin">
+                        <span class="codigo-cupon-admin">${producto.nombre}</span>
+                        <span class="valor-cupon-admin">${formatearPrecio(producto.precio)}</span>
+                        <button type="button" onclick="eliminarProducto('${nombreEscapado}', '${imagenEscapada}')">🗑️</button>
+                    </div>
+                    <div class="fila-producto-admin-etiquetas">
+                        ${pillsHtml}
+                        <button type="button" class="boton-editar-etiquetas" onclick="alternarPanelEtiquetas('${nombreEscapado}')">
+                            ${panelAbierto ? "Listo ✓" : "+ etiqueta"}
+                        </button>
+                    </div>
+                    ${panelHtml}
                 </div>
             `;
         });
         contenedor.innerHTML = html;
     }
 
-    // Guarda al instante la categoría interna (dulce/salado) elegida para un
-    // producto. Es un dato de organización interna: no aparece en la vitrina
-    // pública ni en ningún lugar visible para las personas que compran.
-    async function cambiarCategoriaProductoAdmin(nombre, elementoSelect) {
-        const nuevaCategoria = elementoSelect.value;
+    // Abre o cierra el panel de etiquetas de un producto (uno a la vez).
+    function alternarPanelEtiquetas(nombreProducto) {
+        filaEtiquetasAbierta = filaEtiquetasAbierta === nombreProducto ? null : nombreProducto;
+        renderizarListaProductosAdmin();
+    }
 
-        elementoSelect.classList.remove("select-categoria-admin-dulce", "select-categoria-admin-salado", "select-categoria-admin-vacia");
-        elementoSelect.classList.add(
-            nuevaCategoria === "dulce" ? "select-categoria-admin-dulce" : "select-categoria-admin-salado"
-        );
+    // Agrega o quita al instante una etiqueta de un producto. Es un dato de
+    // organización interna: no aparece en la vitrina pública ni en ningún
+    // lugar visible para las personas que compran.
+    async function alternarEtiquetaEnProducto(nombreProducto, etiquetaId) {
+        const producto = productosCache.find(p => p.nombre === nombreProducto);
+        if (!producto) return;
+
+        const actuales = obtenerCategoriasProducto(producto);
+        const nuevasCategorias = actuales.includes(etiquetaId)
+            ? actuales.filter(id => id !== etiquetaId)
+            : [...actuales, etiquetaId];
 
         try {
-            await db.collection("productos").doc(nombre).update({ categoria: nuevaCategoria });
+            await db.collection("productos").doc(nombreProducto).update({ categorias: nuevasCategorias });
         } catch (error) {
-            console.error("Error al actualizar la categoría interna del producto: ", error);
-            mostrarAviso("No se pudo actualizar la categoría. Intenta de nuevo.", "error");
+            console.error("Error al actualizar las etiquetas del producto: ", error);
+            mostrarAviso("No se pudo actualizar la etiqueta. Intenta de nuevo.", "error");
         }
+    }
+
+    // Crea una etiqueta nueva (si hace falta) y la asigna de inmediato al
+    // producto desde cuyo panel se escribió.
+    async function crearYAsignarEtiqueta(nombreProducto, idSeguro) {
+        const input = document.getElementById(`input-nueva-etiqueta-${idSeguro}`);
+        const nombreEtiqueta = input.value.trim();
+        if (!nombreEtiqueta) return;
+
+        const etiquetaId = await crearEtiquetaSiNoExiste(nombreEtiqueta);
+        input.value = "";
+        await alternarEtiquetaEnProducto(nombreProducto, etiquetaId);
     }
 
     async function eliminarProducto(nombre, imagenURL) {
@@ -2709,7 +2882,7 @@
         const nombre = document.getElementById("nuevo-producto-nombre").value.trim();
         const descripcion = document.getElementById("nuevo-producto-descripcion").value.trim();
         const precio = parseInt(document.getElementById("nuevo-producto-precio").value, 10);
-        const categoria = document.getElementById("nuevo-producto-categoria").value;
+        const categorias = Array.from(document.querySelectorAll(".checkbox-etiqueta-nuevo-producto:checked")).map(cb => cb.value);
         const archivoInput = document.getElementById("nuevo-producto-imagen");
         const archivo = archivoInput.files[0];
         const estado = document.getElementById("estado-nuevo-producto");
@@ -2734,7 +2907,7 @@
                 nombre,
                 descripcion,
                 precio,
-                categoria,
+                categorias,
                 imagenURL: urlImagen,
                 creado: new Date()
             });

@@ -134,26 +134,10 @@
 
             <div class="contenedor-vitrina-principal">
                 <aside id="panel-filtros-vitrina" class="panel-filtros-vitrina">
-                    <h3 class="titulo-panel-filtros">Filtros</h3>
-
-                    <div class="grupo-filtro">
-                        <button type="button" class="cabecera-grupo-filtro" data-grupo="disponibilidad" aria-expanded="true">
-                            <span>Disponibilidad</span>
-                            <span class="icono-colapsar-filtro">−</span>
-                        </button>
-                        <div class="contenido-grupo-filtro" id="contenido-filtro-disponibilidad">
-                            <label class="opcion-filtro">
-                                <input type="checkbox" id="filtro-en-stock" checked>
-                                En stock <span class="conteo-filtro" id="conteo-en-stock">(0)</span>
-                            </label>
-                            <label class="opcion-filtro">
-                                <input type="checkbox" id="filtro-agotado" checked>
-                                Agotado <span class="conteo-filtro" id="conteo-agotado">(0)</span>
-                            </label>
-                        </div>
+                    <div class="cabecera-panel-filtros">
+                        <h3 class="titulo-panel-filtros">Filtros</h3>
+                        <button type="button" id="boton-cerrar-filtros-vitrina" class="boton-cerrar-filtros-vitrina" aria-label="Cerrar filtros">✕</button>
                     </div>
-
-                    <hr class="separador-grupo-filtro">
 
                     <div class="grupo-filtro">
                         <button type="button" class="cabecera-grupo-filtro" data-grupo="precio" aria-expanded="true">
@@ -3313,10 +3297,17 @@
 
         const botonFiltrosVitrina = document.getElementById("boton-filtros-vitrina");
         const panelFiltrosVitrina = document.getElementById("panel-filtros-vitrina");
+        const botonCerrarFiltrosVitrina = document.getElementById("boton-cerrar-filtros-vitrina");
         if (botonFiltrosVitrina && panelFiltrosVitrina) {
             botonFiltrosVitrina.addEventListener("click", () => {
                 const abierto = panelFiltrosVitrina.classList.toggle("abierto");
                 botonFiltrosVitrina.setAttribute("aria-expanded", abierto ? "true" : "false");
+            });
+        }
+        if (botonCerrarFiltrosVitrina && panelFiltrosVitrina && botonFiltrosVitrina) {
+            botonCerrarFiltrosVitrina.addEventListener("click", () => {
+                panelFiltrosVitrina.classList.remove("abierto");
+                botonFiltrosVitrina.setAttribute("aria-expanded", "false");
             });
         }
 
@@ -3362,12 +3353,8 @@
         const botonLimpiarFiltrosVitrina = document.getElementById("boton-limpiar-filtros-vitrina");
         if (botonLimpiarFiltrosVitrina) {
             botonLimpiarFiltrosVitrina.addEventListener("click", () => {
-                vitrinaMostrarEnStock = true;
-                vitrinaMostrarAgotado = true;
                 vitrinaPrecioMin = null;
                 vitrinaPrecioMax = null;
-                filtroEnStock.checked = true;
-                filtroAgotado.checked = true;
                 filtroPrecioMin.value = "";
                 filtroPrecioMax.value = "";
                 renderizarVitrina();

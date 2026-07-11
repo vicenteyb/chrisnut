@@ -3052,6 +3052,31 @@ html[data-tema="oscuro"] .boton-secundario-modal:hover { background-color: rgba(
     border: 1px solid var(--color-borde-suave);
 }
 
+.panel-historial-pedidos-admin {
+    margin: 18px 0;
+    padding: 14px;
+    border-radius: 10px;
+    background-color: var(--color-fondo);
+    border: 1px solid var(--color-borde-suave);
+}
+
+.panel-historial-pedidos-admin .panel-estadisticas-encabezado h4 {
+    margin: 0;
+}
+
+/* Insignia de estado de solo lectura (no es un <select>, como el de
+   "Pedidos activos"), reutilizando los mismos colores por estado. */
+.insignia-estado-pedido {
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-weight: bold;
+    letter-spacing: 0.01em;
+}
+
+.insignia-estado-pedido::after {
+    content: none;
+}
+
 .panel-cupones h4 {
     margin: 0 0 10px;
 }

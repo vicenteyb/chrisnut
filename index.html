@@ -598,6 +598,17 @@
                         <p class="carrito-vacio">Cargando...</p>
                     </div>
 
+                    <div class="panel-historial-pedidos-admin">
+                        <div class="panel-estadisticas-encabezado">
+                            <h4>🗂️ Todos los pedidos</h4>
+                            <button type="button" class="boton-secundario-modal" id="boton-alternar-historial-pedidos-admin" aria-expanded="false" aria-controls="lista-historial-pedidos-admin">Ver historial completo</button>
+                        </div>
+                        <p class="panel-admin-subtitulo">Incluye pendientes, confirmados, entregados y cancelados. Eliminar un pedido también lo descuenta del contador de estadísticas del mes.</p>
+                        <div id="lista-historial-pedidos-admin" class="lista-admin-testimonios" style="display:none;">
+                            <p class="carrito-vacio">Cargando...</p>
+                        </div>
+                    </div>
+
                     <div class="panel-cupones">
                         <h4>🏷️ Códigos de descuento</h4>
                         <div class="grupo-nuevo-cupon">
@@ -823,10 +834,29 @@
     const EMAILJS_SERVICE_ID = "service_cth2waf";
     const EMAILJS_TEMPLATE_PERFIL = "template_egns4ig";
     const EMAILJS_TEMPLATE_PEDIDO = "template_8v6bmkw";
+    // TODO: reemplaza este ID por el de tu plantilla real una vez que la
+    // crees en https://dashboard.emailjs.com (botón "Create New Template").
+    // Puedes usar las mismas variables que las otras plantillas: {{to_email}},
+    // {{to_name}} y {{nombre}}. Mientras este ID sea el de ejemplo, el correo
+    // de bienvenida no se enviará (fallará en silencio, solo se ve en la
+    // consola del navegador).
+    const EMAILJS_TEMPLATE_BIENVENIDA = "template_bienvenida";
     const EMAILJS_PUBLIC_KEY = "Qm8pxveCoxS27xU9v";
 
     if (window.emailjs) {
         emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    }
+
+    // Envía el correo de "¡bienvenido/a a Chrisnut!" apenas alguien crea su cuenta.
+    function enviarCorreoBienvenida(nombre, correo) {
+        if (!window.emailjs || !correo) return;
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_BIENVENIDA, {
+            to_email: correo,
+            to_name: nombre || "amigo/a",
+            nombre: nombre || "amigo/a"
+        }).catch((error) => {
+            console.error("No se pudo enviar el correo de bienvenida: ", error);
+        });
     }
 
     // Envía el correo de "tus datos se actualizaron" al cliente.
@@ -1078,6 +1108,7 @@
                 if (contenidoModalPerfil) contenidoModalPerfil.classList.add("modal-ancho-admin");
                 suscribirTestimoniosPendientesAdmin();
                 suscribirPedidosAdmin();
+                suscribirHistorialPedidosAdmin();
                 suscribirCuponesAdmin();
                 suscribirStockAdmin();
                 suscribirEtiquetasProductos();
@@ -1090,6 +1121,7 @@
                 if (contenidoModalPerfil) contenidoModalPerfil.classList.remove("modal-ancho-admin");
                 desuscribirTestimoniosPendientesAdmin();
                 desuscribirPedidosAdmin();
+                desuscribirHistorialPedidosAdmin();
                 desuscribirCuponesAdmin();
                 desuscribirStockAdmin();
                 desuscribirEtiquetasProductos();
@@ -1106,6 +1138,7 @@
             if (contenidoModalPerfilSalida) contenidoModalPerfilSalida.classList.remove("modal-ancho-admin");
             desuscribirTestimoniosPendientesAdmin();
             desuscribirPedidosAdmin();
+            desuscribirHistorialPedidosAdmin();
             desuscribirCuponesAdmin();
             desuscribirStockAdmin();
             desuscribirEtiquetasProductos();
@@ -2253,6 +2286,97 @@
         }
     }
 
+    // ==========================================
+    // PANEL DE ADMINISTRADOR (historial completo de pedidos + eliminar)
+    // ==========================================
+    // A diferencia de "Pedidos activos" (que solo muestra pendiente/
+    // confirmado), este listado trae los últimos 100 pedidos sin importar
+    // su estado, para poder revisar y, si hace falta, eliminar alguno
+    // (por ejemplo, uno de prueba o duplicado) para que deje de contarse
+    // en las estadísticas del mes.
+    let cancelarSuscripcionHistorialPedidosAdmin = null;
+
+    const ETIQUETAS_ESTADO_PEDIDO_HISTORIAL = {
+        pendiente: "Pendiente",
+        confirmado: "Confirmado",
+        entregado: "Entregado",
+        cancelado: "Cancelado"
+    };
+
+    function suscribirHistorialPedidosAdmin() {
+        if (cancelarSuscripcionHistorialPedidosAdmin) return; // ya está escuchando
+
+        const contenedor = document.getElementById("lista-historial-pedidos-admin");
+        if (!contenedor) return;
+
+        cancelarSuscripcionHistorialPedidosAdmin = db.collection("pedidos")
+            .orderBy("fecha", "desc")
+            .limit(100)
+            .onSnapshot((snapshot) => {
+                if (snapshot.empty) {
+                    contenedor.innerHTML = '<p class="carrito-vacio">Todavía no hay pedidos registrados.</p>';
+                    return;
+                }
+
+                let html = "";
+                snapshot.forEach((doc) => {
+                    const datos = doc.data();
+                    const estado = datos.estado || "pendiente";
+                    const textoEstado = ETIQUETAS_ESTADO_PEDIDO_HISTORIAL[estado] || estado;
+
+                    let itemsHtml = "";
+                    (datos.items || []).forEach(item => {
+                        itemsHtml += `<li>${item.cantidad} × ${item.nombre}</li>`;
+                    });
+
+                    html += `
+                        <div class="tarjeta-admin-testimonio">
+                            <div class="pedido-encabezado">
+                                <span class="pedido-fecha">${formatearFechaPedido(datos.fecha)}</span>
+                                <span class="selector-estado-envoltura selector-estado-${estado} insignia-estado-pedido">${textoEstado}</span>
+                            </div>
+                            <p class="comentario">${datos.nombreCliente || "Cliente"}${datos.correoCliente ? " · " + datos.correoCliente : ""}${datos.telefonoCliente ? " · +" + datos.telefonoCliente : ""}</p>
+                            <ul class="pedido-items">${itemsHtml}</ul>
+                            <div class="pedido-total">Total: ${formatearPrecio(datos.total || 0)}</div>
+                            <div class="acciones-admin-testimonio">
+                                <button class="boton-rechazar-testimonio" onclick="eliminarPedidoAdmin('${doc.id}')">🗑️ Eliminar</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                contenedor.innerHTML = html;
+            }, (error) => {
+                console.error("Error al cargar el historial de pedidos: ", error);
+                contenedor.innerHTML = '<p class="carrito-vacio">No se pudo cargar el historial de pedidos.</p>';
+            });
+    }
+
+    function desuscribirHistorialPedidosAdmin() {
+        if (cancelarSuscripcionHistorialPedidosAdmin) {
+            cancelarSuscripcionHistorialPedidosAdmin();
+            cancelarSuscripcionHistorialPedidosAdmin = null;
+        }
+    }
+
+    // Elimina un pedido por completo (no solo lo cancela). Al hacerlo,
+    // recargamos también las estadísticas del mes para que el contador
+    // baje al instante y refleje la eliminación.
+    async function eliminarPedidoAdmin(idPedido) {
+        const confirmado = await mostrarConfirmacion(
+            "¿Eliminar este pedido para siempre? Esta acción no se puede deshacer y descontará el pedido del contador de estadísticas.",
+            "Sí, eliminar"
+        );
+        if (!confirmado) return;
+
+        try {
+            await db.collection("pedidos").doc(idPedido).delete();
+            cargarEstadisticasMes();
+        } catch (error) {
+            console.error("Error al eliminar el pedido: ", error);
+            mostrarAviso("No se pudo eliminar el pedido. Intenta de nuevo.", "error");
+        }
+    }
+
     function cambiarEstadoPedidoAdmin(idPedido, nuevoEstado) {
         const refPedido = db.collection("pedidos").doc(idPedido);
         refPedido.update({ estado: nuevoEstado })
@@ -2478,6 +2602,8 @@
     let vitrinaMostrarAgotado = true;
     let vitrinaPrecioMin = null;
     let vitrinaPrecioMax = null;
+    let vitrinaMostrarDulce = true;
+    let vitrinaMostrarSalado = true;
 
     // Un producto se considera "agotado" solo si el admin definió stock
     // para HOY y quedó en 0. Si no hay stock definido para hoy, se asume
@@ -2518,6 +2644,18 @@
 
             if (vitrinaPrecioMin !== null && producto.precio < vitrinaPrecioMin) return false;
             if (vitrinaPrecioMax !== null && producto.precio > vitrinaPrecioMax) return false;
+
+            // Filtro "Tipo" (Dulce / Salado). Solo se aplica si el producto
+            // efectivamente tiene alguna de esas dos etiquetas; las etiquetas
+            // personalizadas (ej: "Vegano") no se ven afectadas por estas
+            // casillas, ya que no tienen un control propio en este panel.
+            const categoriasProducto = obtenerCategoriasProducto(producto);
+            const esDulce = categoriasProducto.includes("dulce");
+            const esSalado = categoriasProducto.includes("salado");
+            if (esDulce || esSalado) {
+                const pasaFiltroTipo = (esDulce && vitrinaMostrarDulce) || (esSalado && vitrinaMostrarSalado);
+                if (!pasaFiltroTipo) return false;
+            }
 
             return true;
         });
@@ -3580,6 +3718,30 @@
             });
         }
 
+        const botonAlternarHistorialPedidos = document.getElementById("boton-alternar-historial-pedidos-admin");
+        const listaHistorialPedidos = document.getElementById("lista-historial-pedidos-admin");
+        if (botonAlternarHistorialPedidos && listaHistorialPedidos) {
+            botonAlternarHistorialPedidos.addEventListener("click", () => {
+                const abierto = listaHistorialPedidos.style.display !== "none";
+                listaHistorialPedidos.style.display = abierto ? "none" : "block";
+                botonAlternarHistorialPedidos.setAttribute("aria-expanded", abierto ? "false" : "true");
+                botonAlternarHistorialPedidos.textContent = abierto ? "Ver historial completo" : "Ocultar historial completo";
+            });
+        }
+
+        const filtroDulce = document.getElementById("filtro-dulce");
+        const filtroSalado = document.getElementById("filtro-salado");
+        if (filtroDulce && filtroSalado) {
+            filtroDulce.addEventListener("change", () => {
+                vitrinaMostrarDulce = filtroDulce.checked;
+                renderizarVitrina();
+            });
+            filtroSalado.addEventListener("change", () => {
+                vitrinaMostrarSalado = filtroSalado.checked;
+                renderizarVitrina();
+            });
+        }
+
         const filtroPrecioMin = document.getElementById("filtro-precio-min");
         const filtroPrecioMax = document.getElementById("filtro-precio-max");
         if (filtroPrecioMin && filtroPrecioMax) {
@@ -3600,6 +3762,10 @@
                 vitrinaPrecioMax = null;
                 filtroPrecioMin.value = "";
                 filtroPrecioMax.value = "";
+                vitrinaMostrarDulce = true;
+                vitrinaMostrarSalado = true;
+                if (filtroDulce) filtroDulce.checked = true;
+                if (filtroSalado) filtroSalado.checked = true;
                 renderizarVitrina();
             });
         }
@@ -3825,6 +3991,9 @@
                     correo: correo,
                     fecha: new Date()
                 });
+
+                // Correo de bienvenida (no bloquea el registro si falla)
+                enviarCorreoBienvenida(nombre, correo);
 
                 // El listener onAuthStateChanged ya se disparó al crear la cuenta,
                 // ANTES de que termináramos de guardar el nombre (updateProfile es

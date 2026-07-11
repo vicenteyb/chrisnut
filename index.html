@@ -738,6 +738,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -754,6 +755,11 @@
     };
     
     firebase.initializeApp(firebaseConfig);
+
+    // Analítica de visitas (Google Analytics vía Firebase). Los datos se ven
+    // en Firebase Console → Analytics, o en analytics.google.com con la
+    // misma cuenta de Google. No requiere ninguna configuración adicional.
+    firebase.analytics();
 
     // --- App Check: protege Firestore/Auth/Storage para que solo tu propia
     // página pueda usarlos, no scripts ni bots externos que copien tu
@@ -2046,7 +2052,7 @@
         favoritos.forEach(item => {
             html += `
                 <div class="item-carrito item-favorito">
-                    <img src="${item.imagen || 'logo.png'}" alt="${item.nombre}" class="item-favorito-imagen">
+                    <img src="${item.imagen || 'logo.png'}" alt="${item.nombre}" class="item-favorito-imagen" loading="lazy" decoding="async">
                     <div class="item-carrito-info">
                         <span class="item-carrito-nombre">${item.nombre}</span>
                         <span class="item-carrito-precio">${formatearPrecio(item.precio)}</span>
@@ -2467,7 +2473,7 @@
                 html += `
                     <article class="tarjeta-producto" data-nombre="${producto.nombre}" data-precio="${producto.precio}" data-imagen="${imagenEscapada}">
                         <div class="imagen-contenedor ${window._esAdminActual ? "imagen-editable-admin" : ""}">
-                            <img src="${producto.imagenURL}" alt="${producto.nombre}" class="imagen-producto">
+                            <img src="${producto.imagenURL}" alt="${producto.nombre}" class="imagen-producto" loading="lazy" decoding="async">
                             ${agotado ? '<span class="etiqueta-agotado-producto">Agotado</span>' : ""}
                             <button class="boton-favorito" aria-label="Agregar a favoritos">🤍</button>
                             ${overlayCambiarFoto}
@@ -2508,6 +2514,47 @@
         input.click();
     }
 
+    // Redimensiona y comprime una foto ANTES de subirla a Firebase Storage,
+    // para que las fotos de productos no pesen varios MB en alta resolución.
+    // - Nunca agranda una foto más pequeña que anchoMaximo.
+    // - Convierte a WebP (mucho más liviano que JPG/PNG a igual calidad).
+    // Si el navegador no soporta algo de esto, devuelve el archivo original
+    // tal cual (mejor subir la foto sin optimizar que no subirla).
+    function comprimirImagenProducto(archivo, anchoMaximo = 800, calidad = 0.8) {
+        return new Promise((resolve) => {
+            try {
+                const imagen = new Image();
+                const url = URL.createObjectURL(archivo);
+                imagen.onload = () => {
+                    URL.revokeObjectURL(url);
+                    const escala = Math.min(1, anchoMaximo / imagen.width);
+                    const ancho = Math.round(imagen.width * escala);
+                    const alto = Math.round(imagen.height * escala);
+
+                    const canvas = document.createElement("canvas");
+                    canvas.width = ancho;
+                    canvas.height = alto;
+                    const contexto = canvas.getContext("2d");
+                    contexto.drawImage(imagen, 0, 0, ancho, alto);
+
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            resolve(archivo); // algo falló, subimos el original
+                            return;
+                        }
+                        const nombreSinExtension = archivo.name.replace(/\.[^/.]+$/, "");
+                        const archivoComprimido = new File([blob], `${nombreSinExtension}.webp`, { type: "image/webp" });
+                        resolve(archivoComprimido);
+                    }, "image/webp", calidad);
+                };
+                imagen.onerror = () => resolve(archivo); // no se pudo leer, subimos el original
+                imagen.src = url;
+            } catch (error) {
+                resolve(archivo); // navegador viejo o algo raro, subimos el original
+            }
+        });
+    }
+
     async function manejarCambioFotoProducto() {
         const input = document.getElementById("input-cambiar-foto-producto");
         const archivo = input.files[0];
@@ -2523,8 +2570,9 @@
         }
 
         try {
-            const referenciaImagen = storage.ref(`productos/${Date.now()}-${archivo.name}`);
-            await referenciaImagen.put(archivo);
+            const archivoOptimizado = await comprimirImagenProducto(archivo);
+            const referenciaImagen = storage.ref(`productos/${Date.now()}-${archivoOptimizado.name}`);
+            await referenciaImagen.put(archivoOptimizado);
             const nuevaURL = await referenciaImagen.getDownloadURL();
 
             await db.collection("productos").doc(nombre).update({
@@ -2623,8 +2671,9 @@
         estado.textContent = "Subiendo foto...";
 
         try {
-            const referenciaImagen = storage.ref(`productos/${Date.now()}-${archivo.name}`);
-            await referenciaImagen.put(archivo);
+            const archivoOptimizado = await comprimirImagenProducto(archivo);
+            const referenciaImagen = storage.ref(`productos/${Date.now()}-${archivoOptimizado.name}`);
+            await referenciaImagen.put(archivoOptimizado);
             const urlImagen = await referenciaImagen.getDownloadURL();
 
             estado.textContent = "Guardando producto...";
@@ -3268,9 +3317,6 @@
             botonFiltrosVitrina.addEventListener("click", () => {
                 const abierto = panelFiltrosVitrina.classList.toggle("abierto");
                 botonFiltrosVitrina.setAttribute("aria-expanded", abierto ? "true" : "false");
-                if (abierto) {
-                    panelFiltrosVitrina.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }
             });
         }
 

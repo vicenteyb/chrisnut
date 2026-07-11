@@ -9,8 +9,8 @@
     --color-texto-principal: #3d2817;
     --color-titulo: #6a4833;
     --color-texto-secundario: #555555;
-    --color-texto-terciario: #777777;
-    --color-texto-suave: #888888;
+    --color-texto-terciario: #707070;
+    --color-texto-suave: #6b6b6b;
     --color-texto-suave-claro: #e6dfd1;
 
     --color-borde: #cbd5e1;
@@ -62,6 +62,10 @@ body, .tarjeta-producto, .tarjeta-paso, .tarjeta-testimonio,
 .modal-contenido, .formulario-contacto, .input-clave-contenedor,
 .input-telefono-contenedor, .pedido-tarjeta {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+input[type="checkbox"] {
+    accent-color: var(--color-acento);
 }
 
 /* --- Estilos Generales --- */
@@ -465,6 +469,10 @@ main > section {
     flex: 1;
     font-size: 0.9rem;
     color: var(--color-texto-secundario);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .tarjeta-producto .precio {
@@ -806,11 +814,12 @@ main > section {
         border: 1px solid var(--color-borde-suave);
         border-radius: 10px;
         padding: 20px;
-        order: 2;
+        order: 0;
     }
 
     .panel-filtros-vitrina.abierto {
         display: block;
+        margin-bottom: 16px;
     }
 
     .columna-vitrina-productos {
@@ -1091,12 +1100,11 @@ main > section {
 }
 
 .pie-logo {
-    height: 50px;
-    width: 50px;
-    object-fit: cover;
-    border-radius: 50%;
+    height: auto;
+    width: 160px;
+    max-width: 60%;
+    object-fit: contain;
     margin-bottom: 14px;
-    border: 2px solid rgba(245, 198, 107, 0.35);
 }
 
 .pie-eslogan {
@@ -1501,7 +1509,9 @@ main > section {
     box-sizing: border-box;
 }
 
-/* Botón "X" para que el admin borre una opinión ya publicada */
+/* Botón "X" para que el admin borre una opinión ya publicada.
+   Se mantiene funcional siempre, pero solo se ve al pasar el mouse por la
+   tarjeta, para no competir visualmente con los testimonios. */
 .boton-borrar-testimonio-publico {
     position: absolute;
     top: 10px;
@@ -1520,7 +1530,13 @@ main > section {
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-    transition: filter 0.2s ease, transform 0.2s ease;
+    opacity: 0;
+    transition: filter 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+
+.tarjeta-testimonio:hover .boton-borrar-testimonio-publico,
+.boton-borrar-testimonio-publico:focus-visible {
+    opacity: 1;
 }
 
 .boton-borrar-testimonio-publico:hover {
@@ -3072,6 +3088,10 @@ button {
         filter: none;
         transform: none;
         box-shadow: none;
+    }
+
+    .boton-borrar-testimonio-publico {
+        opacity: 1;
     }
 }
 

@@ -506,7 +506,11 @@
                 <hr class="separador-perfil">
 
                 <div class="seccion-cambiar-clave">
-                    <h3>Cambiar contraseña</h3>
+                    <button type="button" id="boton-toggle-cambiar-clave" class="boton-seccion-plegable" aria-expanded="false" aria-controls="contenedor-cambiar-clave">
+                        <h3>Cambiar contraseña</h3>
+                        <span class="flecha-desplegable">⌄</span>
+                    </button>
+                    <div id="contenedor-cambiar-clave" class="contenedor-seccion-plegable">
                     <form id="formulario-cambiar-clave" class="formulario-modal">
                         <div class="grupo-modal">
                             <label for="clave-actual">Contraseña actual:</label>
@@ -540,6 +544,7 @@
                             <span class="spinner-boton"></span>
                         </button>
                     </form>
+                    </div>
                 </div>
 
                 <hr class="separador-perfil">
@@ -679,6 +684,11 @@
 
     <footer class="pie-pagina">
         <div class="pie-contenido">
+            <div class="pie-marca">
+                <img src="logo.png" alt="Logo Chrisnut" class="pie-logo">
+                <p class="pie-eslogan">Panadería y repostería artesanal, hecha con cariño.</p>
+            </div>
+
             <div class="pie-enlaces">
                 <h3>Enlaces</h3>
                 <ul>
@@ -689,12 +699,25 @@
                     <li><a href="privacidad.html">Política de Privacidad</a></li>
                 </ul>
             </div>
-            <div class="redes-sociales">
-                <a href="https://www.instagram.com/chrisnutcl/" target="_blank">Instagram</a>
-                <a href="https://wa.me/qr/JPOAXZ6QHLFOJ1" target="_blank">Whatsapp</a>
+
+            <div class="pie-social">
+                <h3>Síguenos</h3>
+                <div class="redes-sociales">
+                    <a href="https://www.instagram.com/chrisnutcl/" target="_blank" rel="noopener" aria-label="Instagram de Chrisnut">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="https://wa.me/qr/JPOAXZ6QHLFOJ1" target="_blank" rel="noopener" aria-label="WhatsApp de Chrisnut">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="">
+                        <span>WhatsApp</span>
+                    </a>
+                </div>
             </div>
         </div>
-        <p>&copy; 2026 Chrisnut - Panadería & Dulzura. Todos los derechos reservados.</p>
+
+        <hr class="pie-divisor">
+
+        <p class="pie-copyright">&copy; 2026 Chrisnut - Panadería & Dulzura. Todos los derechos reservados.</p>
     </footer>
 
     <div class="botones-flotantes-contenedor">
@@ -801,6 +824,8 @@
             document.getElementById("error-cambiar-clave").textContent = "";
             document.getElementById("exito-cambiar-clave").textContent = "";
             evaluarFuerzaClave("", "barra-medidor-clave-nueva", "texto-medidor-clave-nueva");
+            document.getElementById("contenedor-cambiar-clave").classList.remove("abierto");
+            document.getElementById("boton-toggle-cambiar-clave").setAttribute("aria-expanded", "false");
         }
         if (window.location.hash === "#mi-cuenta") {
             history.pushState(null, "", window.location.pathname + window.location.search);
@@ -3383,6 +3408,15 @@
             evaluarFuerzaClave(e.target.value, "barra-medidor-clave-nueva", "texto-medidor-clave-nueva");
         });
 
+        // Plegar/desplegar la sección "Cambiar contraseña" (empieza cerrada
+        // para no ocupar tanto espacio dentro de "Mi Perfil")
+        document.getElementById("boton-toggle-cambiar-clave").addEventListener("click", () => {
+            const boton = document.getElementById("boton-toggle-cambiar-clave");
+            const contenedor = document.getElementById("contenedor-cambiar-clave");
+            const abierto = contenedor.classList.toggle("abierto");
+            boton.setAttribute("aria-expanded", abierto ? "true" : "false");
+        });
+
         // Recuperar contraseña
         document.getElementById("enlace-olvide-clave").addEventListener("click", async (e) => {
             e.preventDefault();
@@ -3566,6 +3600,11 @@
                 exitoClave.textContent = "¡Tu contraseña se cambió correctamente!";
                 document.getElementById("formulario-cambiar-clave").reset();
                 evaluarFuerzaClave("", "barra-medidor-clave-nueva", "texto-medidor-clave-nueva");
+                setTimeout(() => {
+                    document.getElementById("contenedor-cambiar-clave").classList.remove("abierto");
+                    document.getElementById("boton-toggle-cambiar-clave").setAttribute("aria-expanded", "false");
+                    exitoClave.textContent = "";
+                }, 1800);
             } catch (error) {
                 console.error("Error al cambiar la contraseña: ", error);
                 if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {

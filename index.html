@@ -2630,15 +2630,57 @@
         productosCache.forEach((producto) => {
             const nombreEscapado = producto.nombre.replace(/'/g, "\\'");
             const imagenEscapada = (producto.imagenURL || "").replace(/'/g, "\\'");
+            const idSeguro = idStockSeguro(producto.nombre);
+
+            // Categoría interna (dulce/salado): es un dato de uso solo
+            // administrativo, nunca se muestra al cliente. Los productos
+            // migrados antes de existir este campo no tienen "categoria"
+            // guardada todavía, por eso se contempla el caso "sin definir".
+            const categoriaActual = producto.categoria || "";
+            const claseCategoria = categoriaActual === "dulce"
+                ? "select-categoria-admin-dulce"
+                : categoriaActual === "salado"
+                    ? "select-categoria-admin-salado"
+                    : "select-categoria-admin-vacia";
+
             html += `
                 <div class="fila-cupon-admin">
                     <span class="codigo-cupon-admin">${producto.nombre}</span>
                     <span class="valor-cupon-admin">${formatearPrecio(producto.precio)}</span>
+                    <select
+                        id="select-categoria-${idSeguro}"
+                        class="select-categoria-admin ${claseCategoria}"
+                        title="Categoría interna (solo la ven los admins)"
+                        onchange="cambiarCategoriaProductoAdmin('${nombreEscapado}', this)"
+                    >
+                        <option value="" ${categoriaActual === "" ? "selected" : ""} disabled>Sin definir</option>
+                        <option value="dulce" ${categoriaActual === "dulce" ? "selected" : ""}>🍰 Dulce</option>
+                        <option value="salado" ${categoriaActual === "salado" ? "selected" : ""}>🥐 Salado</option>
+                    </select>
                     <button type="button" onclick="eliminarProducto('${nombreEscapado}', '${imagenEscapada}')">🗑️</button>
                 </div>
             `;
         });
         contenedor.innerHTML = html;
+    }
+
+    // Guarda al instante la categoría interna (dulce/salado) elegida para un
+    // producto. Es un dato de organización interna: no aparece en la vitrina
+    // pública ni en ningún lugar visible para las personas que compran.
+    async function cambiarCategoriaProductoAdmin(nombre, elementoSelect) {
+        const nuevaCategoria = elementoSelect.value;
+
+        elementoSelect.classList.remove("select-categoria-admin-dulce", "select-categoria-admin-salado", "select-categoria-admin-vacia");
+        elementoSelect.classList.add(
+            nuevaCategoria === "dulce" ? "select-categoria-admin-dulce" : "select-categoria-admin-salado"
+        );
+
+        try {
+            await db.collection("productos").doc(nombre).update({ categoria: nuevaCategoria });
+        } catch (error) {
+            console.error("Error al actualizar la categoría interna del producto: ", error);
+            mostrarAviso("No se pudo actualizar la categoría. Intenta de nuevo.", "error");
+        }
     }
 
     async function eliminarProducto(nombre, imagenURL) {

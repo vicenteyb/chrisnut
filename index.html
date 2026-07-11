@@ -832,44 +832,53 @@
     // hace un pedido. No requiere backend: usa el servicio EmailJS con las
     // plantillas configuradas en https://dashboard.emailjs.com
     const EMAILJS_SERVICE_ID = "service_cth2waf";
-    const EMAILJS_TEMPLATE_PERFIL = "template_egns4ig";
+    // Solo tenemos 2 plantillas disponibles en el plan gratuito de EmailJS,
+    // así que "Perfil actualizado" se reutiliza como plantilla GENERAL para
+    // varios tipos de aviso (bienvenida, perfil actualizado, etc.). El
+    // asunto y el cuerpo del correo se arman aquí en el código con las
+    // variables {{asunto}} y {{mensaje}}; en el dashboard de EmailJS esa
+    // plantilla debe usar esas dos variables en vez de texto fijo.
+    const EMAILJS_TEMPLATE_GENERAL = "template_egns4ig";
     const EMAILJS_TEMPLATE_PEDIDO = "template_8v6bmkw";
-    // TODO: reemplaza este ID por el de tu plantilla real una vez que la
-    // crees en https://dashboard.emailjs.com (botón "Create New Template").
-    // Puedes usar las mismas variables que las otras plantillas: {{to_email}},
-    // {{to_name}} y {{nombre}}. Mientras este ID sea el de ejemplo, el correo
-    // de bienvenida no se enviará (fallará en silencio, solo se ve en la
-    // consola del navegador).
-    const EMAILJS_TEMPLATE_BIENVENIDA = "template_bienvenida";
     const EMAILJS_PUBLIC_KEY = "Qm8pxveCoxS27xU9v";
 
     if (window.emailjs) {
         emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
     }
 
+    // Envía un correo usando la plantilla general ("Perfil actualizado"
+    // reutilizada), armando el asunto y el cuerpo del mensaje aquí mismo.
+    function enviarCorreoGeneral(correo, nombre, asunto, mensaje) {
+        if (!window.emailjs || !correo) return;
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_GENERAL, {
+            to_email: correo,
+            to_name: nombre || "cliente",
+            nombre: nombre || "cliente",
+            asunto: asunto,
+            mensaje: mensaje
+        }).catch((error) => {
+            console.error("No se pudo enviar el correo: ", error);
+        });
+    }
+
     // Envía el correo de "¡bienvenido/a a Chrisnut!" apenas alguien crea su cuenta.
     function enviarCorreoBienvenida(nombre, correo) {
-        if (!window.emailjs || !correo) return;
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_BIENVENIDA, {
-            to_email: correo,
-            to_name: nombre || "amigo/a",
-            nombre: nombre || "amigo/a"
-        }).catch((error) => {
-            console.error("No se pudo enviar el correo de bienvenida: ", error);
-        });
+        enviarCorreoGeneral(
+            correo,
+            nombre,
+            "¡Bienvenido/a a Chrisnut! 🥐",
+            `¡Hola ${nombre || "amigo/a"}! Gracias por crear tu cuenta en Chrisnut. Ya puedes explorar nuestra vitrina, armar tu pedido y hacerle seguimiento desde "Mi Perfil". ¡Te esperamos!`
+        );
     }
 
     // Envía el correo de "tus datos se actualizaron" al cliente.
     function enviarCorreoPerfilActualizado(nombre, correo, telefono) {
-        if (!window.emailjs || !correo) return;
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_PERFIL, {
-            to_email: correo,
-            to_name: nombre || "cliente",
-            nombre: nombre || "-",
-            telefono: telefono || "-"
-        }).catch((error) => {
-            console.error("No se pudo enviar el correo de perfil actualizado: ", error);
-        });
+        enviarCorreoGeneral(
+            correo,
+            nombre,
+            "Tus datos fueron actualizados",
+            `Hola ${nombre || "cliente"}, te confirmamos que tus datos de perfil se actualizaron correctamente.\nTeléfono: ${telefono || "-"}`
+        );
     }
 
     // Envía el correo de "confirmamos tu pedido" al cliente.
